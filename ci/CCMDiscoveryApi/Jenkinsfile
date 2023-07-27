@@ -10,7 +10,7 @@ def configStage = [
     stackname: "ipk-stage",
     dockerFile: "./ci/CCMDiscoveryApi/Dockerfile",
     dockerComposeFile: "./ci/CCMDiscoveryApi/stage/docker-compose.yml",
-    dockerHost: "stoipk-stage01",
+    dockerHost: "sto-mm-04",
     dockerHostCredentialsId: "ipkServerUser",
 
     buildVersion: "0.0.0",
@@ -22,7 +22,7 @@ def configProd = [
     stackname: "ipk",
     dockerFile: "./ci/CCMDiscoveryApi/Dockerfile",
     dockerComposeFile: "./ci/CCMDiscoveryApi/production/docker-compose.yml",
-    dockerHost: "stodacar01",
+    dockerHost: "sto-mm-01",
     dockerHostCredentialsId: "dacarServerUser",
 
     buildVersion: "0.0.0",
