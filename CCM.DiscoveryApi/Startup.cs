@@ -131,7 +131,7 @@ namespace CCM.DiscoveryApi
             app.UseCors(x => x
                 .AllowAnyMethod()
                 .AllowAnyHeader()
-                .SetIsOriginAllowed(origin => true)
+                .AllowAnyOrigin()
                 .AllowCredentials());
 
             // Who are you? (Basic authentication)
