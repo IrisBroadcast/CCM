@@ -93,7 +93,7 @@ namespace CCM.Web.Infrastructure
 
             if (await _cachedSipAccountRepository.AuthenticateAsync(authenticationCredentials.Username, authenticationCredentials.Password) == false)
             {
-                return AuthenticateResult.Fail("Could not authenticate");
+                return AuthenticateResult.Fail($"Could not authenticate, with credentials: {authenticationCredentials.Username}:{authenticationCredentials.Password}]");
             }
 
             // Setting up some claims

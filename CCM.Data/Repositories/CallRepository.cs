@@ -191,6 +191,10 @@ namespace CCM.Data.Repositories
                         $"Unable to save call history with the call fromSip: {dbCall.FromCodec}, toSip: {dbCall.ToCodec}, hash id: {dbCall.DialogHashId}, hash ent: {dbCall.DialogHashEnt}");
                 }
             }
+            else
+            {
+                _logger.LogError($"Could not successfully save the closed call and map to call history fromSip:{dbCall.FromCodec} {dbCall.FromDisplayName}, toSip:{dbCall.ToCodec} {dbCall.ToDisplayName}");
+            }
         }
 
         /// <summary>
