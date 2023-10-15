@@ -48,6 +48,7 @@ namespace CCM.Data.Entities
         public string DialogHashEnt { get; set; }
 
         public Guid FromId { get; set; }
+        public Guid? FromUserAccountId { get; set; }
         public string FromTag { get; set; }
         public string FromSip { get; set; }
         public string FromUsername { get; set; }
@@ -72,6 +73,7 @@ namespace CCM.Data.Entities
         public string FromUserAgentHeader { get; set; }
 
         public Guid ToId { get; set; }
+        public Guid? ToUserAccountId { get; set; }
         public string ToTag { get; set; }
         public string ToSip { get; set; }
         public string ToUsername { get; set; }

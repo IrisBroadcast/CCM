@@ -67,10 +67,6 @@ namespace CCM.Core.Service
             _cache = cache;
         }
 
-        /// <summary>
-        /// Gets the profiles with an easy display name and SDP
-        /// </summary>
-        /// <returns>The profiles</returns>
         public List<ProfileDto> GetProfiles()
         {
             IList<ProfileNameAndSdp> profiles = _cachedProfileRepository.GetAllProfileNamesAndSdp();
@@ -78,10 +74,6 @@ namespace CCM.Core.Service
             return result;
         }
 
-        /// <summary>
-        /// Gets the filters to select the user agents
-        /// </summary>
-        /// <returns>The filters name and sub options</returns>
         public List<FilterDto> GetFilters()
         {
             // TODO: Add "All" filtering with A-G G-Z possibilities
@@ -98,14 +90,6 @@ namespace CCM.Core.Service
             return result;
         }
 
-        /// <summary>
-        /// Returns a list with available user agents based on filter parameters
-        /// </summary>
-        /// <param name="caller">Codec initiating the request for user agents</param>
-        /// <param name="callee">Used for querying on a preselected destination</param>
-        /// <param name="filterParams">Filter parameters</param>
-        /// <param name="includeCodecsInCall">Include registered user agents that's in a call</param>
-        /// <returns>List of user agents</returns>
         public UserAgentsResultDto GetUserAgents(string caller, string callee, IList<KeyValuePair<string, string>> filterParams, bool includeCodecsInCall = false)
         {
             if (filterParams == null)
@@ -121,7 +105,7 @@ namespace CCM.Core.Service
             IList<ProfileNameAndSdp> callerProfiles;
             if (!string.IsNullOrEmpty(caller))
             {
-                callerProfiles = GetProfilesForRegisteredSip(caller, registeredUserAgents);
+                callerProfiles = GetProfileListForRegisteredSipId(caller, registeredUserAgents);
                 log.Debug($"Found {callerProfiles.Count} profiles for caller '{caller}'");
             }
             else
@@ -130,7 +114,7 @@ namespace CCM.Core.Service
                 log.Debug($"Found {callerProfiles.Count} profiles, no caller specified");
             }
 
-            // Filter out user agents
+            // Filter out all user agents that can be called
             if (string.IsNullOrWhiteSpace(callee))
             {
                 var filterSelections = GetFilteringValues(filterParams);
@@ -170,11 +154,13 @@ namespace CCM.Core.Service
                 registeredUserAgents = new List<RegisteredUserAgentAndProfilesDiscovery> { calleeSip };
             }
 
-            var result = MatchProfilesAndUserAgents(registeredUserAgents, callerProfiles.Select(p => new ProfileDto() { Name = p.Name, Sdp = p.Sdp }).ToList());
+            var result = MatchProfilesAndUserAgents(
+                registeredUserAgents,
+                callerProfiles.Select(p => new ProfileDto() { Name = p.Name, Sdp = p.Sdp }).ToList());
             return result;
         }
 
-        private IList<ProfileNameAndSdp> GetProfilesForRegisteredSip(string sipId, IList<RegisteredUserAgentAndProfilesDiscovery> registeredUserAgents)
+        private IList<ProfileNameAndSdp> GetProfileListForRegisteredSipId(string sipId, IList<RegisteredUserAgentAndProfilesDiscovery> registeredUserAgents)
         {
             var regSip = registeredUserAgents.FirstOrDefault(s => s.SipUri == sipId);
             var profileNames = regSip?.OrderedProfiles ?? new List<string>();
@@ -229,7 +215,7 @@ namespace CCM.Core.Service
                             PresentationName = callee.DisplayName,
                             ConnectedTo = callee.InCallWithName ?? string.Empty,
                             InCall = callee.InCall,
-                            MetaData = callee.MetaData?.Select(meta => new KeyValuePair<string, string>(meta.Key, meta.Value)).ToList(), // TODO: needs to be in a new list again?
+                            MetaData = callee.MetaData?.Select(meta => new KeyValuePair<string, string>(meta.Key, meta.Value)).ToList(),
                             Profiles = matchingProfiles,
                         };
                         userAgents.Add(userAgent);

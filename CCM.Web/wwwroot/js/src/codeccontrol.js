@@ -1,14 +1,15 @@
 ﻿
 /* *******************************************************
  * Codec control for front page popup */
-ccmControllers.controller('sipInfoController', function ($scope, $http, $interval, $uibModalInstance, sipid, sipAddress) {
+ccmControllers.controller('sipInfoController', function ($scope, $http, $interval, $uibModalInstance, registrationId, sipAddress, userAccountId) {
 
     $scope.codecControlHost = window.codecControlHost;
     $scope.userName = window.codecControlUserName;
     $scope.password = window.codecControlPassword;
     $scope.discoveryServiceUrl = window.discoveryServiceUrl;
     $scope.codecOnline = false;  // 'true' if codec is reachable
-    $scope.sipid = sipid;
+    $scope.registrationId = registrationId;
+    $scope.userAccountId = userAccountId;
     $scope.sipAddress = sipAddress;
     $scope.info = {};
     $scope.streamInfo = {"lostPackets":0,"lostPacketsPerSec":0,"recoveredPackets":0,"recoveredPacketsPerSec":0,"obsoletePackets":0,"obsoletePacketsPerSec":0,"jitter":0,"jitterPerSec":0,"roundTrip":0,"roundTripPerSec":0,"txKbps":0,"rxKbps":0,"sipAddress":""};
@@ -189,7 +190,7 @@ ccmControllers.controller('sipInfoController', function ($scope, $http, $interva
     };
 
     $scope.controlHangUp = () => {
-        console.info('HangUp call');
+        console.info('Hang up call');
         $scope.httpPost('/api/codeccontrol/hangup', {
             deviceEncoder: null,
             sipAddress: $scope.sipAddress
@@ -416,7 +417,12 @@ ccmControllers.controller('sipInfoController', function ($scope, $http, $interva
         }
     });
 
-    $http.get('/api/RegisteredCodec/ById/?id=' + $scope.sipid).then((response) => {
+    let queryStr = `?id=${$scope.registrationId}`;
+    if ($scope.userAccountId !== "" && $scope.userAccountId !== null) {
+        queryStr = `?userId=${$scope.userAccountId}`;
+    }
+
+    $http.get(`/api/RegisteredCodec/ById/${queryStr}`).then((response) => {
         console.info('Codec information, Get registered User Agent Data', response.data);
 
         let info = response.data;
@@ -444,7 +450,7 @@ ccmControllers.controller('sipInfoController', function ($scope, $http, $interva
         // }
     },
     (error) => {
-        console.error("No answer from '/api/RegisteredCodec/ById/?id=" + $scope.sipid + "'", error);
+        console.error("No answer from '/api/RegisteredCodec/ById/?id=" + $scope.registrationId + "'", error);
     });
 
     // Utilities

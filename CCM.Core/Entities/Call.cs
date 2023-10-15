@@ -46,6 +46,7 @@ namespace CCM.Core.Entities
         public CallRegisteredCodec From { get; set; }
         public string FromSip { get; set; }
         public string FromDisplayName { get; set; }
+        public Guid? FromUserAccountId { get; set; }
         public string FromTag { get; set; }
         public string FromCategory { get; set; }
 
@@ -53,6 +54,7 @@ namespace CCM.Core.Entities
         public CallRegisteredCodec To { get; set; }
         public string ToSip { get; set; }
         public string ToDisplayName { get; set; }
+        public Guid? ToUserAccountId { get; set; }
         public string ToTag { get; set; }
         public string ToCategory { get; set; }
     }

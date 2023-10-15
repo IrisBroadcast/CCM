@@ -65,13 +65,18 @@ namespace CCM.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Called when the user clicked on a codec in the GUI to show detailed information, including codec control GUI, for the codec.
+        /// Called when the user clicked on a codec in the GUI to show detailed information,
+        /// including codec control GUI, for the codec.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public ActionResult ById(Guid id)
+        public ActionResult ById(Guid? id, Guid? userId)
         {
-            RegisteredSipDetails regSipDetails = _registeredCodecDetailsRepository.GetRegisteredSipById(id);
+            if (id == null && userId == null)
+            {
+                return BadRequest();
+            }
+            RegisteredSipDetails regSipDetails = id.HasValue ? _registeredCodecDetailsRepository.GetRegisteredSipById(id.Value) : _registeredCodecDetailsRepository.GetRegisteredSipByUserAccountId(userId.Value);
             if (regSipDetails == null)
             {
                 return NotFound();

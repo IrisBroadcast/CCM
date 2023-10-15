@@ -80,6 +80,7 @@ namespace CCM.Data.Repositories
             dbCallHistory.FromComment = callHistory.FromComment;
             dbCallHistory.FromDisplayName = callHistory.FromDisplayName;
             dbCallHistory.FromId = callHistory.FromId;
+            dbCallHistory.FromUserAccountId = callHistory.FromUserAccountId;
             dbCallHistory.FromLocationId = callHistory.FromLocationId;
             dbCallHistory.FromLocationComment = callHistory.FromLocationComment;
             dbCallHistory.FromLocationName = callHistory.FromLocationName;
@@ -101,6 +102,7 @@ namespace CCM.Data.Repositories
             dbCallHistory.ToComment = callHistory.ToComment;
             dbCallHistory.ToDisplayName = callHistory.ToDisplayName;
             dbCallHistory.ToId = callHistory.ToId;
+            dbCallHistory.ToUserAccountId = callHistory.ToUserAccountId;
             dbCallHistory.ToLocationId = callHistory.ToLocationId;
             dbCallHistory.ToLocationComment = callHistory.ToLocationComment;
             dbCallHistory.ToLocationName = callHistory.ToLocationName;
@@ -292,6 +294,7 @@ namespace CCM.Data.Repositories
                 FromComment = dbCallHistory.FromComment,
                 FromDisplayName = dbCallHistory.FromDisplayName,
                 FromId = dbCallHistory.FromId,
+                FromUserAccountId = dbCallHistory.FromUserAccountId,
                 FromLocationId = dbCallHistory.FromLocationId,
                 FromLocationComment = dbCallHistory.FromLocationComment,
                 FromLocationName = dbCallHistory.FromLocationName,
@@ -312,6 +315,7 @@ namespace CCM.Data.Repositories
                 ToComment = dbCallHistory.ToComment,
                 ToDisplayName = dbCallHistory.ToDisplayName,
                 ToId = dbCallHistory.ToId,
+                ToUserAccountId = dbCallHistory.ToUserAccountId,
                 ToLocationId = dbCallHistory.ToLocationId,
                 ToLocationComment = dbCallHistory.ToLocationComment,
                 ToLocationName = dbCallHistory.ToLocationName,

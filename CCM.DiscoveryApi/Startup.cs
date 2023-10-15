@@ -36,127 +36,126 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
 
-namespace CCM.DiscoveryApi
+namespace CCM.DiscoveryApi;
+
+public class Startup
 {
-    public class Startup
+    public Startup(IConfiguration configuration)
     {
-        public Startup(IConfiguration configuration)
+        Configuration = configuration;
+    }
+
+    public IConfiguration Configuration { get; }
+
+    /// <summary>
+    /// This method gets called by the runtime. Use this method to add services to the container.
+    /// </summary>
+    /// <param name="services"></param>
+    public void ConfigureServices(IServiceCollection services)
+    {
+        // Application deploy information
+        services.Configure<ApplicationBuildInformation>(Configuration.GetSection("Build"));
+
+        // Add Cross Origin support
+        services.AddCors();
+
+        // Authentication and authorization (Basic)
+        // The registered authentication handlers and their configuration options are called "schemes".
+        // An authentication scheme is named when the authentication service is configured during authentication.
+        services.AddAuthentication("BasicAuthenticationDiscoveryV2") // Default
+            .AddScheme<AuthenticationSchemeOptions, DiscoveryV2BasicAuthenticationHandler>("BasicAuthenticationDiscoveryV2", null)
+            .AddScheme<AuthenticationSchemeOptions, DiscoveryV1BasicAuthenticationHandler>("BasicAuthenticationDiscoveryV1", null);
+
+        services.AddAuthorization(opt =>
         {
-            Configuration = configuration;
-        }
-
-        public IConfiguration Configuration { get; }
-
-        /// <summary>
-        /// This method gets called by the runtime. Use this method to add services to the container.
-        /// </summary>
-        /// <param name="services"></param>
-        public void ConfigureServices(IServiceCollection services)
-        {
-            // Application deploy information
-            services.Configure<ApplicationBuildInformation>(Configuration.GetSection("Build"));
-
-            // Add Cross Origin support
-            services.AddCors();
-
-            // Authentication and authorization (Basic)
-            // The registered authentication handlers and their configuration options are called "schemes".
-            // An authentication scheme is named when the authentication service is configured during authentication.
-            services.AddAuthentication("BasicAuthenticationDiscoveryV2") // Default
-                .AddScheme<AuthenticationSchemeOptions, DiscoveryV2BasicAuthenticationHandler>("BasicAuthenticationDiscoveryV2", null)
-                .AddScheme<AuthenticationSchemeOptions, DiscoveryV1BasicAuthenticationHandler>("BasicAuthenticationDiscoveryV1", null);
-
-            services.AddAuthorization(opt =>
+            opt.AddPolicy("BasicAuthenticationDiscoveryV2", policy =>
             {
-                opt.AddPolicy("BasicAuthenticationDiscoveryV2", policy =>
-                {
-                    policy.AddAuthenticationSchemes("BasicAuthenticationDiscoveryV2");
-                    policy.RequireAuthenticatedUser();
-                });
-                opt.AddPolicy("BasicAuthenticationDiscoveryV1", policy =>
-                {
-                    policy.AddAuthenticationSchemes("BasicAuthenticationDiscoveryV1");
-                    policy.RequireAuthenticatedUser();
-                });
+                policy.AddAuthenticationSchemes("BasicAuthenticationDiscoveryV2");
+                policy.RequireAuthenticatedUser();
             });
-
-            services.AddControllers(options =>
-                {
-                    options.RespectBrowserAcceptHeader = true; // false by default
-
-                    //var xmlWriterSettings = options.OutputFormatters
-                    //    .OfType<XmlSerializerOutputFormatter>()
-                    //    .Single()
-                    //    .WriterSettings;
-
-                    //xmlWriterSettings.Indent = false;
-                })
-                .AddNewtonsoftJson(options =>
-                {
-                    options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                })
-                .AddXmlSerializerFormatters()
-                .AddXmlDataContractSerializerFormatters();
-
-            // Used to forward requests to the Discovery API's
-            services.AddHttpClient();
-
-            // Register dependency injection
-            services.AddScoped<IDiscoveryHttpService, DiscoveryHttpService>();
-        }
-
-        /// <summary>
-        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        /// </summary>
-        /// <param name="app"></param>
-        /// <param name="env"></param>
-        /// <param name="logger"></param>
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
-        {
-            logger.LogInformation($"#################### CCM Discovery starting up...");
-
-            if (env.IsDevelopment())
+            opt.AddPolicy("BasicAuthenticationDiscoveryV1", policy =>
             {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-                app.UseHsts();
-            }
-
-            //app.UseHttpsRedirection();
-
-            // Set global CORS policy
-            app.UseCors(x => x
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .AllowAnyOrigin()
-                .AllowCredentials());
-
-            // Who are you? (Basic authentication)
-            app.UseAuthentication();
-
-            // Find out routing
-            app.UseRouting();
-
-            //Are you allowed?
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-
-                // Default route
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-
-                // Api routes
-                endpoints.MapControllerRoute(
-                    name: "DiscoveryApi",
-                    pattern: "api/{controller=Home}/{action=Index}/{id?}");
+                policy.AddAuthenticationSchemes("BasicAuthenticationDiscoveryV1");
+                policy.RequireAuthenticatedUser();
             });
+        });
+
+        services.AddControllers(options =>
+            {
+                options.RespectBrowserAcceptHeader = true; // false by default
+
+                //var xmlWriterSettings = options.OutputFormatters
+                //    .OfType<XmlSerializerOutputFormatter>()
+                //    .Single()
+                //    .WriterSettings;
+
+                //xmlWriterSettings.Indent = false;
+            })
+            .AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            })
+            .AddXmlSerializerFormatters()
+            .AddXmlDataContractSerializerFormatters();
+
+        // Used to forward requests to the Discovery API's
+        services.AddHttpClient();
+
+        // Register dependency injection
+        services.AddScoped<IDiscoveryHttpService, DiscoveryHttpService>();
+    }
+
+    /// <summary>
+    /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+    /// </summary>
+    /// <param name="app"></param>
+    /// <param name="env"></param>
+    /// <param name="logger"></param>
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
+    {
+        logger.LogInformation($"#################### CCM Discovery starting up...");
+
+        if (env.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
         }
+        else
+        {
+            app.UseExceptionHandler("/Home/Error");
+            app.UseHsts();
+        }
+
+        //app.UseHttpsRedirection();
+
+        // Set global CORS policy
+        app.UseCors(x => x
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .SetIsOriginAllowed(origin => true)
+            .AllowCredentials());
+
+        // Who are you? (Basic authentication)
+        app.UseAuthentication();
+
+        // Find out routing
+        app.UseRouting();
+
+        //Are you allowed?
+        app.UseAuthorization();
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+
+            // Default route
+            endpoints.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Home}/{action=Index}/{id?}");
+
+            // Api routes
+            endpoints.MapControllerRoute(
+                name: "DiscoveryApi",
+                pattern: "api/{controller=Home}/{action=Index}/{id?}");
+        });
     }
 }

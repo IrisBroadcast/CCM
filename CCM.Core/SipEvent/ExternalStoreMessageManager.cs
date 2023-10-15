@@ -102,7 +102,7 @@ namespace CCM.Core.SipEvent
                 SDP = message.SDP
             };
 
-            _cachedCallRepository.UpdateCall(call);
+            _cachedCallRepository.UpdateOrAddCall(call);
 
             return SipMessageResult(SipEventChangeStatus.CallStarted, call.Id, call.FromSip);
         }

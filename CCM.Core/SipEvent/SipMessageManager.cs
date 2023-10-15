@@ -28,8 +28,10 @@ using System;
 using System.Linq;
 using CCM.Core.Entities;
 using CCM.Core.Extensions;
+using CCM.Core.Helpers;
 using CCM.Core.Interfaces.Managers;
 using CCM.Core.Interfaces.Repositories;
+using CCM.Core.Managers;
 using CCM.Core.SipEvent.Messages;
 using CCM.Core.SipEvent.Models;
 using Microsoft.Extensions.Logging;
@@ -45,12 +47,18 @@ namespace CCM.Core.SipEvent
 
         private readonly ICachedCallRepository _cachedCallRepository;
         private readonly ICachedRegisteredCodecRepository _cachedRegisteredCodecRepository;
+        private readonly ISettingsManager _settingsManager;
 
-        public SipMessageManager(ICachedRegisteredCodecRepository cachedRegisteredCodecRepository, ICachedCallRepository cachedCallRepository, ILogger<SipMessageManager> logger)
+        public SipMessageManager(
+            ICachedRegisteredCodecRepository cachedRegisteredCodecRepository,
+            ICachedCallRepository cachedCallRepository,
+            ILogger<SipMessageManager> logger,
+            ISettingsManager settingsManager)
         {
             _cachedRegisteredCodecRepository = cachedRegisteredCodecRepository;
             _cachedCallRepository = cachedCallRepository;
             _logger = logger;
+            _settingsManager = settingsManager;
         }
 
         /// <summary>
@@ -113,7 +121,7 @@ namespace CCM.Core.SipEvent
             var sipAddress = expireMessage.SipAddress.UserAtHost;
             if (regType == "delete") // TODO: Should this be an enum? Maybe define when this happen
             {
-                _logger.LogInformation($"Unregister Codec {sipAddress}, {regType}");
+                _logger.LogInformation($"Unregister Codec {sipAddress}, type:{regType}");
                 Call codecCall = _cachedCallRepository.GetCallBySipAddress(sipAddress);
                 if (codecCall != null)
                 {
@@ -129,7 +137,7 @@ namespace CCM.Core.SipEvent
         /// <param name="sipDialogMessage"></param>
         private SipEventHandlerResult HandleDialog(SipDialogMessage sipDialogMessage)
         {
-            log.Info($"######## Handle Dialog {sipDialogMessage.ToDebugString()}");
+            log.Info($"######## Handle Dialog {sipDialogMessage.ToDebugString()}"); // TODO: check this
             switch (sipDialogMessage.Status)
             {
                 case SipDialogStatus.Start:
@@ -165,17 +173,17 @@ namespace CCM.Core.SipEvent
             // If the user-part is numeric, we make the assumption
             // that it is a phone number (even though sip-address
             // can be of the numeric kind)
-            var from = _cachedRegisteredCodecRepository
+            var regFrom = _cachedRegisteredCodecRepository
                 .GetRegisteredUserAgents()
                 .FirstOrDefault(x =>
                     (x.SipUri == sipMessage.FromSipUri.User || x.SipUri == sipMessage.FromSipUri.UserAtHost));
+
             call.FromDisplayName = sipMessage.FromDisplayName;
-            if (from != null)
+            if (regFrom != null)
             {
-                call.FromSip = from.SipUri;
-                call.FromDisplayName = string.IsNullOrEmpty(from.UserDisplayName)
-                    ? from.DisplayName
-                    : from.UserDisplayName; // TODO: maybe displayname helper should exist here.. check this
+                call.FromSip = regFrom.SipUri;
+                call.FromDisplayName = DisplayNameHelper.GetDisplayName(regFrom, _settingsManager.SipDomain);
+                call.FromUserAccountId = regFrom.UserAccountId;
             }
             else if (sipMessage.FromSipUri.User.IsNumeric())
             {
@@ -187,21 +195,19 @@ namespace CCM.Core.SipEvent
                 call.FromSip = sipMessage.FromSipUri.UserAtHost;
             }
 
-            call.FromId = from?.Id ?? Guid.Empty;
+            call.FromId = regFrom?.Id ?? Guid.Empty;
 
-            var to = _cachedRegisteredCodecRepository
+            var regTo = _cachedRegisteredCodecRepository
                 .GetRegisteredUserAgents()
                 .FirstOrDefault(x =>
                     (x.SipUri == sipMessage.ToSipUri.User || x.SipUri == sipMessage.ToSipUri.UserAtHost));
 
             call.ToDisplayName = sipMessage.ToDisplayName;
-            if (to != null)
+            if (regTo != null)
             {
-                call.ToSip = to.SipUri;
-                call.ToDisplayName =
-                    string.IsNullOrEmpty(to.UserDisplayName)
-                        ? to.DisplayName
-                        : to.UserDisplayName; // TODO: maybe displayname helper should exist here.. check this
+                call.ToSip = regTo.SipUri;
+                call.ToDisplayName = DisplayNameHelper.GetDisplayName(regTo, _settingsManager.SipDomain);
+                call.ToUserAccountId = regTo.UserAccountId;
             }
             else if (sipMessage.ToSipUri.User.IsNumeric())
             {
@@ -213,7 +219,7 @@ namespace CCM.Core.SipEvent
                 call.ToSip = sipMessage.ToSipUri.UserAtHost;
             }
 
-            call.ToId = to?.Id ?? Guid.Empty;
+            call.ToId = regTo?.Id ?? Guid.Empty;
 
             call.Started = DateTime.UtcNow;
             call.CallId = sipMessage.CallId;
@@ -224,7 +230,7 @@ namespace CCM.Core.SipEvent
             call.FromTag = sipMessage.FromTag;
             call.SDP = sipMessage.Sdp;
 
-            _cachedCallRepository.UpdateCall(call);
+            _cachedCallRepository.UpdateOrAddCall(call);
 
             return SipMessageResult(SipEventChangeStatus.CallStarted, call.Id, call.FromSip);
         }

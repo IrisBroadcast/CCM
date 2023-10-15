@@ -127,9 +127,9 @@ namespace CCM.Data.Repositories
                 dbSip.Username = registeredSipUsername;
                 var sipAccount = _cachedSipAccountRepository.GetSipAccountByUserName(registeredSipUsername);
                 dbSip.User_UserId = sipAccount?.Id;
+                // Log to SIP account that it has been used if it's a new registration
                 if (isNewRegistration && sipAccount != null) {
                     var dbUser = db.SipAccounts.FirstOrDefault(rs => rs.Id == sipAccount.Id);
-                    // Log to SIP account that it has been used
                     dbUser.LastUsed = DateTime.UtcNow;
                     dbUser.LastKnownAddress = registration.IpAddress;
                     dbUser.LastUserAgent = registration.UserAgentHeader;
@@ -354,6 +354,7 @@ namespace CCM.Data.Repositories
                         CodecTypeColor = x.User.CodecType.Color,
                         CodecTypeCategory = x.UserAgent.Category.Name,
                         CodecApi = x.UserAgent.Api,
+                        UserAccountId = x.User_UserId,
                         UserExternalReference = x.User.ExternalReference,
                         UserDisplayName = x.User.DisplayName,
                         UserComment = x.User.Comment,
@@ -372,6 +373,7 @@ namespace CCM.Data.Repositories
                     codecTypeName: x.CodecTypeName,
                     codecTypeColor: x.CodecTypeColor,
                     codecTypeCategory: x.CodecTypeCategory,
+                    userAccountId: x.UserAccountId,
                     userExternalReference: x.UserExternalReference,
                     userDisplayName: x.UserDisplayName,
                     userComment: x.UserComment,

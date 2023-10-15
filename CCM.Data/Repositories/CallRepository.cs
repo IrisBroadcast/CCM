@@ -66,7 +66,7 @@ namespace CCM.Data.Repositories
         /// Update or add information about a call. Can be used to close calls as well
         /// </summary>
         /// <param name="call"></param>
-        public void UpdateCall(Call call)
+        public void UpdateOrAddCall(Call call)
         {
             try
             {
@@ -87,12 +87,14 @@ namespace CCM.Data.Repositories
 
                         FromId = call.FromId,
                         FromTag = call.FromTag,
+                        FromUserAccountId = call.FromUserAccountId,
                         FromUsername = call.FromSip,
                         FromDisplayName = call.FromDisplayName,
                         FromCategory = call.FromCategory,
 
                         ToId = call.ToId,
                         ToTag = call.ToTag,
+                        ToUserAccountId = call.ToUserAccountId,
                         ToUsername = call.ToSip,
                         ToDisplayName = call.ToDisplayName,
                         ToCategory = call.ToCategory,
@@ -261,7 +263,8 @@ namespace CCM.Data.Repositories
                 .Include(c => c.ToCodec.Location)
                 .Include(c => c.ToCodec.Location.Region)
                 .Include(c => c.ToCodec.Location.Category)
-                .Where(call => !call.Closed).OrderByDescending(call => call.Started).ToList();
+                .Where(call => !call.Closed)
+                .OrderByDescending(call => call.Started).ToList();
             return dbCalls.Select(dbCall => MapToOngoingCall(dbCall, anonymize)).ToList().AsReadOnly();
         }
 
@@ -302,6 +305,7 @@ namespace CCM.Data.Repositories
                 FromId = GuidHelper.AsString(dbCall.FromId),
                 FromSip = anonymize ? DisplayNameHelper.AnonymizePhonenumber(dbCall.FromUsername) : dbCall.FromUsername,
                 FromDisplayName = anonymize ? DisplayNameHelper.AnonymizeDisplayName(fromDisplayName) : fromDisplayName,
+                FromUserAccountId = GuidHelper.AsString(dbCall.FromUserAccountId),
                 FromCodecTypeColor = dbCall.FromCodec?.User?.CodecType?.Color ?? string.Empty,
                 FromCodecTypeName = dbCall.FromCodec?.User?.CodecType?.Name ?? string.Empty,
                 FromCodecTypeCategory = dbCall.FromCodec?.UserAgent?.Category?.Name ?? string.Empty,
@@ -316,6 +320,7 @@ namespace CCM.Data.Repositories
                 ToId = GuidHelper.AsString(dbCall.ToId),
                 ToSip = anonymize ? DisplayNameHelper.AnonymizePhonenumber(dbCall.ToUsername) : dbCall.ToUsername,
                 ToDisplayName = anonymize ? DisplayNameHelper.AnonymizeDisplayName(toDisplayName) : toDisplayName,
+                ToUserAccountId = GuidHelper.AsString(dbCall.ToUserAccountId),
                 ToCodecTypeColor = dbCall.ToCodec?.User?.CodecType?.Color ?? string.Empty,
                 ToCodecTypeName = dbCall.ToCodec?.User?.CodecType?.Name ?? string.Empty,
                 ToCodecTypeCategory = dbCall.ToCodec?.UserAgent?.Category?.Name ?? string.Empty,
@@ -350,7 +355,8 @@ namespace CCM.Data.Repositories
                 FromCodecTypeCategory = call.FromCodec?.UserAgent?.Category?.Name,
                 FromComment = call.FromCodec?.User?.Comment ?? string.Empty,
                 FromDisplayName = CallDisplayNameHelper.GetDisplayName(call.FromCodec, call.FromDisplayName, call.FromUsername, sipDomain),
-                FromId = call.FromId ?? Guid.Empty,
+                FromId = call?.FromId ?? Guid.Empty,
+                FromUserAccountId = call.FromUserAccountId ?? Guid.Empty,
                 FromLocationComment = call.FromCodec?.Location?.Comment ?? string.Empty,
                 FromLocationId = call.FromCodec?.Location?.Id ?? Guid.Empty,
                 FromLocationName = call.FromCodec?.Location?.Name ?? string.Empty,
@@ -371,7 +377,8 @@ namespace CCM.Data.Repositories
                 ToCodecTypeCategory = call.ToCodec?.UserAgent?.Category?.Name,
                 ToComment = call.ToCodec?.User?.Comment ?? string.Empty,
                 ToDisplayName = CallDisplayNameHelper.GetDisplayName(call.ToCodec, call.ToDisplayName, call.ToUsername, sipDomain),
-                ToId = call.ToId ?? Guid.Empty,
+                ToId = call?.ToId ?? Guid.Empty,
+                ToUserAccountId = call.ToUserAccountId ?? Guid.Empty,
                 ToLocationComment = call.ToCodec?.Location?.Comment ?? string.Empty,
                 ToLocationId = call.ToCodec?.Location?.Id ?? Guid.Empty,
                 ToLocationName = call.ToCodec?.Location?.Name ?? string.Empty,

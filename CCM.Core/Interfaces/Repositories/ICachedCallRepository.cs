@@ -36,7 +36,7 @@ namespace CCM.Core.Interfaces.Repositories
         IReadOnlyCollection<OnGoingCall> GetOngoingCalls(bool anonymize);
         OnGoingCall GetOngoingCallById(Guid callId);
         bool CallExists(string callId, string hashId, string hashEnt);
-        void UpdateCall(Call call);
+        void UpdateOrAddCall(Call call);
         void CloseCall(Guid callId);
         Call GetCallBySipAddress(string sipAddress);
         CallInfo GetCallInfo(string callId, string hashId, string hashEnt);
@@ -48,7 +48,7 @@ namespace CCM.Core.Interfaces.Repositories
         IReadOnlyCollection<OnGoingCall> GetOngoingCalls(bool anonymize);
         OnGoingCall GetOngoingCallById(Guid callId);
         bool CallExists(string callId, string hashId, string hashEnt);
-        void UpdateCall(Call call);
+        void UpdateOrAddCall(Call call);
         void CloseCall(Guid callId);
         Call GetCallBySipAddress(string sipAddress);
         CallInfo GetCallInfo(string callId, string hashId, string hashEnt);

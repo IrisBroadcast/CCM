@@ -41,6 +41,7 @@ namespace CCM.Core.Entities
             string codecTypeName,
             string codecTypeColor,
             string codecTypeCategory,
+            Guid? userAccountId,
             string userExternalReference,
             string userDisplayName,
             string userComment,
@@ -57,6 +58,7 @@ namespace CCM.Core.Entities
             CodecTypeName = codecTypeName;
             CodecTypeColor = codecTypeColor;
             CodecTypeCategory = codecTypeCategory;
+            UserAccountId = userAccountId;
             UserExternalReference = userExternalReference;
             UserDisplayName = userDisplayName;
             UserComment = userComment;
@@ -75,6 +77,7 @@ namespace CCM.Core.Entities
         public string CodecTypeColor { get; }
         public string CodecTypeCategory { get; }
         public string CodecApi { get; }
+        public Guid? UserAccountId { get; }
         public string UserExternalReference { get; }
         public string UserDisplayName { get; }
         public string UserComment { get; }

@@ -584,15 +584,16 @@ ccmControllers.controller('overviewController', function ($scope, $http, $interv
         //$scope.closeFilterView();
     };
 
-    $scope.showSipInfo = function (id, sipAddress, $event) {
+    $scope.showSipInfo = function (registrationId, sipAddress, userAccountId, $event) {
         $event.preventDefault();
         $uibModal.open({
             templateUrl: 'sipInfo.html',
             controller: 'sipInfoController',
             resolve:
             {
-                sipid: function () { return id; },
-                sipAddress: function () { return sipAddress; }
+                registrationId: function () { return registrationId; },
+                sipAddress: function () { return sipAddress; },
+                userAccountId: function () { return userAccountId; }
             }
         }).result.catch(function (res) {
             console.log('Closed modal: ', res);

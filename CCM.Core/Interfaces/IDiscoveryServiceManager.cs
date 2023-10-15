@@ -31,8 +31,24 @@ namespace CCM.Core.Interfaces
 {
     public interface IDiscoveryServiceManager
     {
-        UserAgentsResultDto GetUserAgents(string caller, string callee, IList<KeyValuePair<string, string>> filters, bool includeCodecsInCall = false);
+        /// <summary>
+        /// Returns a list with available user agents based on filter parameters
+        /// </summary>
+        /// <param name="caller">Codec initiating the request for user agents</param>
+        /// <param name="callee">Used for querying on a preselected destination</param>
+        /// <param name="filterParams">Filter parameters</param>
+        /// <param name="includeCodecsInCall">Include registered user agents that's in a call</param>
+        /// <returns>List of user agents</returns>
+        UserAgentsResultDto GetUserAgents(string caller, string callee, IList<KeyValuePair<string, string>> filterParams, bool includeCodecsInCall = false);
+        /// <summary>
+        /// Gets the profiles with an easy display name and SDP
+        /// </summary>
+        /// <returns>The profiles</returns>
         List<ProfileDto> GetProfiles();
+        /// <summary>
+        /// Gets the filters to select the user agents
+        /// </summary>
+        /// <returns>The filters name and sub options</returns>
         List<FilterDto> GetFilters();
     }
 }

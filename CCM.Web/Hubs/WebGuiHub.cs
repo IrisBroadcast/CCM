@@ -25,17 +25,12 @@
  */
 
 using CCM.Core.Entities.Specific;
-using CCM.Core.Interfaces.Managers;
-using CCM.Core.Interfaces.Repositories;
-using CCM.Web.Mappers;
 using CCM.Web.Models.Home;
 using Microsoft.AspNetCore.SignalR;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace CCM.Web.Hubs
 {

@@ -30,53 +30,52 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using NLog.Web;
 
-namespace CCM.Web
+namespace CCM.Web;
+
+public class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
+        var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
+        try
         {
-            var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
-            try
-            {
-                logger.Info($"Starting application CCM {DateTime.Now}");
-                CreateHostBuilder(args).Build().Run();
-            }
-            catch (Exception exception)
-            {
-                logger.Error(exception, "Stopped CCM because of exception");
-                throw;
-            }
-            finally
-            {
-                // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault on Linux)
-                NLog.LogManager.Shutdown();
-            }
+            logger.Info($"Starting application CCM {DateTime.Now}");
+            CreateHostBuilder(args).Build().Run();
         }
-
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureServices((hostContext, services) =>
-                {
-                })
-                .ConfigureAppConfiguration(configBuilder =>
-                {
-                    // Adding file that build server updates values in
-                    configBuilder.AddJsonFile("buildinformation.json");
-
-                    // Adding support for environment variables
-                    configBuilder.AddEnvironmentVariables();
-
-                    // Potentially adding support for command line arguments
-                    if (args != null)
-                    {
-                        configBuilder.AddCommandLine(args);
-                    }
-                })
-                .ConfigureWebHostDefaults(webBuilder => // Kestrel
-                {
-                    webBuilder.UseStartup<Startup>();
-                })
-                .UseNLog(); // NLog: Setup NLog for Dependency injection
+        catch (Exception exception)
+        {
+            logger.Error(exception, "Stopped CCM because of exception");
+            throw;
+        }
+        finally
+        {
+            // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault on Linux)
+            NLog.LogManager.Shutdown();
+        }
     }
+
+    public static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .ConfigureServices((hostContext, services) =>
+            {
+            })
+            .ConfigureAppConfiguration(configBuilder =>
+            {
+                // Adding file that build server updates values in
+                configBuilder.AddJsonFile("buildinformation.json");
+
+                // Adding support for environment variables
+                configBuilder.AddEnvironmentVariables();
+
+                // Potentially adding support for command line arguments
+                if (args != null)
+                {
+                    configBuilder.AddCommandLine(args);
+                }
+            })
+            .ConfigureWebHostDefaults(webBuilder => // Kestrel
+            {
+                webBuilder.UseStartup<Startup>();
+            })
+            .UseNLog(); // NLog: Setup NLog for Dependency injection
 }

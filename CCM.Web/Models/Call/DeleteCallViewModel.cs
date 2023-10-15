@@ -34,7 +34,6 @@ namespace CCM.Web.Models.Call
     public class DeleteCallViewModel
     {
         public Guid CallId { get; set; }
-        public CallInfo Call { get; set; }
 
         public string CallFromSipAddress { get; set; }
         public string CallToSipAddress { get; set; }

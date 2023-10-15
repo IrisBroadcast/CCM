@@ -92,7 +92,7 @@ namespace CCM.Web.Mappers
                 return result;
             }).ToList();
 
-            // TODO: reuse this when performance review has been done
+            // TODO: reuse this when performance review has been done, xx?
             // Check if there is calling parts that are not registered
             //foreach (var uu in ongoingCalls)
             //{

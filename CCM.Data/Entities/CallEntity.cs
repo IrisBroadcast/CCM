@@ -55,6 +55,7 @@ namespace CCM.Data.Entities
         public virtual RegisteredCodecEntity FromCodec { get; set; } // TODO: Rename "FromUserAgent"
         public string FromUsername { get; set; }
         public string FromDisplayName { get; set; }
+        public Guid? FromUserAccountId { get; set; }
         public string FromTag { get; set; } // TODO: Not in use?
         public string FromCategory { get; set; }
 
@@ -63,6 +64,7 @@ namespace CCM.Data.Entities
         public virtual RegisteredCodecEntity ToCodec { get; set; } // TODO: Rename "ToUserAgent"
         public string ToUsername { get; set; }
         public string ToDisplayName { get; set; }
+        public Guid? ToUserAccountId { get; set; }
         public string ToTag { get; set; } // TODO: Not in use?
         public string ToCategory { get; set; }
     }

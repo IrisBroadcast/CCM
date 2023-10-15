@@ -243,7 +243,7 @@
                                     <span title="{{sip.codecTypeName}}" class="codec-type" ng-style="{'background-color': sip.codecTypeColor}">&nbsp;</span>
                                 }
 
-                                <a ng-click="showSipInfo(sip.id, sip.sip, $event)" href="#" class="list-ccm--sip-name list-ccm--reg-ua-name" title="{{sip.sip}}">{{sip.displayName}}</a>
+                                <a ng-click="showSipInfo(sip.id, sip.sip, sip.userAccountId, $event)" href="#" class="list-ccm--sip-name list-ccm--reg-ua-name" title="{{sip.sip}}">{{sip.displayName}}</a>
 
                                 <span ng-if="sip.inCall">
                                     <span class="mui-registered-incall-dir">
@@ -252,7 +252,7 @@
                                         <polygon fill="#A0A09F" points="15.6,40.5 11.1,33.9 24.5,25 11.1,16.1 15.6,9.5 38.9,25" />
                                         </svg>
                                     </span>
-                                    <a ng-if="sip.inCallWithId.length" ng-click="showSipInfo(sip.inCallWithId, sip.inCallWithSip, $event)" href="#"
+                                    <a ng-if="sip.inCallWithId.length" ng-click="showSipInfo(sip.inCallWithId, sip.inCallWithSip, sip.inCallWithUserAccountId, $event)" href="#"
                                        title="{{sip.inCallWithSip}}" class="list-ccm--reg-ua-name-to">
                                         {{sip.inCallWithName}}
                                     </a>
@@ -316,7 +316,7 @@
                 <div class="mui-content ongoing-calls">
                     <div class="mui-row call" ng-repeat="call in filteredOnGoingCalls = (onGoingCalls | filter: callFilter ) | orderBy:ongoingCallSort.column:ongoingCallSort.descending track by call.callId">
                         <div class="mui-col mui-col--source">
-                            <a class="list-ccm--sip-name" ng-if="call.fromId.length" href="#" ng-click="showSipInfo(call.fromId, call.fromSip, $event)" title="{{call.fromSip}}">{{call.fromDisplayName}}</a>
+                            <a class="list-ccm--sip-name" ng-if="call.fromId.length" href="#" ng-click="showSipInfo(call.fromId, call.fromSip, call.fromUserAccountId, $event)" title="{{call.fromSip}}">{{call.fromDisplayName}}</a>
                             <span class="list-ccm--sip-name" ng-if="!call.fromId.length" title="{{call.fromSip}}">{{call.fromDisplayName}}</span>
                             <span class="list-ccm--sip-location" ng-if="call.fromLocationName.length" title="{{call.fromLocationShortName}}">({{call.fromLocationName}})</span>
                             <span class="codec-type" title="{{call.fromCodecTypeName}}">{{call.fromCodecTypeName}}</span>
@@ -330,7 +330,7 @@
                             </svg>
                         </div>
                         <div class="mui-col mui-col--destination">
-                            <a class="list-ccm--sip-name-to" ng-if="call.toId.length" href="#" ng-click="showSipInfo(call.toId, call.toSip, $event)" title="{{call.toSip}}">{{call.toDisplayName}}</a>
+                            <a class="list-ccm--sip-name-to" ng-if="call.toId.length" href="#" ng-click="showSipInfo(call.toId, call.toSip, call.toUserAccountId, $event)" title="{{call.toSip}}">{{call.toDisplayName}}</a>
                             <span class="list-ccm--sip-name-to" ng-if="!call.toId.length" title="{{call.toSip}}">{{call.toDisplayName}}</span>
                             <span class="list-ccm--sip-location" ng-if="call.toLocationName.length" title="{{call.toLocationShortName}}">({{call.toLocationName}})</span>
                             <span class="codec-type" title="{{call.toCodecTypeName}}">{{call.toCodecTypeName}}</span>
@@ -381,7 +381,7 @@
                     <div class="mui-row" ng-repeat="call in filteredOldCalls = (oldCalls | filter: callFilter) track by $index">
                         <div class="mui-col mui-col--source">
                             <span class="codec-type" ng-style="{'background-color': call.fromCodecTypeColor}" title="{{call.fromCodecTypeName}}">&nbsp;</span>
-                            <a class="list-ccm--sip-name--history" ng-if="call.fromId.length" href="#" ng-click="showSipInfo(call.fromId, call.fromSip, $event)" title="{{call.fromSip}}">{{call.fromDisplayName}}</a>
+                            <a class="list-ccm--sip-name--history" ng-if="call.fromId.length" href="#" ng-click="showSipInfo(call.fromId, call.fromSip, call.fromUserAccountId, $event)" title="{{call.fromSip}}">{{call.fromDisplayName}}</a>
                             <span class="list-ccm--sip-name--history" ng-if="!call.fromId.length" title="{{call.fromSip}}">{{ call.fromDisplayName }}</span>
                             <span class="list-ccm--sip-location--history" ng-if="call.fromLocationName.length" title="{{call.fromLocationShortName}}">({{call.fromLocationName}})</span>
                         </div>
@@ -393,7 +393,7 @@
                         </div>
                         <div class="mui-col mui-col--destination">
                             <span class="codec-type" ng-style="{'background-color': call.toCodecTypeColor}" title="{{call.toCodecTypeName}}">&nbsp;</span>
-                            <a class="list-ccm--sip-name-to--history" ng-if="call.toId.length" href="#" ng-click="showSipInfo(call.toId, call.toSip, $event)" title="{{call.toSip}}">{{call.toDisplayName}}</a>
+                            <a class="list-ccm--sip-name-to--history" ng-if="call.toId.length" href="#" ng-click="showSipInfo(call.toId, call.toSip, call.toUserAccountId, $event)" title="{{call.toSip}}">{{call.toDisplayName}}</a>
                             <span class="list-ccm--sip-name-to--history" ng-if="!call.toId.length" title="{{call.toSip}}">{{ call.toDisplayName }}</span>
                             <span class="list-ccm--sip-location--history" ng-if="call.toLocationName.length" title="{{call.toLocationShortName}}">({{call.toLocationName}})</span>
                         </div>

@@ -146,8 +146,8 @@ namespace CCM.UnitTests.CCM.Core.Cache
         {
             A.CallTo(() => _internalRegisteredSipRepository.GetRegisteredUserAgents()).Returns(new List<RegisteredUserAgent>
             {
-                new RegisteredUserAgent("a@acip.example.com", Guid.NewGuid(), null, null, null, null, null, null, null, null, null, null, null, null, null),
-                new RegisteredUserAgent("b@acip.example.com", Guid.NewGuid(), null, null, null, null, null, null, null, null, null, null, null, null, null)
+                new RegisteredUserAgent("a@acip.example.com", Guid.NewGuid(), null, null, null, null, null, null, null, null, null, null, null, null, null, null),
+                new RegisteredUserAgent("b@acip.example.com", Guid.NewGuid(), null, null, null, null, null, null, null, null, null, null, null, null, null, null)
             });
 
             var regSipList = _sut.GetRegisteredUserAgents().ToList();
@@ -163,8 +163,8 @@ namespace CCM.UnitTests.CCM.Core.Cache
         {
             A.CallTo(() => _internalRegisteredSipRepository.GetRegisteredUserAgents()).Returns(new List<RegisteredUserAgent>
             {
-                new RegisteredUserAgent("a@acip.example.com", Guid.NewGuid(), null,null,null, null, null, null, null, null, null, null, null, null, null),
-                new RegisteredUserAgent("b@acip.example.com", Guid.NewGuid(), null, null, null,null, null, null, null, null, null, null, null, null, null)
+                new RegisteredUserAgent("a@acip.example.com", Guid.NewGuid(), null,null,null, null, null, null, null, null, null, null, null, null, null, null),
+                new RegisteredUserAgent("b@acip.example.com", Guid.NewGuid(), null, null, null,null, null, null, null, null, null, null, null, null, null, null)
             });
 
             var regSipList = _sut.GetRegisteredUserAgents().ToList();

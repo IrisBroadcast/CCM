@@ -80,9 +80,9 @@ namespace CCM.Core.Cache
             return _internalRepository.GetCallBySipAddress(sipAddress);
         }
 
-        public void UpdateCall(Call call)
+        public void UpdateOrAddCall(Call call)
         {
-            _internalRepository.UpdateCall(call);
+            _internalRepository.UpdateOrAddCall(call);
             _lazyCache.ClearOngoingCalls();
         }
 

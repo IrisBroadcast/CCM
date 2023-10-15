@@ -32,5 +32,6 @@ namespace CCM.Core.Interfaces.Repositories
     public interface IRegisteredCodecDetailsRepository
     {
         RegisteredSipDetails GetRegisteredSipById(Guid id);
+        RegisteredSipDetails GetRegisteredSipByUserAccountId(Guid userId);
     }
 }

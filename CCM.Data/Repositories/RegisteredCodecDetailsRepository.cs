@@ -53,6 +53,29 @@ namespace CCM.Data.Repositories
                 .Include(rs => rs.User)
                 .SingleOrDefault(r => r.Id == id);
 
+            if (dbCodec == null)
+            {
+                return null;
+            }
+
+            return MapToRegisteredSipDetails(dbCodec);
+        }
+
+        public RegisteredSipDetails GetRegisteredSipByUserAccountId(Guid userId)
+        {
+            RegisteredCodecEntity dbCodec = _ccmDbContext.RegisteredCodecs
+                .Include(rs => rs.Location)
+                .Include(rs => rs.Location.City)
+                .Include(rs => rs.Location.Region) // TODO: verify this?REGION doesn't exist!!!
+                .Include(rs => rs.UserAgent)
+                .Include(rs => rs.User)
+                .SingleOrDefault(r => r.User_UserId == userId);
+
+            if (dbCodec == null)
+            {
+                return null;
+            }
+
             return MapToRegisteredSipDetails(dbCodec);
         }
 

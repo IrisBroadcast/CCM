@@ -70,6 +70,7 @@ namespace CCM.Web.Mappers
                     CodecTypeName = regSip.CodecTypeName,
                     CodecTypeColor = regSip.CodecTypeColor,
                     CodecTypeCategory = regSip.CodecTypeCategory,
+                    UserAccountId = regSip.UserAccountId,
                     UserComment = regSip.UserComment,
                     UserExternalReference = regSip.UserExternalReference,
                     RegionName = regSip.RegionName,
@@ -85,6 +86,7 @@ namespace CCM.Web.Mappers
                     {
                         var isFromCaller = call.FromSip == regSip.SipUri;
                         result.InCallWithId = isFromCaller ? call.ToId : call.FromId;
+                        result.InCallWithUserAccountId = isFromCaller ? call.ToUserAccountId : call.FromUserAccountId;
                         result.InCallWithSip = isFromCaller ? call.ToSip : call.FromSip;
                         result.InCallWithName = isFromCaller ? call.ToDisplayName : call.FromDisplayName;
                     }
