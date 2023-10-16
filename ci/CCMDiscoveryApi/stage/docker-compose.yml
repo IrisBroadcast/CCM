@@ -13,7 +13,7 @@ services:
     networks:
       - proxynet
     extra_hosts:
-      - "stage-ccm.sr.se:134.25.10.16"
+      - "stage-ccm.sr.se:134.25.209.74"
     configs:
       - source: discovery_appsettings_stage
         target: /app/appsettings.json
