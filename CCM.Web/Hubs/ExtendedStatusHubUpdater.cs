@@ -78,8 +78,8 @@ namespace CCM.Web.Hubs
                     if (callInfo != null)
                     {
                         _logger.LogDebug($"ExtendedStatusHub. Call started. From:{callInfo.FromId}, To:{callInfo.ToId}");
-                        UpdateCodecStatusByGuid(callInfo.FromId);
-                        UpdateCodecStatusByGuid(callInfo.ToId);
+                        UpdateCodecStatusByGuid(callInfo.FromId, updateResult.ChangeStatus, callInfo.FromSipAddress);
+                        UpdateCodecStatusByGuid(callInfo.ToId, updateResult.ChangeStatus, callInfo.ToSipAddress);
                     }
                     else
                     {
@@ -94,12 +94,12 @@ namespace CCM.Web.Hubs
                 }
                 case (SipEventChangeStatus.CodecAdded):
                 {
-                    UpdateCodecStatusByGuid(updateResult.ChangedObjectId);
+                    UpdateCodecStatusByGuid(updateResult.ChangedObjectId, updateResult.ChangeStatus, updateResult.SipAddress);
                     break;
                 }
                 case (SipEventChangeStatus.CodecUpdated):
                 {
-                    UpdateCodecStatusByGuid(updateResult.ChangedObjectId);
+                    UpdateCodecStatusByGuid(updateResult.ChangedObjectId, updateResult.ChangeStatus, updateResult.SipAddress);
                     break;
                 }
                 case (SipEventChangeStatus.CodecRemoved):
@@ -131,7 +131,7 @@ namespace CCM.Web.Hubs
             _hub.Clients.All.CodecStatus(codecStatusViewModel);
         }
 
-        private void UpdateCodecStatusByGuid(Guid id)
+        private void UpdateCodecStatusByGuid(Guid id, SipEventChangeStatus changeReason, string sipAddress = "")
         {
             if (id == Guid.Empty)
             {
@@ -148,7 +148,7 @@ namespace CCM.Web.Hubs
             }
             else
             {
-                _logger.LogError($"Can't update ExtendedStatusHub. No codec online with id: {id}");
+                _logger.LogError($"Can't update ExtendedStatusHub. No codec online with id: {id}, {sipAddress}. Reason: {changeReason}");
             }
         }
 

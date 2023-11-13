@@ -34,7 +34,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using NLog;
 using Claim = System.Security.Claims.Claim;
 using ClaimsIdentity = System.Security.Claims.ClaimsIdentity;
 using ClaimsPrincipal = System.Security.Claims.ClaimsPrincipal;
@@ -52,7 +51,7 @@ namespace CCM.DiscoveryApi.Authentication
     /// </summary>
     public class DiscoveryV1BasicAuthenticationHandler: AuthenticationHandler<AuthenticationSchemeOptions>
     {
-        protected static readonly Logger log = LogManager.GetCurrentClassLogger();
+        private readonly Microsoft.Extensions.Logging.ILogger _logger;
 
         public DiscoveryV1BasicAuthenticationHandler(
             IOptionsMonitor<AuthenticationSchemeOptions> options,
@@ -61,7 +60,7 @@ namespace CCM.DiscoveryApi.Authentication
             ISystemClock clock)
             : base(options, logger, encoder, clock)
         {
-
+            _logger = logger.CreateLogger(GetType().FullName);
         }
 
         [Consumes("application/x-www-form-urlencoded")]
@@ -105,15 +104,12 @@ namespace CCM.DiscoveryApi.Authentication
                 var principal = new ClaimsPrincipal(identity);
                 var ticket = new AuthenticationTicket(principal, "Basic");
 
-                if (log.IsDebugEnabled)
-                {
-                    log.Debug($"Request to {Request.Path.Value} params. User name:'{userName}' Password:{(string.IsNullOrEmpty(pwdHash) ? "<missing>" : " * *******")}");
-                }
+                _logger.LogDebug($"Request to {Request.Path.Value} params. User name:'{userName}' Password:{(string.IsNullOrEmpty(pwdHash) ? "<missing>" : " * *******")}");
                 return AuthenticateResult.Success(ticket);
             }
             catch (Exception ex)
             {
-                log.Error(ex, "Could not authenticate");
+                _logger.LogError(ex, "Could not authenticate");
                 return AuthenticateResult.Fail("Exception in authentication");
             }
         }

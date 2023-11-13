@@ -24,7 +24,10 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using Newtonsoft.Json.Converters;
 using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace CCM.Web.Models.ApiExternal
 {
@@ -46,6 +49,7 @@ namespace CCM.Web.Models.ApiExternal
         public string ConnectedToDisplayName { get; set; } //TODO:  Not in use ... yet
         public string ConnectedToLocation { get; set; }
         public bool IsCallingPart { get; set; }
+        [JsonConverter(typeof(JsonDateTimeConverter))]
         public DateTime CallStartedAt { get; set; }
         #endregion
     }
@@ -62,5 +66,14 @@ namespace CCM.Web.Models.ApiExternal
         public string RegionName { get; set; }
         public string UserComment { get; set; }
         #endregion
+    }
+
+    public class JsonDateTimeConverter : JsonConverter<DateTime>
+    {
+        public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => reader.GetDateTime();
+
+        public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options) =>
+            writer.WriteStringValue(value.ToUniversalTime()
+                         .ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'"));
     }
 }

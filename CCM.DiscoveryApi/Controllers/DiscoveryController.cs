@@ -29,12 +29,12 @@ using CCM.Core.Entities.Discovery;
 using CCM.DiscoveryApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NLog;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CCM.DiscoveryApi.Models.Discovery;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace CCM.DiscoveryApi.Controllers
 {
@@ -42,20 +42,21 @@ namespace CCM.DiscoveryApi.Controllers
     [Authorize("BasicAuthenticationDiscoveryV1")]
     public class DiscoveryController : ControllerBase
     {
-        protected static readonly Logger log = LogManager.GetCurrentClassLogger();
+        private readonly ILogger<DiscoveryController> _logger;
 
         private readonly IDiscoveryHttpService _discoveryService;
 
-        public DiscoveryController(IDiscoveryHttpService discoveryHttpService)
+        public DiscoveryController(IDiscoveryHttpService discoveryHttpService, ILogger<DiscoveryController> logger)
         {
             _discoveryService = discoveryHttpService;
+            _logger = logger;
         }
 
         [Route("~/filters")]
         [HttpPost]
         public async Task<DiscoveryResponse> Filters()
         {
-            log.Trace("Discovery API - requesting 'filters'");
+            _logger.LogTrace("Discovery API - requesting 'filters'");
 
             var filterDtos = await _discoveryService.GetFiltersAsync(Request);
 
@@ -72,7 +73,7 @@ namespace CCM.DiscoveryApi.Controllers
         [HttpPost]
         public async Task<DiscoveryResponse> Profiles()
         {
-            log.Trace("Discovery API - requesting 'profiles'");
+            _logger.LogTrace("Discovery API - requesting 'profiles'");
 
             var profileDtos = await _discoveryService.GetProfilesAsync(Request);
 
@@ -88,7 +89,7 @@ namespace CCM.DiscoveryApi.Controllers
         {
             if (Request.ContentType != "application/x-www-form-urlencoded")
             {
-                log.Warn("Wrong content type, expecting 'application/x-www-form-urlencoded'");
+                _logger.LogWarning("Wrong content type, expecting 'application/x-www-form-urlencoded'");
             }
 
             // Since nested filter choices does not work with flat keys, special parsing is done
@@ -102,13 +103,13 @@ namespace CCM.DiscoveryApi.Controllers
                 Filters = srDiscoveryParameters.Filters
             };
 
-            log.Trace("Discovery API - requesting 'useragents'", searchParams);
+            _logger.LogTrace("Discovery API - requesting 'useragents'", searchParams);
 
             UserAgentsResultDto uaResult = await _discoveryService.GetUserAgentsAsync(searchParams, Request);
 
             if (uaResult == null)
             {
-                log.Info("No user agents returned for DiscoveryV1");
+                _logger.LogDebug("No user agents returned for DiscoveryV1");
                 return new DiscoveryResponse();
             }
 
@@ -122,7 +123,7 @@ namespace CCM.DiscoveryApi.Controllers
                 MetaData = ua.MetaData.Select(m => new DiscoveryUserAgentMetaData() { Key = m.Key, Value = m.Value }).ToList()
             }).ToList() ?? new List<DiscoveryUserAgent>();
 
-            log.Debug("Discovery V1 Returning {0} useragents and {1} profiles", uaResult.UserAgents?.Count ?? 0, uaResult.Profiles?.Count ?? 0);
+            _logger.LogDebug("Discovery V1 Returning {0} useragents and {1} profiles", uaResult.UserAgents?.Count ?? 0, uaResult.Profiles?.Count ?? 0);
 
             return new DiscoveryResponse { UserAgents = userAgents, Profiles = profiles };
         }

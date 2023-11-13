@@ -31,20 +31,15 @@ using CCM.Core.Extensions;
 using CCM.Core.Helpers;
 using CCM.Core.Interfaces.Managers;
 using CCM.Core.Interfaces.Repositories;
-using CCM.Core.Managers;
 using CCM.Core.SipEvent.Messages;
 using CCM.Core.SipEvent.Models;
 using Microsoft.Extensions.Logging;
-using NLog;
 
 namespace CCM.Core.SipEvent
 {
     public class SipMessageManager : ISipMessageManager
     {
         private readonly ILogger<SipMessageManager> _logger;
-        protected static readonly Logger log = LogManager.GetCurrentClassLogger();
-
-
         private readonly ICachedCallRepository _cachedCallRepository;
         private readonly ICachedRegisteredCodecRepository _cachedRegisteredCodecRepository;
         private readonly ISettingsManager _settingsManager;
@@ -94,7 +89,7 @@ namespace CCM.Core.SipEvent
                 default:
                     {
                         _logger.LogInformation("Unhandled Kamailio message: {0}", sipMessage.ToDebugString());
-                        return NothingChangedResult;
+                        return SipEventHandlerResult.NothingChanged;
                     }
             }
         }
@@ -125,7 +120,7 @@ namespace CCM.Core.SipEvent
                 Call codecCall = _cachedCallRepository.GetCallBySipAddress(sipAddress);
                 if (codecCall != null)
                 {
-                    _logger.LogWarning($"Unregistrating codec but it's in a call {sipAddress}");
+                    _logger.LogError($"Unregistrating codec but it's in a call {sipAddress}");
                 }
             }
             return _cachedRegisteredCodecRepository.DeleteRegisteredSip(sipAddress);
@@ -137,7 +132,7 @@ namespace CCM.Core.SipEvent
         /// <param name="sipDialogMessage"></param>
         private SipEventHandlerResult HandleDialog(SipDialogMessage sipDialogMessage)
         {
-            log.Info($"######## Handle Dialog {sipDialogMessage.ToDebugString()}"); // TODO: check this
+            _logger.LogDebug($"Handle Dialog {sipDialogMessage.ToDebugString()}"); // TODO: check this
             switch (sipDialogMessage.Status)
             {
                 case SipDialogStatus.Start:
@@ -151,9 +146,9 @@ namespace CCM.Core.SipEvent
                     // If BYE in Kamailio and no dialog is in Kamailio, a single bye is sent to CCM
                     // TODO: Handle single bye message and close call
                     _logger.LogInformation("Received SingleBye command from Kamailio. HangUp reason:{0}, from:{1}, to:{2}", sipDialogMessage.HangupReason, sipDialogMessage.FromSipUri, sipDialogMessage.ToSipUri);
-                    return NothingChangedResult;
+                    return SipEventHandlerResult.NothingChanged;
                 default:
-                    return NothingChangedResult;
+                    return SipEventHandlerResult.NothingChanged;
             }
         }
 
@@ -166,7 +161,7 @@ namespace CCM.Core.SipEvent
             {
                 _logger.LogDebug("Call with id:{0}, hash id:{1}, hash entry:{2} already exists", sipMessage.CallId,
                     sipMessage.HashId, sipMessage.HashEntry);
-                return NothingChangedResult;
+                return SipEventHandlerResult.NothingChanged;
             }
             var call = new Call();
 
@@ -232,7 +227,7 @@ namespace CCM.Core.SipEvent
 
             _cachedCallRepository.UpdateOrAddCall(call);
 
-            return SipMessageResult(SipEventChangeStatus.CallStarted, call.Id, call.FromSip);
+            return SipEventHandlerResult.SipMessageResult(SipEventChangeStatus.CallStarted, call.Id, call.FromSip);
         }
 
         public SipEventHandlerResult CloseCall(SipDialogMessage sipMessage)
@@ -246,28 +241,23 @@ namespace CCM.Core.SipEvent
                 if (call == null)
                 {
                     _logger.LogWarning("Unable to find call with call id:{0}, hash id:{1}, hash entry:{2}", sipMessage.CallId, sipMessage.HashId, sipMessage.HashEntry);
-                    return NothingChangedResult;
+                    return SipEventHandlerResult.NothingChanged;
                 }
 
                 if (call.Closed)
                 {
                     _logger.LogWarning("Call with call id:{0} already closed", sipMessage.CallId);
-                    return NothingChangedResult;
+                    return SipEventHandlerResult.NothingChanged;
                 }
 
                 _cachedCallRepository.CloseCall(call.Id);
-                return SipMessageResult(SipEventChangeStatus.CallClosed, call.Id, call.FromSipAddress);
+                return SipEventHandlerResult.SipMessageResult(SipEventChangeStatus.CallClosed, call.Id, call.FromSipAddress);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error while closing call with call id:{0}", sipMessage.CallId);
-                return NothingChangedResult;
+                return SipEventHandlerResult.NothingChanged;
             }
         }
-
-        private SipEventHandlerResult NothingChangedResult => SipMessageResult(SipEventChangeStatus.NothingChanged);
-        private SipEventHandlerResult SipMessageResult(SipEventChangeStatus status) { return new SipEventHandlerResult() { ChangeStatus = status }; }
-        private SipEventHandlerResult SipMessageResult(SipEventChangeStatus status, Guid id) { return new SipEventHandlerResult() { ChangeStatus = status, ChangedObjectId = id }; }
-        private SipEventHandlerResult SipMessageResult(SipEventChangeStatus status, Guid id, string sipAddress) { return new SipEventHandlerResult() { ChangeStatus = status, ChangedObjectId = id, SipAddress = sipAddress }; }
     }
 }

@@ -301,7 +301,7 @@ namespace CCM.Data.Repositories
                 Started = dbCall.Started,
                 SDP = dbCall.SDP,
                 IsPhoneCall = dbCall.IsPhoneCall,
-
+                
                 FromId = GuidHelper.AsString(dbCall.FromId),
                 FromSip = anonymize ? DisplayNameHelper.AnonymizePhonenumber(dbCall.FromUsername) : dbCall.FromUsername,
                 FromDisplayName = anonymize ? DisplayNameHelper.AnonymizeDisplayName(fromDisplayName) : fromDisplayName,

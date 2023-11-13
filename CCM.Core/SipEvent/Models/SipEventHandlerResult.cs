@@ -40,5 +40,13 @@ namespace CCM.Core.SipEvent.Models
         }
 
         public static SipEventHandlerResult NothingChanged => new SipEventHandlerResult { ChangeStatus = SipEventChangeStatus.NothingChanged };
+
+        public static SipEventHandlerResult SipMessageResult(SipEventChangeStatus status, Guid id, string sipAddress) {
+            return new SipEventHandlerResult() {
+                ChangeStatus = status,
+                ChangedObjectId = id,
+                SipAddress = sipAddress
+            };
+        }
     }
 }

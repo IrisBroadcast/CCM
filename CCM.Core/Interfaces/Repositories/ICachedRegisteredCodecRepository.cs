@@ -34,9 +34,9 @@ namespace CCM.Core.Interfaces.Repositories
     public interface ICachedRegisteredCodecRepository
     {
         SipEventHandlerResult UpdateRegisteredSip(UserAgentRegistration registration);
+        SipEventHandlerResult DeleteRegisteredSip(string sipAddress);
         IEnumerable<RegisteredUserAgentDiscovery> GetRegisteredUserAgentsDiscovery();
         IEnumerable<RegisteredUserAgent> GetRegisteredUserAgents();
-        SipEventHandlerResult DeleteRegisteredSip(string sipAddress);
         IEnumerable<RegisteredUserAgentCodecInformation> GetRegisteredUserAgentsCodecInformation();
         IEnumerable<RegisteredUserAgentMiniInformation> GetRegisteredCodecsUpdateTimes();
     }
@@ -44,9 +44,9 @@ namespace CCM.Core.Interfaces.Repositories
     public interface IRegisteredCodecRepository
     {
         SipEventHandlerResult UpdateRegisteredSip(UserAgentRegistration registration);
+        SipEventHandlerResult DeleteRegisteredSip(string sipAddress);
         IEnumerable<RegisteredUserAgentDiscovery> GetRegisteredUserAgentsDiscovery();
         IEnumerable<RegisteredUserAgent> GetRegisteredUserAgents();
-        SipEventHandlerResult DeleteRegisteredSip(string sipAddress);
         IEnumerable<RegisteredUserAgentCodecInformation> GetRegisteredUserAgentsCodecInformation();
         IEnumerable<RegisteredUserAgentMiniInformation> GetRegisteredCodecsUpdateTimes();
     }
