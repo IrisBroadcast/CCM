@@ -60,7 +60,8 @@ namespace CCM.Web.Controllers
             new CodecApiInformation { DisplayName = "Prodys IkusNet", Name = "IkusNet" },
             new CodecApiInformation { DisplayName = "Prodys IkusNet ST", Name = "IkusNetSt" },
             new CodecApiInformation { DisplayName = "Mandozzi Umac", Name = "Umac" },
-            new CodecApiInformation { DisplayName = "Baresip Proprietary", Name = "BaresipRest" }
+            new CodecApiInformation { DisplayName = "Baresip Proprietary", Name = "BaresipRest" },
+            new CodecApiInformation { DisplayName = "Aeta Scoopy Flex", Name = "Aeta" },
         };
 
         public UserAgentsController(
