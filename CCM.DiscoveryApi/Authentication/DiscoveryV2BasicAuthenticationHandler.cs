@@ -39,7 +39,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using NLog;
 
 namespace CCM.DiscoveryApi.Authentication
 {
@@ -50,7 +49,7 @@ namespace CCM.DiscoveryApi.Authentication
     ///
     /// Actual user authentication is deferred to CCM web api.
     /// </summary>
-    public class DiscoveryV2BasicAuthenticationHandler: AuthenticationHandler<AuthenticationSchemeOptions>
+    public class DiscoveryV2BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
         private readonly Microsoft.Extensions.Logging.ILogger _logger;
 
@@ -83,22 +82,29 @@ namespace CCM.DiscoveryApi.Authentication
             if (string.IsNullOrEmpty(authorizationHeader))
             {
                 // If no authorization header arrives, check if it comes as form data
-                IFormCollection formData = Request.Form;
-                if (formData == null)
+                try
                 {
-                    return AuthenticateResult.Fail("Missing authentication");
+                    IFormCollection formData = Request.Form;
+                    if (formData == null || formData.Count == 0)
+                    {
+                        return AuthenticateResult.Fail("Missing authentication");
+                    }
+
+                    var userName = formData["username"];
+                    var pwdHash = formData["pwdhash"];
+                    if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(pwdHash))
+                    {
+                        return AuthenticateResult.Fail("Missing user name or password");
+                    }
+
+                    // Convert SR Discovery special authentication to Basic Authentication
+                    authorizationHeader = AuthenticationHelper.GetBasicAuthorizationString(userName, pwdHash);
                 }
-
-                var userName = formData["username"];
-                var pwdHash = formData["pwdhash"];
-
-                if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(pwdHash))
+                catch (Exception e)
                 {
-                    return AuthenticateResult.Fail("Missing user name or password");
+                    _logger.LogWarning("No authentication form data in request for {URL}. {Message}", Request.GetDisplayUrl().ToString(), e.Message);
+                    return AuthenticateResult.Fail("Could not verify request");
                 }
-
-                // Convert SR Discovery special authentication to Basic Authentication
-                authorizationHeader = AuthenticationHelper.GetBasicAuthorizationString(userName, pwdHash);
             }
 
             AuthenticationHeaderValue header;
@@ -106,9 +112,9 @@ namespace CCM.DiscoveryApi.Authentication
             {
                 header = AuthenticationHeaderValue.Parse(authorizationHeader);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                _logger.LogWarning("No authentication header in request for {0}. {1}", Request.GetDisplayUrl().ToString(), e.Message);
+                _logger.LogWarning("No authentication header in request for {URL}. {Message}", Request.GetDisplayUrl().ToString(), e.Message);
                 return AuthenticateResult.Fail(e.Message);
             }
 
@@ -116,7 +122,7 @@ namespace CCM.DiscoveryApi.Authentication
             {
                 // No authentication was attempted (for this authentication method).
                 // Do not set either Principal (which would indicate success) or ErrorResult (indicating an error).
-                _logger.LogDebug("No authentication header in request for {0}", Request.GetDisplayUrl().ToString());
+                _logger.LogDebug("No authentication header in request for {URL}", Request.GetDisplayUrl().ToString());
                 return AuthenticateResult.Fail("Missing authorization header");
             }
 
@@ -124,7 +130,7 @@ namespace CCM.DiscoveryApi.Authentication
             {
                 // No authentication was attempted (for this authentication method).
                 // Do not set either Principal (which would indicate success) or ErrorResult (indicating an error).
-                _logger.LogDebug("Not a Basic authentication header in request for {0}", Request.GetDisplayUrl().ToString());
+                _logger.LogDebug("Not a Basic authentication header in request for {URL}", Request.GetDisplayUrl().ToString());
                 return AuthenticateResult.Fail("Not using basic authorization scheme");
             }
 
@@ -132,7 +138,7 @@ namespace CCM.DiscoveryApi.Authentication
             if (authenticationCredentials == null)
             {
                 // Authentication was attempted but failed. Set ErrorResult to indicate an error.
-                _logger.LogDebug("No username and password in request for {0}", Request.GetDisplayUrl().ToString());
+                _logger.LogDebug("No username and password in request for {URl}", Request.GetDisplayUrl().ToString());
                 return AuthenticateResult.Fail("Missing or invalid credentials");
             }
 

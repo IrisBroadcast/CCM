@@ -49,7 +49,7 @@ namespace CCM.DiscoveryApi.Authentication
     ///
     /// Actual user authentication is deferred to CCM web api.
     /// </summary>
-    public class DiscoveryV1BasicAuthenticationHandler: AuthenticationHandler<AuthenticationSchemeOptions>
+    public class DiscoveryV1BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
         private readonly Microsoft.Extensions.Logging.ILogger _logger;
 
@@ -80,7 +80,7 @@ namespace CCM.DiscoveryApi.Authentication
                 {
                     return AuthenticateResult.Fail("Missing authentication");
                 }
-                
+
                 var userName = formData["username"];
                 var pwdHash = formData["pwdhash"];
 
