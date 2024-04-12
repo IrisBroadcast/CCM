@@ -49,6 +49,7 @@ namespace CCM.Core.Entities
         public Guid? FromUserAccountId { get; set; }
         public string FromTag { get; set; }
         public string FromCategory { get; set; }
+        public string? FromExternalLocation { get; set; }
 
         public Guid? ToId { get; set; }
         public CallRegisteredCodec To { get; set; }
@@ -57,5 +58,6 @@ namespace CCM.Core.Entities
         public Guid? ToUserAccountId { get; set; }
         public string ToTag { get; set; }
         public string ToCategory { get; set; }
+        public string? ToExternalLocation { get; set; }
     }
 }

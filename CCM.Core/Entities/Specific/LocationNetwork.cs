@@ -32,12 +32,13 @@ namespace CCM.Core.Entities.Specific
     public class LocationNetwork
     {
         public Guid Id { get; set; }
+        public string? Name { get; set; }
         public byte Cidr { get; set; }
         public IPNetwork Network { get; set; }
-
-        public LocationNetwork(Guid id, string ipAddress, byte cidr)
+        public LocationNetwork(Guid id, string ipAddress, byte cidr, string? name = null)
         {
             Id = id;
+            Name = name;
             Cidr = cidr;
             IPNetwork.TryParse(ipAddress, cidr, out var network);
             Network = network;

@@ -41,12 +41,13 @@ namespace CCM.Core.SipEvent
 
         private readonly ICachedCallRepository _cachedCallRepository;
         private readonly ICachedRegisteredCodecRepository _cachedRegisteredCodecRepository;
-
-        public ExternalStoreMessageManager(ICachedRegisteredCodecRepository cachedRegisteredCodecRepository, ICachedCallRepository cachedCallRepository, ILogger<SipMessageManager> logger)
+        private readonly ILocationManager _locationManager;
+        public ExternalStoreMessageManager(ICachedRegisteredCodecRepository cachedRegisteredCodecRepository, ICachedCallRepository cachedCallRepository, ILogger<SipMessageManager> logger, ILocationManager locationManager)
         {
             _cachedRegisteredCodecRepository = cachedRegisteredCodecRepository;
             _cachedCallRepository = cachedCallRepository;
             _logger = logger;
+            _locationManager = locationManager;
         }
 
         /// <summary>
@@ -88,10 +89,12 @@ namespace CCM.Core.SipEvent
                 FromDisplayName = message.FromDisplayName,
                 FromId = Guid.Parse(message.FromId),
                 FromCategory = message.FromCategory,
+                FromExternalLocation = message.FromIPAddress != null? _locationManager.GetLocationNameByIp(message.FromIPAddress) : null,
                 ToSip = message.ToUsername,
                 ToDisplayName = message.ToDisplayName,
                 ToId = Guid.Parse(message.ToId),
                 ToCategory = message.ToCategory,
+                ToExternalLocation = message.ToIPAddress != null? _locationManager.GetLocationNameByIp(message.ToIPAddress) : null,
                 Started = message.Started ?? DateTime.UtcNow,
                 Closed = (message.Ended != null),
                 CallId = message.CallId,

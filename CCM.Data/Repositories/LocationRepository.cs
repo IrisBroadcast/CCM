@@ -212,7 +212,7 @@ namespace CCM.Data.Repositories
                 {
                     var networks = db.Locations
                         .Where(l => !string.IsNullOrEmpty(l.Net_Address_v6))
-                        .Select(l => new LocationNetwork(l.Id, l.Net_Address_v6, l.Cidr_v6.Value))
+                        .Select(l => new LocationNetwork(l.Id, l.Net_Address_v6, l.Cidr_v6.Value, l.Name))
                         .Where(n => n.Network != null)
                         .ToList();
 
@@ -253,13 +253,13 @@ namespace CCM.Data.Repositories
 
             var networksV4 = locations
                 .Where(l => !string.IsNullOrEmpty(l.Net_Address_v4) && l.Cidr.HasValue)
-                .Select(l => new LocationNetwork(l.Id, l.Net_Address_v4, l.Cidr.Value))
+                .Select(l => new LocationNetwork(l.Id, l.Net_Address_v4, l.Cidr.Value,l.Name))
                 .Where(l => l.Network != null)
                 .ToList();
 
             var networksV6 = locations
                 .Where(l => !string.IsNullOrEmpty(l.Net_Address_v6) && l.Cidr_v6.HasValue)
-                .Select(l => new LocationNetwork(l.Id, l.Net_Address_v6, l.Cidr_v6.Value))
+                .Select(l => new LocationNetwork(l.Id, l.Net_Address_v6, l.Cidr_v6.Value,l.Name))
                 .Where(l => l.Network != null)
                 .ToList();
 

@@ -58,6 +58,8 @@ namespace CCM.Data.Entities
         public Guid? FromUserAccountId { get; set; }
         public string FromTag { get; set; } // TODO: Not in use?
         public string FromCategory { get; set; }
+        public string FromExternalLocation { get; set; }
+        
 
         public Guid? ToId { get; set; }
         [ForeignKey("ToId")]
@@ -67,5 +69,6 @@ namespace CCM.Data.Entities
         public Guid? ToUserAccountId { get; set; }
         public string ToTag { get; set; } // TODO: Not in use?
         public string ToCategory { get; set; }
+        public string ToExternalLocation { get; set; }
     }
 }

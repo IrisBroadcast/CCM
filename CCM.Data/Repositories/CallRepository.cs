@@ -91,13 +91,15 @@ namespace CCM.Data.Repositories
                         FromUsername = call.FromSip,
                         FromDisplayName = call.FromDisplayName,
                         FromCategory = call.FromCategory,
-
+                        FromExternalLocation = call.FromExternalLocation,
+                        
                         ToId = call.ToId,
                         ToTag = call.ToTag,
                         ToUserAccountId = call.ToUserAccountId,
                         ToUsername = call.ToSip,
                         ToDisplayName = call.ToDisplayName,
                         ToCategory = call.ToCategory,
+                        ToExternalLocation = call.ToExternalLocation,
 
                         IsPhoneCall = call.IsPhoneCall,
                         SDP = call.SDP
@@ -359,7 +361,7 @@ namespace CCM.Data.Repositories
                 FromUserAccountId = call.FromUserAccountId ?? Guid.Empty,
                 FromLocationComment = call.FromCodec?.Location?.Comment ?? string.Empty,
                 FromLocationId = call.FromCodec?.Location?.Id ?? Guid.Empty,
-                FromLocationName = call.FromCodec?.Location?.Name ?? string.Empty,
+                FromLocationName = call.FromCodec?.Location?.Name ?? call.FromExternalLocation?? string.Empty,
                 FromLocationShortName = call.FromCodec?.Location?.ShortName ?? string.Empty,
                 FromLocationCategory = call.FromCodec?.Location?.Category?.Name,
                 FromOwnerId = call.FromCodec?.User?.Owner?.Id ?? Guid.Empty,
@@ -381,7 +383,7 @@ namespace CCM.Data.Repositories
                 ToUserAccountId = call.ToUserAccountId ?? Guid.Empty,
                 ToLocationComment = call.ToCodec?.Location?.Comment ?? string.Empty,
                 ToLocationId = call.ToCodec?.Location?.Id ?? Guid.Empty,
-                ToLocationName = call.ToCodec?.Location?.Name ?? string.Empty,
+                ToLocationName = call.ToCodec?.Location?.Name ?? call.ToExternalLocation?? string.Empty,
                 ToLocationShortName = call.ToCodec?.Location?.ShortName ?? string.Empty,
                 ToLocationCategory = call.ToCodec?.Location?.Category?.Name,
                 ToOwnerId = call.ToCodec?.User?.Owner?.Id ?? Guid.Empty,

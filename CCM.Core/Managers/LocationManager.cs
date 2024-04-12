@@ -60,5 +60,25 @@ namespace CCM.Core.Managers
 
             return match;
         }
+
+        public string GetLocationNameByIp(string ip)
+        {
+            IPAddress ipAddress;
+            if (!IPAddress.TryParse(ip, out ipAddress))
+            {
+                return string.Empty;
+            }
+
+            var networks = _cachedLocationRepository.GetAllLocationNetworks().Where(n => n.Network.AddressFamily == ipAddress.AddressFamily);
+
+            string match = networks
+                //.Where(n => IPNetwork.Contains(n.Network, ipAddress)) // TODO: redid this one, not sure correct, verify
+                .Where(n => n.Network.Contains(ipAddress))
+                .OrderByDescending(n => n.Cidr)
+                .Select(n => n.Name)
+                .FirstOrDefault();
+
+            return match;
+        }
     }
 }
