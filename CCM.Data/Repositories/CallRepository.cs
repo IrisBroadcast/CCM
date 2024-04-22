@@ -404,6 +404,11 @@ namespace CCM.Data.Repositories
 
             if (call.ToCategory != null && !string.IsNullOrEmpty(call.ToCategory))
             {
+                // special case for power bi log call type / category
+                if (call.ToCategory.Contains("vox-medarbetare") || call.ToCategory.Contains("medi-g"))
+                {
+                    callHistory.FromCodecTypeCategory = call.ToCategory;
+                }
                 callHistory.ToCodecTypeCategory = call.ToCategory;
             }
 
