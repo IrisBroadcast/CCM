@@ -30,6 +30,7 @@ namespace CCM.Core.Interfaces.Managers
 {
     public interface ILocationManager
     {
+        string GetRegionNameByIp(string ip);
         Guid GetLocationIdByIp(string ip);
         string GetLocationNameByIp(string ip);
     }

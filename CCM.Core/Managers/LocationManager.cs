@@ -80,5 +80,18 @@ namespace CCM.Core.Managers
 
             return match;
         }
+
+        public string GetRegionNameByIp(string ip)
+        {
+            var location = GetLocationIdByIp(ip);
+            if(location == Guid.Empty)
+            {
+                return string.Empty;
+            }
+            
+            var regionName = _cachedLocationRepository.GetById(location).Region.Name ?? string.Empty;
+
+            return regionName;
+        }
     }
 }
