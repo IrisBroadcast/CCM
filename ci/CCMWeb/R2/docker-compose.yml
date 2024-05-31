@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+  ccm:
+    image: ${IMAGE_NAME}
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+    logging:
+      driver: json-file
+      options:
+        max-file: "5"
+        max-size: 20m
+    environment:
+      ASPNETCORE_URLS: http://+:80
+    ports:
+      - 80:80
+    configs:
+      - source: ccm_appsettings_r2
+        target: /app/appsettings.json
+    volumes:
+      - /home/mobilmedverkan/ccm/data:/ccm
+configs:
+  ccm_appsettings_r2:
+    name: ccm_appsettings_r2_2024_05_24
+    external: true

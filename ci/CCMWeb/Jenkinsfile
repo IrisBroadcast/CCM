@@ -7,6 +7,7 @@ def application = [
 
 // Configuration :: Stage
 def configStage = [
+    alias: "CCM Stage", //används som input-text för bekräftelse att fortsätta deploy
     stackname: "ipk",
     dockerFile: "./ci/CCMWeb/Dockerfile",
     dockerComposeFile: "./ci/CCMWeb/stage/docker-compose.yml",
@@ -19,6 +20,7 @@ def configStage = [
 
 // Configuration :: Prod
 def configProd = [
+    alias: "CCM PROD", //används som input-text för bekräftelse att fortsätta deploy
     stackname: "ipk",
     dockerFile: "./ci/CCMWeb/Dockerfile",
     dockerComposeFile: "./ci/CCMWeb/production/docker-compose.yml",
@@ -29,54 +31,95 @@ def configProd = [
     environment: "Prod",
 ]
 
+// Configuration :: R2
+def configR2 = [
+    alias: "CCM RDC", //används som input-text för bekräftelse att fortsätta deploy
+    stackname: "ipk",
+    dockerFile: "./ci/CCMWeb/Dockerfile",
+    dockerComposeFile: "./ci/CCMWeb/R2/docker-compose.yml",
+    dockerHost: "rdcmm01",
+    dockerHostCredentialsId: "jenkinsDeployUser",
+
+    buildVersion: "0.0.0",
+    environment: "Prod",
+]
+
+
+
 node(application.jenkinsWorkerConstraint) {
-
     try {
-
+        def deployTarget = []
         def config
-        def buildArgs = []
+        def buildName
+        def imageName
+
+        // parameters for deploy
+        properties([
+            parameters([
+                booleanParam(
+                    defaultValue: false,
+                    description: 'Production',
+                    name: 'Deploy_Production'
+                ),
+                booleanParam(
+                    defaultValue: false,
+                    description: 'Stage',
+                    name: 'Deploy_Stage'
+                ),
+                booleanParam(
+                    defaultValue: false,
+                    description: 'RDC R2',
+                    name: 'Deploy_Rdc'
+                ),
+            ])
+        ])
 
         stage("Clone repository") {
             checkout scm
+        }
+
+        // select deploy target 
+        stage('Select Deploy target') {
+            if (params.Deploy_Rdc == true) {
+                echo 'Deploy --> RDC'
+                deployTarget.push(configR2)
+            }
+            if (params.Deploy_Production == true) {
+                echo 'Deploy --> Prod'
+                deployTarget.push(configProd)
+            }
+            if (params.Deploy_Stage == true) {
+                echo 'Deploy --> Stage'
+                deployTarget.push(configStage)
+            }
         }
 
         // #######################################
         // Make custom build steps below this line
         // =======================================
 
-        stage("Setting up environment") {
+        deployTarget.each {
+            def buildArgs = []
+            def image
+
+            config = it
+            echo "${config.dockerHost}"
+            stage("Setting up environment") {
             if (env.TAG_NAME) {
-                config = configProd
                 config.buildVersion = "tag-${env.TAG_NAME.replaceAll('/', '-')}"
             } else {
-                config = configStage
                 def gitHash = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
                 config.buildVersion = "commit-${gitHash}"
             }
         }
 
-        stage("Adding build information") {
-            // Modify the buildinformation.json file in the repository
-            sh "sed -i \"s/APP_VERSION/\"${config.buildVersion}\"/g\" ./CCM.Web/buildinformation.json"
-            sh "sed -i \"s/APP_ENVIRONMENT/\"${config.environment}\"/g\" ./CCM.Web/buildinformation.json"
-            sh "sed -i \"s/APP_SERVER/\"${config.dockerHost}\"/g\" ./CCM.Web/buildinformation.json"
 
-            sh '''
-                BUILDINFORMATION="./CCM.Web/buildinformation.json"
-                DATE=$(date '+%Y-%m-%d %H:%M:%S')
-                sed -i "s/APP_NAME/Codec Control Monitor/g" $BUILDINFORMATION
-                sed -i "s/APP_RELEASE_DATE/${DATE}/g" $BUILDINFORMATION
-            '''
-            // Print the modified file
-            sh 'cat ./CCM.Web/buildinformation.json'
-        }
 
         // #########################################################################
         // Below is generic for applications - don't change anything below this line
         // =========================================================================
 
-        def image
-        def imageName
+
 
         stage("Setting up tag") {
             if (env.TAG_NAME) {
@@ -86,34 +129,60 @@ node(application.jenkinsWorkerConstraint) {
                 application.tag = "commit-${gitCommitHash}"
             }
 
-            // APP_BUILD_TAG is application version identification
-            buildArgs.add("APP_BUILD_TAG=${application.tag}")
-        }
 
-        docker.withRegistry(env.DOCKER_REGISTRY) {
-            stage("Build image") {
-                def argsString = ""
-                if (env.HTTP_PROXY) {
-                    def proxyArgs = ["HTTP_PROXY=${env.HTTP_PROXY}", "HTTPS_PROXY=${env.HTTP_PROXY}", "http_proxy=${env.HTTP_PROXY}", "https_proxy=${env.HTTP_PROXY}"]
-                    proxyArgs.each {
-                        argsString += "--build-arg ${it} "
+        }
+        stage('build image') {
+            if (application.tag != buildName) {
+                echo "building image"
+                buildName = application.tag
+                // APP_BUILD_TAG is application version identification
+                buildArgs.add("APP_BUILD_TAG=${application.tag}")
+
+                docker.withRegistry(env.DOCKER_REGISTRY) {
+                    stage("Adding build information") {
+                        // Modify the buildinformation.json file in the repository
+                        sh "sed -i \"s/APP_VERSION/\"${config.buildVersion}\"/g\" ./CCM.Web/buildinformation.json"
+                        sh "sed -i \"s/APP_ENVIRONMENT/\"${config.environment}\"/g\" ./CCM.Web/buildinformation.json"
+                        // this should not be added to image. 
+                        // If this image is started on other server, this information is possibly wrong. This and ENVIRONMENT perhaps should be in a config file not written to image.
+                        // removed from ccm web proj for now.
+                        sh "sed -i \"s/APP_SERVER/\"${config.dockerHost}\"/g\" ./CCM.Web/buildinformation.json"
+
+                        sh '''
+                            BUILDINFORMATION="./CCM.Web/buildinformation.json"
+                            DATE=$(date '+%Y-%m-%d %H:%M:%S')
+                            sed -i "s/APP_NAME/Codec Control Monitor/g" $BUILDINFORMATION
+                            sed -i "s/APP_RELEASE_DATE/${DATE}/g" $BUILDINFORMATION
+                        '''
+                        // Print the modified file
+                        sh 'cat ./CCM.Web/buildinformation.json'
+                    }
+                    stage("Build image") {
+                        def argsString = ""
+                        if (env.HTTP_PROXY) {
+                            def proxyArgs = ["HTTP_PROXY=${env.HTTP_PROXY}", "HTTPS_PROXY=${env.HTTP_PROXY}", "http_proxy=${env.HTTP_PROXY}", "https_proxy=${env.HTTP_PROXY}"]
+                            proxyArgs.each {
+                                argsString += "--build-arg ${it} "
+                            }
+                        }
+
+                        // Adding custom buildArgs if they exist
+                        buildArgs.each {
+                            argsString += "--build-arg ${it} "
+                        }
+
+                        argsString += "-f ${config.dockerFile} ."
+                        image = docker.build("${application.name}:${application.tag}", argsString)
+                    }
+
+                    stage("Push image to registry") {
+                        image.push()
+                        imageName = image.imageName()
                     }
                 }
-
-                // Adding custom buildArgs if they exist
-                buildArgs.each {
-                    argsString += "--build-arg ${it} "
-                }
-
-                argsString += "-f ${config.dockerFile} ."
-                image = docker.build("${application.name}:${application.tag}", argsString)
-            }
-
-            stage("Push image to registry") {
-                image.push()
-                imageName = image.imageName()
             }
         }
+
 
         withCredentials([usernamePassword(credentialsId: config.dockerHostCredentialsId, passwordVariable: "pass", usernameVariable: "user")]) {
             def dockerHost = [
@@ -125,6 +194,10 @@ node(application.jenkinsWorkerConstraint) {
             ]
             def dockerComposePath = "${application.tempFilesPath}/${env.BUILD_TAG}".replaceAll("\\s","-")
 
+            stage('Request user input.') {
+                    input id: 'goahead', message: "Ok to deploy to ${config.alias}", ok: 'Go ahead', submitterParameter: 'move_on'
+            }
+
             stage("Update service on ${dockerHost.host}") {
                 sshCommand remote: dockerHost, command: "if [ ! -d ${dockerComposePath} ];then mkdir -p ${dockerComposePath};fi"
                 sshPut remote: dockerHost, from: config.dockerComposeFile, into: "${dockerComposePath}/docker-compose.yml"
@@ -132,7 +205,7 @@ node(application.jenkinsWorkerConstraint) {
                 sshCommand remote: dockerHost, command: "if [ -d ${dockerComposePath} ];then rm -rf ${dockerComposePath};fi"
             }
         }
-
+        }
     } finally {
         cleanWs()
     }

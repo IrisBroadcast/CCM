@@ -13,7 +13,7 @@
     string env = @BuildInformation.Value.Environment;
     var logoClass = (env == "development" ? "development" : (env == "staging" ? "staging" : "production"));
     string deployVersion = @BuildInformation.Value.Version;
-    string deployServer = @BuildInformation.Value.Server;
+    //string deployServer = @BuildInformation.Value.Server;
     string deployEnvironment = BuildInformation.Value.Environment;
     string buildDateString = @BuildInformation.Value.ReleaseDate;
     string codecControlHost = @SettingsManager.CodecControlHost;
@@ -66,7 +66,7 @@
         @RenderBody()
         <hr />
         <footer class="mui-footer">
-            <p>&copy; 2014 - @DateTime.Now.Year Sveriges Radio. Version <strong>@deployVersion</strong> - <strong>@buildDateString</strong> <strong>@deployServer</strong> (<i>@deployEnvironment</i>)</p>
+            <p>&copy; 2014 - @DateTime.Now.Year Sveriges Radio. Version <strong>@deployVersion</strong> - <strong>@buildDateString</strong> (<i>@deployEnvironment</i>)</p>
         </footer>
     </div>
 
