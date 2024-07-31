@@ -24,7 +24,6 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using CCM.Core.SipEvent;
 using CCM.Core.SipEvent.Messages;
 using CCM.Core.SipEvent.Models;
 

@@ -27,7 +27,6 @@
 using System;
 using System.Globalization;
 using System.Text.Json.Serialization;
-using CCM.Core.SipEvent.Messages;
 
 namespace CCM.Core.SipEvent.Event
 {
@@ -67,8 +66,8 @@ namespace CCM.Core.SipEvent.Event
         public string ToLogString()
         {
             var timestamp = this.UnixTimeStampToDateTime(this.TimeStamp);
-            return $"Kamailio Sip Event:{this.Event.ToString()}, TimeStamp:{timestamp}, Registrar:{this.Registrar}, RegType:{this.RegType}, Expires:{this.Expires.ToString()}, Method:{this.Method}, User-Agent:{this.UserAgentHeader}, FromURI:{this.FromUri}, CallId:{this.CallId.ToString()}" +
-            	$", DialogState:{this.DialogState}, DialogHashId:{this.DialogHashId}, DialogHashEntry:{this.DialogHashEntry}, HangupReason:{this.HangupReason}";
+            return $"Kamailio Sip Event:{this.Event}, TimeStamp:{timestamp}, Registrar:{this.Registrar}, RegType:{this.RegType}, Expires:{this.Expires}, Method:{this.Method}, User-Agent:{this.UserAgentHeader}, FromURI:{this.FromUri}, CallId:{this.CallId}" +
+                $", DialogState:{this.DialogState}, DialogHashId:{this.DialogHashId}, DialogHashEntry:{this.DialogHashEntry}, HangupReason:{this.HangupReason}";
         }
 
         public string UnixTimeStampToDateTime(long unixTimeStamp)
