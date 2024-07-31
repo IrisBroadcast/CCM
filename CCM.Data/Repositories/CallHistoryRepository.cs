@@ -164,6 +164,7 @@ namespace CCM.Data.Repositories
                 IsPhoneCall = dbCallHistory.IsPhoneCall,
 
                 FromId = MapGuidString(dbCallHistory.FromId),
+                FromUserAccountId = MapGuidString(dbCallHistory.FromUserAccountId ?? Guid.Empty),
                 FromSip = dbCallHistory.FromUsername,
                 FromCodecTypeColor = dbCallHistory.FromCodecTypeColor,
                 FromCodecTypeName = dbCallHistory.FromCodecTypeName,
@@ -176,6 +177,7 @@ namespace CCM.Data.Repositories
                 FromLocationCategory = dbCallHistory.FromLocationCategory,
 
                 ToId = MapGuidString(dbCallHistory.ToId),
+                ToUserAccountId = MapGuidString(dbCallHistory.ToUserAccountId ?? Guid.Empty),
                 ToSip = dbCallHistory.ToUsername,
                 ToCodecTypeColor = dbCallHistory.ToCodecTypeColor,
                 ToCodecTypeName = dbCallHistory.ToCodecTypeName,

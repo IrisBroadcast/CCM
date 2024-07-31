@@ -39,23 +39,21 @@ namespace CCM.Web.Controllers.ApiRegistrar
     /// Receives ongoing call information from external services, like WebRTC services.
     /// This is used so information will be stored in the statistics table.
     /// </summary>
-    public class CallRegisterController : ControllerBase {
+    public class CallRegisterController : ControllerBase
+    {
         protected static readonly Logger log = LogManager.GetCurrentClassLogger();
 
-        private readonly ISipEventParser _sipEventParser;
         private readonly IExternalStoreMessageManager _externalStoreMessageManager;
         private readonly IWebGuiHubUpdater _webGuiHubUpdater;
         private readonly ICodecStatusHubUpdater _codecStatusHubUpdater;
         private readonly IExtendedStatusHubUpdater _extendedStatusHubUpdater;
 
         public CallRegisterController(
-            ISipEventParser sipEventParser,
             IExternalStoreMessageManager externalStoreMessageManager,
             IWebGuiHubUpdater webGuiHubUpdater,
             ICodecStatusHubUpdater codecStatusHubUpdater,
             IExtendedStatusHubUpdater extendedStatusHubUpdater)
         {
-            _sipEventParser = sipEventParser;
             _externalStoreMessageManager = externalStoreMessageManager;
             _webGuiHubUpdater = webGuiHubUpdater;
             _codecStatusHubUpdater = codecStatusHubUpdater;

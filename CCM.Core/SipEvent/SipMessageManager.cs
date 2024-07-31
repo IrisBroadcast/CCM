@@ -33,6 +33,7 @@ using CCM.Core.Interfaces.Managers;
 using CCM.Core.Interfaces.Repositories;
 using CCM.Core.SipEvent.Messages;
 using CCM.Core.SipEvent.Models;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 
 namespace CCM.Core.SipEvent
@@ -43,13 +44,13 @@ namespace CCM.Core.SipEvent
         private readonly ICachedCallRepository _cachedCallRepository;
         private readonly ICachedRegisteredCodecRepository _cachedRegisteredCodecRepository;
         private readonly ISettingsManager _settingsManager;
-        private readonly IStringLocalizer<Resources> _localizer;
+        private readonly IStringLocalizer<Resources.Resources> _localizer;
 
         public SipMessageManager(
             ICachedRegisteredCodecRepository cachedRegisteredCodecRepository,
             ICachedCallRepository cachedCallRepository,
             ILogger<SipMessageManager> logger,
-            IStringLocalizer<Resources> localizer,
+            IStringLocalizer<Resources.Resources> localizer,
             ISettingsManager settingsManager)
         {
             _cachedRegisteredCodecRepository = cachedRegisteredCodecRepository;

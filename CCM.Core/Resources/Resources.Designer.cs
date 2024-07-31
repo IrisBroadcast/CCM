@@ -22,7 +22,7 @@ namespace CCM.Core.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace CCM.Core.Resources {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CCM.Core.Resources.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace CCM.Core.Resources {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace CCM.Core.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Börjar med.
         /// </summary>
-        internal static string Begins_With {
+        public static string Begins_With {
             get {
                 return ResourceManager.GetString("Begins_With", resourceCulture);
             }
@@ -72,7 +72,7 @@ namespace CCM.Core.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Innehåller.
         /// </summary>
-        internal static string Contains {
+        public static string Contains {
             get {
                 return ResourceManager.GetString("Contains", resourceCulture);
             }
@@ -81,7 +81,7 @@ namespace CCM.Core.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Pool-kodare.
         /// </summary>
-        internal static string Description_PoolCodec {
+        public static string Description_PoolCodec {
             get {
                 return ResourceManager.GetString("Description_PoolCodec", resourceCulture);
             }
@@ -90,7 +90,7 @@ namespace CCM.Core.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Vanligt SIP-konto.
         /// </summary>
-        internal static string Description_SipAccount {
+        public static string Description_SipAccount {
             get {
                 return ResourceManager.GetString("Description_SipAccount", resourceCulture);
             }
@@ -99,7 +99,7 @@ namespace CCM.Core.Resources {
         /// <summary>
         ///   Looks up a localized string similar to SIP-alias.
         /// </summary>
-        internal static string Description_SipAlias {
+        public static string Description_SipAlias {
             get {
                 return ResourceManager.GetString("Description_SipAlias", resourceCulture);
             }
@@ -108,7 +108,7 @@ namespace CCM.Core.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Slutar med.
         /// </summary>
-        internal static string Ends_With {
+        public static string Ends_With {
             get {
                 return ResourceManager.GetString("Ends_With", resourceCulture);
             }
@@ -117,7 +117,7 @@ namespace CCM.Core.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Externt nummer.
         /// </summary>
-        internal static string External_Phone_Number {
+        public static string External_Phone_Number {
             get {
                 return ResourceManager.GetString("External_Phone_Number", resourceCulture);
             }
@@ -126,7 +126,7 @@ namespace CCM.Core.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Ank.
         /// </summary>
-        internal static string Internal_Phone_Connection_Prefix {
+        public static string Internal_Phone_Connection_Prefix {
             get {
                 return ResourceManager.GetString("Internal_Phone_Connection_Prefix", resourceCulture);
             }
@@ -135,7 +135,7 @@ namespace CCM.Core.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Reguljärt uttryck.
         /// </summary>
-        internal static string Regular_Expression {
+        public static string Regular_Expression {
             get {
                 return ResourceManager.GetString("Regular_Expression", resourceCulture);
             }
@@ -144,7 +144,7 @@ namespace CCM.Core.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Programtelefoni.
         /// </summary>
-        internal static string Telephone {
+        public static string Telephone {
             get {
                 return ResourceManager.GetString("Telephone", resourceCulture);
             }
