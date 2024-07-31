@@ -87,6 +87,7 @@ namespace CCM.Web.Hubs
                         }
                         break;
                     }
+                // TODO: Add Progress here ??? Other topic though
                 case (SipEventChangeStatus.CallClosed):
                     {
                         UpdateCodecStatusCallClosed(updateResult.ChangedObjectId);
@@ -218,7 +219,7 @@ namespace CCM.Web.Hubs
                     CodecTypeColor = call.FromCodecTypeColor,
                     CodecTypeCategory = call.FromCodecTypeCategory,
                     RegionName = call.FromRegionName,
-                    UserComment = call.FromComment
+                    UserComment = call.FromComment,
                 };
                 _hub.Clients.All.CodecStatus(updatedCodecFrom);
             }

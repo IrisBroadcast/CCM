@@ -24,7 +24,6 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using Newtonsoft.Json.Converters;
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -38,12 +37,12 @@ namespace CCM.Web.Models.ApiExternal
         public CodecState State { get; set; }
         public string SipAddress { get; set; }
         public string PresentationName { get; set; }
-        public string DisplayName { get; set; } //TODO:  Not in use ... yet, changed my mind, will be removed...since it's PresentationName...
+        public string DisplayName { get; set; } // TODO:  Not in use ... yet, changed my mind, will be removed...since it's PresentationName...
         public bool HasCodecControl { get; set; }
         #endregion
 
         #region Call
-        public bool InCall { get; set; } // TODO: Not in use .. yet
+        public bool InCall { get; set; }
         public string ConnectedToSipAddress { get; set; }
         public string ConnectedToPresentationName { get; set; }
         public string ConnectedToDisplayName { get; set; } //TODO:  Not in use ... yet
@@ -51,6 +50,9 @@ namespace CCM.Web.Models.ApiExternal
         public bool IsCallingPart { get; set; }
         [JsonConverter(typeof(JsonDateTimeConverter))]
         public DateTime CallStartedAt { get; set; }
+
+        public string SipCode { get; set; }
+        public string SipMessage { get; set; }
         #endregion
     }
 

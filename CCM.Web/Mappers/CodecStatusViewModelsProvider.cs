@@ -83,6 +83,9 @@ namespace CCM.Web.Mappers
                     result.ConnectedToDisplayName = isFromCaller ? call.ToDisplayName : call.FromDisplayName;
                     result.ConnectedToLocation = isFromCaller ? call.ToLocationName : call.FromLocationName;
                     result.CallStartedAt = call.Started;
+
+                    result.SipCode = call.SipCode;
+                    result.SipMessage = call.SipMessage;
                 }
 
                 result.State = regSip.Id == Guid.Empty
@@ -244,6 +247,9 @@ namespace CCM.Web.Mappers
                     result.ConnectedToDisplayName = isFromCaller ? call.ToDisplayName : call.FromDisplayName;
                     result.ConnectedToLocation = isFromCaller ? call.ToLocationName : call.FromLocationName;
                     result.CallStartedAt = call.Started;
+
+                    result.SipCode = call.SipCode;
+                    result.SipMessage = call.SipMessage;
                 }
 
                 result.State = regSip.Id == Guid.Empty
@@ -346,6 +352,9 @@ namespace CCM.Web.Mappers
                     result.ConnectedToDisplayName = isFromCaller ? call.ToDisplayName : call.FromDisplayName;
                     result.ConnectedToLocation = isFromCaller ? call.ToLocationName : call.FromLocationName;
                     result.CallStartedAt = call.Started;
+
+                    result.SipCode = call.SipCode;
+                    result.SipMessage = call.SipMessage;
                 }
 
                 result.State = regSip.Id == Guid.Empty
@@ -410,6 +419,9 @@ namespace CCM.Web.Mappers
                     result.ConnectedToDisplayName = isFromCaller ? call.ToDisplayName : call.FromDisplayName;
                     result.ConnectedToLocation = isFromCaller ? call.ToLocationName : call.FromLocationName;
                     result.CallStartedAt = call.Started;
+
+                    result.SipCode = call.SipCode;
+                    result.SipMessage = call.SipMessage;
                 }
 
                 result.State = regSip.Id == Guid.Empty

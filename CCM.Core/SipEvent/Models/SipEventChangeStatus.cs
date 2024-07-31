@@ -31,6 +31,7 @@ namespace CCM.Core.SipEvent.Models
         NothingChanged = 0,
         CallStarted,
         CallClosed,
+        CallProgress,
         CodecAdded,
         CodecUpdated,
         CodecRemoved

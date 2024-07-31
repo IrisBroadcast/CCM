@@ -61,6 +61,10 @@ namespace CCM.Core.SipEvent.Event
         // Topic: Dialog End
         [JsonPropertyName("hangup_reason")] public string HangupReason { get; set; } // "NORMAL"
 
+        // Topic: Dialog Progress / Dialog Failed
+        [JsonPropertyName("code")] public string SipCode { get; set; }
+        [JsonPropertyName("message")] public string SipMessage { get; set; }
+
         [JsonPropertyName("ip")] public IpInfo Ip { get; set; }
 
         public string ToLogString()

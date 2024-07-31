@@ -142,6 +142,10 @@ namespace CCM.Core.SipEvent
             {
                 case SipDialogStatus.Start:
                     return RegisterCall(sipDialogMessage);
+                case SipDialogStatus.Progress:
+                    return ProgressCall(sipDialogMessage);
+                case SipDialogStatus.Failed:
+                    return ProgressCall(sipDialogMessage);
                 case SipDialogStatus.End:
                     // TODO: Check hangup reason. Only close calls where reason = Normal
                     // TODO: Handle timeout message and add warning to call but don't end it
@@ -227,6 +231,8 @@ namespace CCM.Core.SipEvent
             call.CallId = sipMessage.CallId;
             call.DialogHashId = sipMessage.HashId;
             call.DialogHashEnt = sipMessage.HashEntry;
+            call.SipCode = sipMessage.SipCode;
+            call.SipMessage = sipMessage.SipMessage;
             call.Updated = DateTime.UtcNow;
             call.ToTag = sipMessage.ToTag;
             call.FromTag = sipMessage.FromTag;
@@ -235,6 +241,36 @@ namespace CCM.Core.SipEvent
             _cachedCallRepository.UpdateOrAddCall(call);
 
             return SipEventHandlerResult.SipMessageResult(SipEventChangeStatus.CallStarted, call.Id, call.FromSip);
+        }
+
+        public SipEventHandlerResult ProgressCall(SipDialogMessage sipMessage)
+        {
+            _logger.LogDebug("Progress call with id:{0}, hash id:{1}, hash entry:{2}", sipMessage.CallId, sipMessage.HashId, sipMessage.HashEntry);
+
+            try
+            {
+                CallInfo call = _cachedCallRepository.GetCallInfo(sipMessage.CallId, sipMessage.HashId, sipMessage.HashEntry);
+
+                if (call == null)
+                {
+                    _logger.LogWarning("Unable to find call with call id:{0}, hash id:{1}, hash entry:{2} (Progress)", sipMessage.CallId, sipMessage.HashId, sipMessage.HashEntry);
+                    return SipEventHandlerResult.NothingChanged;
+                }
+
+                if (call.Closed)
+                {
+                    _logger.LogWarning("Call with call id:{0} already closed (Progress)", sipMessage.CallId);
+                    return SipEventHandlerResult.NothingChanged;
+                }
+
+                _cachedCallRepository.UpdateCallProgress(call.Id, sipMessage.SipCode, sipMessage.SipMessage);
+                return SipEventHandlerResult.SipMessageResult(SipEventChangeStatus.CallProgress, call.Id, call.FromSipAddress); // TODO: Add information here about to from
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while adding progress to call with call id:{0}", sipMessage.CallId);
+                return SipEventHandlerResult.NothingChanged;
+            }
         }
 
         public SipEventHandlerResult CloseCall(SipDialogMessage sipMessage)

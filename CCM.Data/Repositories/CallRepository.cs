@@ -63,7 +63,7 @@ namespace CCM.Data.Repositories
         }
 
         /// <summary>
-        /// Update or add information about a call. Can be used to close calls as well
+        /// Update or add information about a call. Can be used to close calls as well.
         /// </summary>
         /// <param name="call"></param>
         public void UpdateOrAddCall(Call call)
@@ -92,7 +92,7 @@ namespace CCM.Data.Repositories
                         FromDisplayName = call.FromDisplayName,
                         FromCategory = call.FromCategory,
                         FromExternalLocation = call.FromExternalLocation,
-                        
+
                         ToId = call.ToId,
                         ToTag = call.ToTag,
                         ToUserAccountId = call.ToUserAccountId,
@@ -102,7 +102,10 @@ namespace CCM.Data.Repositories
                         ToExternalLocation = call.ToExternalLocation,
 
                         IsPhoneCall = call.IsPhoneCall,
-                        SDP = call.SDP
+                        SDP = call.SDP,
+
+                        Code = call.SipCode,
+                        Message = call.SipMessage,
                     };
 
                     _ccmDbContext.Calls.Add(dbCall);
@@ -138,6 +141,39 @@ namespace CCM.Data.Repositories
             {
                 log.Error(ex);
                 _logger.LogError(ex, $"Error saving/updating call with call id: {call.CallId}, hash id: {call.DialogHashId}, hash ent: {call.DialogHashEnt}");
+            }
+        }
+
+        /// <summary>
+        /// Update call progress information.
+        /// </summary>
+        /// <param name="call"></param>
+        /// <param name="code">Information about progress 200</param>
+        /// <param name="message">Information about progress Not Acceptable here</param>
+        public void UpdateCallProgress(Guid callId, string code, string message)
+        {
+            try
+            {
+                var dbCall = callId != Guid.Empty ? _ccmDbContext.Calls.FirstOrDefault(c => c.Id == callId) : null;
+
+                if (dbCall == null)
+                {
+                    _logger.LogError($"Could not update progress for {callId} since there is no call to be found.", callId);
+                    return;
+                }
+
+                // Common properties
+                var updated = DateTime.UtcNow;
+                dbCall.Updated = updated;
+                dbCall.Code = code;
+                dbCall.Message = message;
+                //dbCall.State = call.State;
+                _ = _ccmDbContext.SaveChanges() > 0;
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                _logger.LogError(ex, $"Error saving/updating progress on call with call id: {callId}, sipCode:{code}, sipMessage:{message}");
             }
         }
 
@@ -178,7 +214,8 @@ namespace CCM.Data.Repositories
             dbCall.Updated = DateTime.UtcNow;
             var success = _ccmDbContext.SaveChanges() > 0;
 
-            if (success) {
+            if (success)
+            {
                 // Save call history
                 var callHistory = MapToCallHistory(dbCall);
                 var callHistorySuccess = _cachedCallHistoryRepository.Save(callHistory);
@@ -303,7 +340,10 @@ namespace CCM.Data.Repositories
                 Started = dbCall.Started,
                 SDP = dbCall.SDP,
                 IsPhoneCall = dbCall.IsPhoneCall,
-                
+
+                SipCode = dbCall.Code,
+                SipMessage = dbCall.Message,
+
                 FromId = GuidHelper.AsString(dbCall.FromId),
                 FromSip = anonymize ? DisplayNameHelper.AnonymizePhonenumber(dbCall.FromUsername) : dbCall.FromUsername,
                 FromDisplayName = anonymize ? DisplayNameHelper.AnonymizeDisplayName(fromDisplayName) : fromDisplayName,
@@ -438,7 +478,9 @@ namespace CCM.Data.Repositories
                 FromCategory = dbCall.FromCategory,
                 ToCategory = dbCall.ToCategory,
                 IsPhoneCall = dbCall.IsPhoneCall,
-                SDP = dbCall.SDP
+                SDP = dbCall.SDP,
+                SipCode = dbCall.Code,
+                SipMessage = dbCall.Message,
             };
         }
 

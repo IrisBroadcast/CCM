@@ -80,6 +80,11 @@ namespace CCM.Web.Hubs
                 UpdateCodecsOnline();
             }
 
+            if (updateResult.ChangeStatus == SipEventChangeStatus.CallProgress)
+            {
+                UpdateOngoingCalls();
+            }
+
             if (updateResult.ChangeStatus == SipEventChangeStatus.CallClosed)
             {
                 UpdateOldCalls();

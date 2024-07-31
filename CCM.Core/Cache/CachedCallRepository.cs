@@ -86,6 +86,12 @@ namespace CCM.Core.Cache
             _lazyCache.ClearOngoingCalls();
         }
 
+        public void UpdateCallProgress(Guid callId, string code, string message)
+        {
+            _internalRepository.UpdateCallProgress(callId, code, message);
+            _lazyCache.ClearOngoingCalls();
+        }
+
         public void CloseCall(Guid callId)
         {
             _internalRepository.CloseCall(callId);

@@ -30,6 +30,9 @@ namespace CCM.Core.SipEvent.Messages
 {
     public class SipDialogMessage : SipMessageBase
     {
+        /// <summary>
+        /// Contains the state of the dialog. Should be in order Start - (Progress) - Failed or End.
+        /// </summary>
         public SipDialogStatus Status { get; set; }
         public string CallId { get; set; }
         public string HashId { get; set; }
@@ -42,6 +45,10 @@ namespace CCM.Core.SipEvent.Messages
         public string ToTag { get; set; }
         public string Sdp { get; set; }
         public string HangupReason { get; set; }
+
+        public string SipCode { get; set; }
+        public string SipMessage { get; set; }
+
 
         public override string ToDebugString()
         {

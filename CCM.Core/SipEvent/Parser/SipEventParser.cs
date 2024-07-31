@@ -126,7 +126,9 @@ namespace CCM.Core.SipEvent.Parser
                 HangupReason = kamailioData.HangupReason,
                 FromTag = kamailioData.FromTag,
                 ToTag = kamailioData.ToTag,
-                Sdp = kamailioData.Sdp
+                Sdp = kamailioData.Sdp,
+                SipCode = kamailioData.SipCode,
+                SipMessage = kamailioData.SipMessage,
             };
 
             return dialog;

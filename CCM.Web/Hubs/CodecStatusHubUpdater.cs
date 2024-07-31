@@ -86,6 +86,23 @@ namespace CCM.Web.Hubs
                         }
                         break;
                     }
+                case (SipEventChangeStatus.CallProgress):
+                    {
+                        // Load call and update to and from codecs
+                        var callId = updateResult.ChangedObjectId;
+                        CallInfo callInfo = _cachedCallRepository.GetCallInfoById(callId); // TODO: Get this id to and from directyl from status...
+                        if (callInfo != null)
+                        {
+                            _logger.LogDebug($"CodecStatusHub. Call started. From:{callInfo.FromId}, To:{callInfo.ToId}");
+                            UpdateCodecStatusByGuid(callInfo.FromId);
+                            UpdateCodecStatusByGuid(callInfo.ToId);
+                        }
+                        else
+                        {
+                            _logger.LogError($"CodecStatusHub. Call started but was not found in database. Call Id:{callId}");
+                        }
+                        break;
+                    }
                 case (SipEventChangeStatus.CallClosed):
                     {
                         UpdateCodecStatusCallClosed(updateResult.ChangedObjectId);

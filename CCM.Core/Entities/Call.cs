@@ -41,6 +41,8 @@ namespace CCM.Core.Entities
         public bool Closed { get; set; }
         public bool IsPhoneCall { get; set; }
         public string SDP { get; set; }
+        public string SipCode { get; set; }
+        public string SipMessage { get; set; }
 
         public Guid? FromId { get; set; }
         public CallRegisteredCodec From { get; set; }

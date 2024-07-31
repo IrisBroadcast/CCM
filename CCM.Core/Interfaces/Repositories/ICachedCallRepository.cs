@@ -37,6 +37,7 @@ namespace CCM.Core.Interfaces.Repositories
         OnGoingCall GetOngoingCallById(Guid callId);
         bool CallExists(string callId, string hashId, string hashEnt);
         void UpdateOrAddCall(Call call);
+        void UpdateCallProgress(Guid callId, string code, string message);
         void CloseCall(Guid callId);
         Call GetCallBySipAddress(string sipAddress);
         CallInfo GetCallInfo(string callId, string hashId, string hashEnt);
@@ -49,6 +50,7 @@ namespace CCM.Core.Interfaces.Repositories
         OnGoingCall GetOngoingCallById(Guid callId);
         bool CallExists(string callId, string hashId, string hashEnt);
         void UpdateOrAddCall(Call call);
+        void UpdateCallProgress(Guid callId, string code, string message);
         void CloseCall(Guid callId);
         Call GetCallBySipAddress(string sipAddress);
         CallInfo GetCallInfo(string callId, string hashId, string hashEnt);
