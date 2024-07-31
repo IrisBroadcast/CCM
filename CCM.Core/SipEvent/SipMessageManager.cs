@@ -238,6 +238,9 @@ namespace CCM.Core.SipEvent
             call.FromTag = sipMessage.FromTag;
             call.SDP = sipMessage.Sdp;
 
+            call.SipCode = sipMessage.SipCode;
+            call.SipMessage = sipMessage.SipMessage;
+
             _cachedCallRepository.UpdateOrAddCall(call);
 
             return SipEventHandlerResult.SipMessageResult(SipEventChangeStatus.CallStarted, call.Id, call.FromSip);
