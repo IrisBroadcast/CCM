@@ -98,7 +98,7 @@ namespace CCM.Web.Controllers.ApiRegistrar
                 SipMessageBase sipMessage = _sipEventParser.Parse(sipEventData);
                 if (sipMessage == null)
                 {
-                    _logger.LogWarning("Incorrect SIP message format: ", sipEventData);
+                    _logger.LogWarning("Incorrect SIP message format: {sipEventData}", sipEventData);
                     return BadRequest();
                 }
 

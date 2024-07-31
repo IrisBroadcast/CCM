@@ -33,6 +33,7 @@ using CCM.Core.Interfaces.Managers;
 using CCM.Core.Interfaces.Repositories;
 using CCM.Core.SipEvent.Messages;
 using CCM.Core.SipEvent.Models;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 
 namespace CCM.Core.SipEvent
@@ -43,17 +44,20 @@ namespace CCM.Core.SipEvent
         private readonly ICachedCallRepository _cachedCallRepository;
         private readonly ICachedRegisteredCodecRepository _cachedRegisteredCodecRepository;
         private readonly ISettingsManager _settingsManager;
+        private readonly IStringLocalizer<Resources.Resources> _localizer;
 
         public SipMessageManager(
             ICachedRegisteredCodecRepository cachedRegisteredCodecRepository,
             ICachedCallRepository cachedCallRepository,
             ILogger<SipMessageManager> logger,
+            IStringLocalizer<Resources.Resources> localizer,
             ISettingsManager settingsManager)
         {
             _cachedRegisteredCodecRepository = cachedRegisteredCodecRepository;
             _cachedCallRepository = cachedCallRepository;
             _logger = logger;
             _settingsManager = settingsManager;
+            _localizer = localizer;
         }
 
         /// <summary>
@@ -86,6 +90,7 @@ namespace CCM.Core.SipEvent
                         // Handle dialog information
                         return HandleDialog(dialogMessage);
                     }
+                // TODO: add case for dialog progress!
                 default:
                     {
                         _logger.LogInformation("Unhandled Kamailio message: {0}", sipMessage.ToDebugString());
@@ -106,7 +111,7 @@ namespace CCM.Core.SipEvent
                 port: sipMessage.Port,
                 expirationTimeSeconds: sipMessage.Expires,
                 serverTimeStamp: sipMessage.UnixTimeStamp
-                );
+            );
 
             return _cachedRegisteredCodecRepository.UpdateRegisteredSip(userAgentRegistration);
         }
@@ -127,7 +132,7 @@ namespace CCM.Core.SipEvent
         }
 
         /// <summary>
-        /// Handles the dialog received
+        /// Handles the dialog received.
         /// </summary>
         /// <param name="sipDialogMessage"></param>
         private SipEventHandlerResult HandleDialog(SipDialogMessage sipDialogMessage)
@@ -184,6 +189,7 @@ namespace CCM.Core.SipEvent
             {
                 call.FromSip = sipMessage.FromSipUri.User;
                 call.IsPhoneCall = true;
+                call.FromCategory = _localizer["Telephone"];
             }
             else
             {
@@ -208,6 +214,7 @@ namespace CCM.Core.SipEvent
             {
                 call.ToSip = sipMessage.ToSipUri.User;
                 call.IsPhoneCall = true;
+                call.ToCategory = _localizer["Telephone"];
             }
             else
             {

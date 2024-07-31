@@ -40,6 +40,7 @@ namespace CCM.Core.Entities.Specific
         public string FromDisplayName { get; set; }
         public string FromSip { get; set; }
         public string FromId { get; set; }
+        public string FromUserAccountId { get; set; }
         public string FromLocationName { get; set; }
         public string FromLocationShortName { get; set; }
         public string FromLocationCategory { get; set; }
@@ -52,6 +53,7 @@ namespace CCM.Core.Entities.Specific
         public string ToDisplayName { get; set; }
         public string ToSip { get; set; }
         public string ToId { get; set; }
+        public string ToUserAccountId { get; set; }
         public string ToLocationName { get; set; }
         public string ToLocationShortName { get; set; }
         public string ToLocationCategory { get; set; }
