@@ -35,11 +35,23 @@ namespace CCM.Core.Interfaces.Repositories
     {
         IReadOnlyCollection<OnGoingCall> GetOngoingCalls(bool anonymize);
         OnGoingCall GetOngoingCallById(Guid callId);
+        OnGoingCall GetOngoingCallBySipAddress(string sipAddress);
+
         bool CallExists(string callId, string hashId, string hashEnt);
+        bool CallExistsAndIsStarted(string callId, string hashId, string hashEnt);
+        bool CallExistsBySipAddress(string sipAddress);
         void UpdateOrAddCall(Call call);
         void UpdateCallProgress(Guid callId, string code, string message);
         void CloseCall(Guid callId);
-        Call GetCallBySipAddress(string sipAddress);
+        void FailAndCloseCall(Guid callId, string code, string message);
+
+        /// <summary>
+        /// Get information about a specific call. Returns closed calls also.
+        /// </summary>
+        /// <param name="callId">Kamailio call id</param>
+        /// <param name="hashId"></param>
+        /// <param name="hashEnt"></param>
+        /// <returns></returns>
         CallInfo GetCallInfo(string callId, string hashId, string hashEnt);
         CallInfo GetCallInfoById(Guid callId);
     }
@@ -48,11 +60,16 @@ namespace CCM.Core.Interfaces.Repositories
     {
         IReadOnlyCollection<OnGoingCall> GetOngoingCalls(bool anonymize);
         OnGoingCall GetOngoingCallById(Guid callId);
+        OnGoingCall GetOngoingCallBySipAddress(string sipAddress);
+
         bool CallExists(string callId, string hashId, string hashEnt);
+        bool CallExistsAndIsStarted(string callId, string hashId, string hashEnt);
+        bool CallExistsBySipAddress(string sipAddress);
         void UpdateOrAddCall(Call call);
         void UpdateCallProgress(Guid callId, string code, string message);
         void CloseCall(Guid callId);
-        Call GetCallBySipAddress(string sipAddress);
+        void FailAndCloseCall(Guid callId, string code, string message);
+
         CallInfo GetCallInfo(string callId, string hashId, string hashEnt);
         CallInfo GetCallInfoById(Guid callId);
     }

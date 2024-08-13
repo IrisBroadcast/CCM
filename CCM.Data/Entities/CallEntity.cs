@@ -54,6 +54,8 @@ namespace CCM.Data.Entities
         public string Code { get; set; }
         [Column("SipMessage")]
         public string Message { get; set; }
+        [Column("IsStarted")]
+        public bool IsStarted { get; set; }
 
         public Guid? FromId { get; set; }
         [ForeignKey("FromId")]

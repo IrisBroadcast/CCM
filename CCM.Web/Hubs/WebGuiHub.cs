@@ -27,7 +27,7 @@
 using CCM.Core.Entities.Specific;
 using CCM.Web.Models.Home;
 using Microsoft.AspNetCore.SignalR;
-using NLog;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -43,30 +43,17 @@ namespace CCM.Web.Hubs
 
     public class WebGuiHub : Hub<IWebGuiHub>
     {
-        protected static readonly Logger log = LogManager.GetCurrentClassLogger();
-        //private readonly IServiceProvider _serviceProvider;
-        //private static readonly IHubContext<WebGuiHub, IWebGuiHub> myHubContext;
+        private readonly ILogger<WebGuiHub> _logger;
 
-        //private readonly Throttler CodecsOnlineThrottler;
-        //private readonly Throttler OngoingCallsThrottler;
-        //private readonly Throttler OldCallsThrottler;
-
-        public WebGuiHub()
+        public WebGuiHub(ILogger<WebGuiHub> logger)
         {
-            //_serviceProvider = serviceProvider;
-            
-            //CodecsOnlineThrottler = new Throttler("RegisteredCodecs", 200, UpdateCodecsOnline);
-            //OngoingCallsThrottler = new Throttler("OnGoingCalls", 300, UpdateOngoingCalls);
-            //OldCallsThrottler = new Throttler("OldCalls", 400, UpdateOldCalls);
+            _logger = logger;
         }
 
         public override async Task OnConnectedAsync()
         {
+            _logger.LogDebug($"SignalR client connected to {GetType().Name}, connection id={Context.ConnectionId}");
 
-            if (log.IsDebugEnabled)
-            {
-                log.Debug($"SignalR client connected to {GetType().Name}, connection id={Context.ConnectionId}");
-            }
             await base.OnConnectedAsync();
         }
 
@@ -74,54 +61,13 @@ namespace CCM.Web.Hubs
         {
             if (exception == null)
             {
-                log.Debug($"SignalR client disconnected gracefully from {GetType().Name}, connection id={Context.ConnectionId}");
+                _logger.LogDebug($"SignalR client disconnected gracefully from {GetType().Name}, connection id={Context.ConnectionId}");
             }
             else
             {
-                log.Debug($"SignalR client disconnected ungracefully from {GetType().Name}, connection id={Context.ConnectionId}");
+                _logger.LogDebug($"SignalR client disconnected ungracefully from {GetType().Name}, connection id={Context.ConnectionId}");
             }
             await base.OnDisconnectedAsync(exception);
         }
-
-        //public void ThrottlingUpdateCodecsOnline()
-        //{
-        //    CodecsOnlineThrottler.Trigger();
-        //}
-
-        //private void UpdateCodecsOnline()
-        //{
-        //    var registeredUserAgentViewModelsProvider = _serviceProvider.GetService<RegisteredUserAgentViewModelsProvider>();
-        //    var userAgentsOnline = registeredUserAgentViewModelsProvider.GetAll();
-        //    myHubContext.Clients.All.CodecsOnline(userAgentsOnline);
-        //}
-
-        //public void ThrottlingUpdateOngoingCalls()
-        //{
-        //    OngoingCallsThrottler.Trigger();
-        //}
-
-        //private void UpdateOngoingCalls()
-        //{
-        //    var callRepository = _serviceProvider.GetService<ICallRepository>();
-        //    var onGoingCalls = callRepository.GetOngoingCalls(true);
-
-        //    log.Debug($"WebGuiHubUpdater. Updating list of ongoing calls on web gui clients. Ongoing calls count: {onGoingCalls.Count.ToString()}");
-        //    myHubContext.Clients.All.OnGoingCalls(onGoingCalls);
-        //}
-
-        //public void ThrottlingUpdateOldCalls()
-        //{
-        //    OldCallsThrottler.Trigger();
-        //}
-
-        //private void UpdateOldCalls()
-        //{
-        //    var callHistoryRepository = _serviceProvider.GetService<ICachedCallHistoryRepository>();
-        //    var settingsManager = _serviceProvider.GetService<ISettingsManager>();
-        //    var oldCalls = callHistoryRepository.GetOldCalls(settingsManager.LatestCallCount, true);
-
-        //    log.Debug($"WebGuiHubUpdater. Updating list of old calls on web gui clients. Old calls count: {oldCalls.Count.ToString()}");
-        //    myHubContext.Clients.All.OldCalls(oldCalls);
-        //}
     }
 }

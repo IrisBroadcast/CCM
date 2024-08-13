@@ -31,6 +31,9 @@ namespace CCM.Core.SipEvent.Models
     public class SipEventHandlerResult
     {
         public SipEventChangeStatus ChangeStatus { get; set; }
+        /// <summary>
+        /// Changed call id from `Calls` database. (Not Kamailio CallId)
+        /// </summary>
         public Guid ChangedObjectId { get; set; }
         public string SipAddress { get; set; }
 
@@ -41,8 +44,50 @@ namespace CCM.Core.SipEvent.Models
 
         public static SipEventHandlerResult NothingChanged => new SipEventHandlerResult { ChangeStatus = SipEventChangeStatus.NothingChanged };
 
-        public static SipEventHandlerResult SipMessageResult(SipEventChangeStatus status, Guid id, string sipAddress) {
-            return new SipEventHandlerResult() {
+        public static SipEventHandlerResult CallStarted(Guid id, string sipAddress)
+        {
+            return new SipEventHandlerResult()
+            {
+                ChangeStatus = SipEventChangeStatus.CallStarted,
+                ChangedObjectId = id,
+                SipAddress = sipAddress
+            };
+        }
+
+        public static SipEventHandlerResult CallClosed(Guid id, string sipAddress)
+        {
+            return new SipEventHandlerResult()
+            {
+                ChangeStatus = SipEventChangeStatus.CallClosed,
+                ChangedObjectId = id,
+                SipAddress = sipAddress
+            };
+        }
+
+        public static SipEventHandlerResult CallFailed(Guid id, string sipAddress)
+        {
+            return new SipEventHandlerResult()
+            {
+                ChangeStatus = SipEventChangeStatus.CallFailed,
+                ChangedObjectId = id,
+                SipAddress = sipAddress
+            };
+        }
+
+        public static SipEventHandlerResult CallProgress(Guid id, string sipAddress)
+        {
+            return new SipEventHandlerResult()
+            {
+                ChangeStatus = SipEventChangeStatus.CallProgress,
+                ChangedObjectId = id,
+                SipAddress = sipAddress
+            };
+        }
+
+        public static SipEventHandlerResult SipMessageResult(SipEventChangeStatus status, Guid id, string sipAddress)
+        {
+            return new SipEventHandlerResult()
+            {
                 ChangeStatus = status,
                 ChangedObjectId = id,
                 SipAddress = sipAddress

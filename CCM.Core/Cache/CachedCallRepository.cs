@@ -60,9 +60,24 @@ namespace CCM.Core.Cache
             return _internalRepository.GetOngoingCallById(callId);
         }
 
+        public OnGoingCall GetOngoingCallBySipAddress(string sipAddress)
+        {
+            return _internalRepository.GetOngoingCallBySipAddress(sipAddress);
+        }
+
         public bool CallExists(string callId, string hashId, string hashEnt)
         {
             return _internalRepository.CallExists(callId, hashId, hashEnt);
+        }
+
+        public bool CallExistsAndIsStarted(string callId, string hashId, string hashEnt)
+        {
+            return _internalRepository.CallExistsAndIsStarted(callId, hashId, hashEnt);
+        }
+
+        public bool CallExistsBySipAddress(string sipAddress)
+        {
+            return _internalRepository.CallExistsBySipAddress(sipAddress);
         }
 
         public CallInfo GetCallInfo(string callId, string hashId, string hashEnt)
@@ -73,11 +88,6 @@ namespace CCM.Core.Cache
         public CallInfo GetCallInfoById(Guid callId)
         {
             return _internalRepository.GetCallInfoById(callId);
-        }
-
-        public Call GetCallBySipAddress(string sipAddress)
-        {
-            return _internalRepository.GetCallBySipAddress(sipAddress);
         }
 
         public void UpdateOrAddCall(Call call)
@@ -95,6 +105,12 @@ namespace CCM.Core.Cache
         public void CloseCall(Guid callId)
         {
             _internalRepository.CloseCall(callId);
+            _lazyCache.ClearOngoingCalls();
+        }
+
+        public void FailAndCloseCall(Guid callId, string code, string message)
+        {
+            _internalRepository.FailAndCloseCall(callId, code, message);
             _lazyCache.ClearOngoingCalls();
         }
     }

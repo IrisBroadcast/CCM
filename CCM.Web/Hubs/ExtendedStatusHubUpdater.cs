@@ -74,12 +74,11 @@ namespace CCM.Web.Hubs
                         // Load call and update to and from codecs
                         var callId = updateResult.ChangedObjectId;
                         CallInfo callInfo = _cachedCallRepository.GetCallInfoById(callId);
-
                         if (callInfo != null)
                         {
                             _logger.LogDebug($"ExtendedStatusHub. Call started. From:{callInfo.FromId}, To:{callInfo.ToId}");
-                            UpdateCodecStatusByGuid(callInfo.FromId, updateResult.ChangeStatus, callInfo.FromSipAddress);
-                            UpdateCodecStatusByGuid(callInfo.ToId, updateResult.ChangeStatus, callInfo.ToSipAddress);
+                            UpdateCodecStatusByGuid(updateResult.ChangeStatus, callInfo.FromId, callInfo.FromSipAddress);
+                            UpdateCodecStatusByGuid(updateResult.ChangeStatus, callInfo.ToId, callInfo.ToSipAddress);
                         }
                         else
                         {
@@ -88,6 +87,7 @@ namespace CCM.Web.Hubs
                         break;
                     }
                 // TODO: Add Progress here ??? Other topic though
+                // TODO: Add Failed here ???
                 case (SipEventChangeStatus.CallClosed):
                     {
                         UpdateCodecStatusCallClosed(updateResult.ChangedObjectId);
@@ -95,12 +95,12 @@ namespace CCM.Web.Hubs
                     }
                 case (SipEventChangeStatus.CodecAdded):
                     {
-                        UpdateCodecStatusByGuid(updateResult.ChangedObjectId, updateResult.ChangeStatus, updateResult.SipAddress);
+                        UpdateCodecStatusByGuid(updateResult.ChangeStatus, updateResult.ChangedObjectId, updateResult.SipAddress);
                         break;
                     }
                 case (SipEventChangeStatus.CodecUpdated):
                     {
-                        UpdateCodecStatusByGuid(updateResult.ChangedObjectId, updateResult.ChangeStatus, updateResult.SipAddress);
+                        UpdateCodecStatusByGuid(updateResult.ChangeStatus, updateResult.ChangedObjectId, updateResult.SipAddress);
                         break;
                     }
                 case (SipEventChangeStatus.CodecRemoved):
@@ -132,7 +132,7 @@ namespace CCM.Web.Hubs
             _hub.Clients.All.CodecStatus(codecStatusViewModel);
         }
 
-        private void UpdateCodecStatusByGuid(Guid id, SipEventChangeStatus changeReason, string sipAddress = "")
+        private void UpdateCodecStatusByGuid(SipEventChangeStatus changeReason, Guid id, string sipAddress = "")
         {
             if (id == Guid.Empty)
             {

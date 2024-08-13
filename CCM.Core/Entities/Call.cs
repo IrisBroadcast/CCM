@@ -43,6 +43,7 @@ namespace CCM.Core.Entities
         public string SDP { get; set; }
         public string SipCode { get; set; }
         public string SipMessage { get; set; }
+        public bool IsStarted { get; set; } = false;
 
         public Guid? FromId { get; set; }
         public CallRegisteredCodec From { get; set; }

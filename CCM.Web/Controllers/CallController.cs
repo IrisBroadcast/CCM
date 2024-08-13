@@ -65,7 +65,6 @@ namespace CCM.Web.Controllers
             }
 
             var call = _cachedCallRepository.GetCallInfoById(callIdGuid);
-
             if (call == null)
             {
                 return RedirectToAction("Index", "Home");

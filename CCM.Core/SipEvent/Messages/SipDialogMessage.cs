@@ -49,20 +49,19 @@ namespace CCM.Core.SipEvent.Messages
         public string SipCode { get; set; }
         public string SipMessage { get; set; }
 
-
         public override string ToDebugString()
         {
             if (Status == SipDialogStatus.SingleBye)
             {
-                return $"CallId:{CallId}, FromSip:{FromSipUri?.UserAtHost ?? string.Empty}, ToSip:{ToSipUri?.UserAtHost ?? string.Empty}, FromTag:{FromTag}, ToTag:{ToTag}";
+                return $"CallId:{CallId}, FromSip:{FromSipUri?.UserAtHost ?? string.Empty}, ToSip:{ToSipUri?.UserAtHost ?? string.Empty}, FromTag:{FromTag}, ToTag:{ToTag}, SipCode:{SipCode}, SipMessage:{SipMessage}";
             }
 
             if (Status == SipDialogStatus.End)
             {
-                return $"CallId:{CallId}, HashId:{HashId}, HashEntry:{HashEntry}, Hangup reason:{HangupReason}, FromDisplayName:{FromDisplayName} FromSip:{FromSipUri?.UserAtHost ?? string.Empty}, ToDisplayName:{ToDisplayName} ToSip:{ToSipUri?.UserAtHost ?? string.Empty}, FromTag:{FromTag}, ToTag:{ToTag}";
+                return $"CallId:{CallId}, HashId:{HashId}, HashEntry:{HashEntry}, Hangup reason:{HangupReason}, FromDisplayName:{FromDisplayName} FromSip:{FromSipUri?.UserAtHost ?? string.Empty}, ToDisplayName:{ToDisplayName} ToSip:{ToSipUri?.UserAtHost ?? string.Empty}, FromTag:{FromTag}, ToTag:{ToTag}, SipCode:{SipCode}, SipMessage:{SipMessage}";
             }
 
-            return $"CallId:{CallId}, HashId:{HashId}, HashEntry:{HashEntry}, FromDisplayName:{FromDisplayName} FromSip:{FromSipUri?.UserAtHost ?? string.Empty}, ToDisplayName:{ToDisplayName} ToSip:{ToSipUri?.UserAtHost ?? string.Empty}, FromTag:{FromTag}, ToTag:{ToTag}";
+            return $"CallId:{CallId}, HashId:{HashId}, HashEntry:{HashEntry}, FromDisplayName:{FromDisplayName} FromSip:{FromSipUri?.UserAtHost ?? string.Empty}, ToDisplayName:{ToDisplayName} ToSip:{ToSipUri?.UserAtHost ?? string.Empty}, FromTag:{FromTag}, ToTag:{ToTag}, SipCode:{SipCode}, SipMessage:{SipMessage}";
         }
     }
 }

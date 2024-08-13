@@ -63,7 +63,7 @@ namespace CCM.Core.SipEvent
                 case ExternalDialogStatus.End:
                     return CloseCall(dialogMessage);
                 default:
-                    return NothingChangedResult;
+                    return SipEventHandlerResult.NothingChanged;
             }
         }
 
@@ -80,7 +80,7 @@ namespace CCM.Core.SipEvent
             if (_cachedCallRepository.CallExists(message.CallId, "", ""))
             {
                 _logger.LogDebug($"Call with id:{message.CallId} already exists");
-                return NothingChangedResult;
+                return SipEventHandlerResult.NothingChanged;
             }
 
             var call = new Call
@@ -102,47 +102,42 @@ namespace CCM.Core.SipEvent
                 DialogHashEnt = "",
                 Updated = DateTime.UtcNow,
                 State = SipCallState.NONE,
-                SDP = message.SDP
+                SDP = message.SDP,
+                IsStarted = true,
             };
 
             _cachedCallRepository.UpdateOrAddCall(call);
 
-            return SipMessageResult(SipEventChangeStatus.CallStarted, call.Id, call.FromSip);
+            return SipEventHandlerResult.CallStarted(call.Id, call.FromSip);
         }
 
         public SipEventHandlerResult CloseCall(ExternalDialogMessage message)
         {
-            _logger.LogDebug($"Closing call with id:{message.CallId}");
+            _logger.LogDebug("Closing call with id:{callId}", message.CallId);
 
             try
             {
                 CallInfo call = _cachedCallRepository.GetCallInfo(message.CallId, "", "");
-
                 if (call == null)
                 {
-                    _logger.LogWarning($"Unable to find call with call id:{message.CallId}");
-                    return NothingChangedResult;
+                    _logger.LogWarning("Unable to find call with call id:{callId}, ", message.CallId);
+                    return SipEventHandlerResult.NothingChanged;
                 }
 
                 if (call.Closed)
                 {
-                    _logger.LogWarning($"Call with call id:{message.CallId} already closed");
-                    return NothingChangedResult;
+                    _logger.LogWarning("Call with call id:{callId} already closed", message.CallId);
+                    return SipEventHandlerResult.NothingChanged;
                 }
 
                 _cachedCallRepository.CloseCall(call.Id);
-                return SipMessageResult(SipEventChangeStatus.CallClosed, call.Id, call.FromSipAddress);
+                return SipEventHandlerResult.CallClosed(call.Id, call.FromSipAddress);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error while closing call with call id:{message.CallId}");
-                return NothingChangedResult;
+                return SipEventHandlerResult.NothingChanged;
             }
         }
-
-        private SipEventHandlerResult NothingChangedResult => SipMessageResult(SipEventChangeStatus.NothingChanged);
-        private SipEventHandlerResult SipMessageResult(SipEventChangeStatus status) { return new SipEventHandlerResult() { ChangeStatus = status }; }
-        private SipEventHandlerResult SipMessageResult(SipEventChangeStatus status, Guid id) { return new SipEventHandlerResult() { ChangeStatus = status, ChangedObjectId = id }; }
-        private SipEventHandlerResult SipMessageResult(SipEventChangeStatus status, Guid id, string sipAddress) { return new SipEventHandlerResult() { ChangeStatus = status, ChangedObjectId = id, SipAddress = sipAddress }; }
     }
 }
