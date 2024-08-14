@@ -113,20 +113,20 @@ namespace CCM.Core.SipEvent
 
         public SipEventHandlerResult CloseCall(ExternalDialogMessage message)
         {
-            _logger.LogDebug("Closing call with id:{callId}", message.CallId);
+            _logger.LogDebug("Closing call with id:{callId} (external)", message.CallId);
 
             try
             {
                 CallInfo call = _cachedCallRepository.GetCallInfo(message.CallId, "", "");
                 if (call == null)
                 {
-                    _logger.LogWarning("Unable to find call with call id:{callId}, ", message.CallId);
+                    _logger.LogWarning("Unable to find call with call id:{callId} (external)", message.CallId);
                     return SipEventHandlerResult.NothingChanged;
                 }
 
                 if (call.Closed)
                 {
-                    _logger.LogWarning("Call with call id:{callId} already closed", message.CallId);
+                    _logger.LogWarning("Call with call id:{callId} already closed (external)", message.CallId);
                     return SipEventHandlerResult.NothingChanged;
                 }
 
@@ -135,7 +135,7 @@ namespace CCM.Core.SipEvent
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Error while closing call with call id:{message.CallId}");
+                _logger.LogError(ex, "Error while closing call with call id:{callId} (external)", message.CallId);
                 return SipEventHandlerResult.NothingChanged;
             }
         }

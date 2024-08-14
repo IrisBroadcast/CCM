@@ -136,7 +136,7 @@ namespace CCM.Core.SipEvent
         /// <param name="sipDialogMessage"></param>
         private SipEventHandlerResult HandleDialog(SipDialogMessage sipDialogMessage)
         {
-            _logger.LogDebug($"Handle Dialog {sipDialogMessage.ToDebugString()}");
+            _logger.LogInformation("Handle Dialog {debug}", sipDialogMessage.ToDebugString());
 
             switch (sipDialogMessage.Status)
             {
@@ -147,7 +147,6 @@ namespace CCM.Core.SipEvent
                 case SipDialogStatus.Failed:
                     return FailedCall(sipDialogMessage);
                 case SipDialogStatus.End:
-                    _logger.LogInformation("Received End command from Kamailio. HangUp reason:{0}, from:{1}, to:{2}", sipDialogMessage.HangupReason, sipDialogMessage.FromSipUri, sipDialogMessage.ToSipUri);
                     return CloseCall(sipDialogMessage);
                 case SipDialogStatus.SingleBye:
                     // If BYE in Kamailio and no dialog is in Kamailio, a single bye is sent to CCM
@@ -161,8 +160,7 @@ namespace CCM.Core.SipEvent
 
         private SipEventHandlerResult RegisterCall(SipDialogMessage sipMessage)
         {
-            _logger.LogDebug("Register call from:{fromUserAtHost} to:{toUserAtHost}, call id:{call}, hash id:{hashId}, hash entry:{hashEntry}",
-                sipMessage.FromSipUri.UserAtHost, sipMessage.ToSipUri.UserAtHost, sipMessage.CallId, sipMessage.HashId, sipMessage.HashEntry);
+            _logger.LogInformation("Register call {debug}", sipMessage.ToDebugString());
 
             if (_cachedCallRepository.CallExistsAndIsStarted(sipMessage.CallId, sipMessage.HashId, sipMessage.HashEntry))
             {
@@ -245,7 +243,7 @@ namespace CCM.Core.SipEvent
 
         private SipEventHandlerResult ProgressCall(SipDialogMessage sipMessage)
         {
-            _logger.LogDebug("Progress call with call id:{callId}, hash id:{hashId}, hash entry:{hashEntry}", sipMessage.CallId, sipMessage.HashId, sipMessage.HashEntry);
+            _logger.LogInformation("Progress call {debug}", sipMessage.ToDebugString());
 
             if (_cachedCallRepository.CallExists(sipMessage.CallId, sipMessage.HashId, sipMessage.HashEntry) == false)
             {
@@ -358,7 +356,7 @@ namespace CCM.Core.SipEvent
 
         private SipEventHandlerResult FailedCall(SipDialogMessage sipMessage)
         {
-            _logger.LogDebug("Failed call with call id:{callId}, hash id:{hashId}, hash entry:{hashEntry}", sipMessage.CallId, sipMessage.HashId, sipMessage.HashEntry);
+            _logger.LogInformation("Failed call {debug}", sipMessage.ToDebugString());
 
             try
             {
@@ -387,7 +385,7 @@ namespace CCM.Core.SipEvent
 
         private SipEventHandlerResult CloseCall(SipDialogMessage sipMessage)
         {
-            _logger.LogDebug("Closing call with call id:{callId}, hash id:{hashId}, hash entry:{hashEntry}", sipMessage.CallId, sipMessage.HashId, sipMessage.HashEntry);
+            _logger.LogInformation("Closing call {debug}", sipMessage.ToDebugString());
 
             try
             {
