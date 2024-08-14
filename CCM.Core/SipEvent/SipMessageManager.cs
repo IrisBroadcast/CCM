@@ -247,8 +247,7 @@ namespace CCM.Core.SipEvent
 
             if (_cachedCallRepository.CallExists(sipMessage.CallId, sipMessage.HashId, sipMessage.HashEntry) == false)
             {
-                _logger.LogWarning("Progress call with id:{0}, hash id:{1}, hash entry:{2} doesn't exist. (Creating it) {debug}", sipMessage.CallId,
-                    sipMessage.HashId, sipMessage.HashEntry, sipMessage.ToDebugString());
+                _logger.LogWarning("Progress call (Creating it) {debug}", sipMessage.ToDebugString());
 
                 ////////////////////////////////////////////////////////////////
 
