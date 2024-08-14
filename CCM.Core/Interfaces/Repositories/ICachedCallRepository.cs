@@ -34,16 +34,15 @@ namespace CCM.Core.Interfaces.Repositories
     public interface ICachedCallRepository
     {
         IReadOnlyCollection<OnGoingCall> GetOngoingCalls(bool anonymize);
-        OnGoingCall GetOngoingCallById(Guid callId);
+        OnGoingCall GetOngoingCallById(Guid dbId);
         OnGoingCall GetOngoingCallBySipAddress(string sipAddress);
 
         bool CallExists(string callId, string hashId, string hashEnt);
-        bool CallExistsAndIsStarted(string callId, string hashId, string hashEnt);
         bool CallExistsBySipAddress(string sipAddress);
         void UpdateOrAddCall(Call call);
-        void UpdateCallProgress(Guid callId, string code, string message);
-        void CloseCall(Guid callId);
-        void FailAndCloseCall(Guid callId, string code, string message);
+        void UpdateCallProgress(Guid dbId, string code, string message);
+        void CloseCall(Guid dbId);
+        void FailAndCloseCall(Guid dbId, string code, string message);
 
         /// <summary>
         /// Get information about a specific call. Returns closed calls also.
@@ -53,24 +52,23 @@ namespace CCM.Core.Interfaces.Repositories
         /// <param name="hashEnt"></param>
         /// <returns></returns>
         CallInfo GetCallInfo(string callId, string hashId, string hashEnt);
-        CallInfo GetCallInfoById(Guid callId);
+        CallInfo GetCallInfoById(Guid dbId);
     }
 
     public interface ICallRepository
     {
         IReadOnlyCollection<OnGoingCall> GetOngoingCalls(bool anonymize);
-        OnGoingCall GetOngoingCallById(Guid callId);
+        OnGoingCall GetOngoingCallById(Guid dbId);
         OnGoingCall GetOngoingCallBySipAddress(string sipAddress);
 
         bool CallExists(string callId, string hashId, string hashEnt);
-        bool CallExistsAndIsStarted(string callId, string hashId, string hashEnt);
         bool CallExistsBySipAddress(string sipAddress);
         void UpdateOrAddCall(Call call);
-        void UpdateCallProgress(Guid callId, string code, string message);
-        void CloseCall(Guid callId);
-        void FailAndCloseCall(Guid callId, string code, string message);
+        void UpdateCallProgress(Guid dbId, string code, string message);
+        void CloseCall(Guid dbId);
+        void FailAndCloseCall(Guid dbId, string code, string message);
 
         CallInfo GetCallInfo(string callId, string hashId, string hashEnt);
-        CallInfo GetCallInfoById(Guid callId);
+        CallInfo GetCallInfoById(Guid dbId);
     }
 }

@@ -39,7 +39,6 @@ using CCM.Data.Helpers;
 using LazyCache;
 using Microsoft.Extensions.Logging;
 using NLog;
-using System.Security.Policy;
 
 namespace CCM.Data.Repositories
 {
@@ -62,12 +61,6 @@ namespace CCM.Data.Repositories
         {
             return _ccmDbContext.Calls
                 .Any(c => c.DialogCallId == callId && c.DialogHashId == hashId && c.DialogHashEnt == hashEnt);
-        }
-
-        public bool CallExistsAndIsStarted(string callId, string hashId, string hashEnt)
-        {
-            return _ccmDbContext.Calls
-                .Any(c => c.DialogCallId == callId && c.DialogHashId == hashId && c.DialogHashEnt == hashEnt && c.IsStarted == true);
         }
 
         public bool CallExistsBySipAddress(string sipAddress)
@@ -166,7 +159,7 @@ namespace CCM.Data.Repositories
         /// <summary>
         /// Update call progress information.
         /// </summary>
-        /// <param name="call"></param>
+        /// <param name="callId"></param>
         /// <param name="code">Information about progress 200</param>
         /// <param name="message">Information about progress Not Acceptable here</param>
         public void UpdateCallProgress(Guid callId, string code, string message)
@@ -275,11 +268,11 @@ namespace CCM.Data.Repositories
         /// <summary>
         /// Get call information with db id.
         /// </summary>
-        /// <param name="callId"></param>
+        /// <param name="dbId"></param>
         /// <returns></returns>
-        public CallInfo GetCallInfoById(Guid callId)
+        public CallInfo GetCallInfoById(Guid dbId)
         {
-            var dbCall = _ccmDbContext.Calls.SingleOrDefault(c => c.Id == callId);
+            var dbCall = _ccmDbContext.Calls.SingleOrDefault(c => c.Id == dbId);
             return MapToCallInfo(dbCall);
         }
 
@@ -313,9 +306,9 @@ namespace CCM.Data.Repositories
         /// <summary>
         /// Returns ongoing call by db id.
         /// </summary>
-        /// <param name="callId"></param>
+        /// <param name="dbId"></param>
         /// <returns></returns>
-        public OnGoingCall GetOngoingCallById(Guid callId)
+        public OnGoingCall GetOngoingCallById(Guid dbId)
         {
             var dbCall = _ccmDbContext.Calls
                 .Include(c => c.FromCodec)
@@ -332,7 +325,7 @@ namespace CCM.Data.Repositories
                 .Include(c => c.ToCodec.Location)
                 .Include(c => c.ToCodec.Location.Region)
                 .Include(c => c.ToCodec.Location.Category)
-                .SingleOrDefault(c => !c.Closed && c.Id == callId);
+                .SingleOrDefault(c => !c.Closed && c.Id == dbId);
             return MapToOngoingCall(dbCall, false);
         }
 
@@ -531,12 +524,13 @@ namespace CCM.Data.Repositories
             };
         }
 
-        private CallInfo MapToCallInfo(CallEntity dbCall)
+        private CallInfo? MapToCallInfo(CallEntity dbCall)
         {
             return dbCall == null ? null : new CallInfo
             {
                 Id = dbCall.Id,
                 Started = dbCall.Started,
+                IsStarted = dbCall.IsStarted,
                 FromSipAddress = dbCall.FromUsername,
                 ToSipAddress = dbCall.ToUsername,
                 FromId = dbCall.FromId ?? Guid.Empty,

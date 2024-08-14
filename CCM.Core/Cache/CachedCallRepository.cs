@@ -70,11 +70,6 @@ namespace CCM.Core.Cache
             return _internalRepository.CallExists(callId, hashId, hashEnt);
         }
 
-        public bool CallExistsAndIsStarted(string callId, string hashId, string hashEnt)
-        {
-            return _internalRepository.CallExistsAndIsStarted(callId, hashId, hashEnt);
-        }
-
         public bool CallExistsBySipAddress(string sipAddress)
         {
             return _internalRepository.CallExistsBySipAddress(sipAddress);

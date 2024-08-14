@@ -162,7 +162,8 @@ namespace CCM.Core.SipEvent
         {
             _logger.LogInformation("Register call {debug}", sipMessage.ToDebugString());
 
-            if (_cachedCallRepository.CallExistsAndIsStarted(sipMessage.CallId, sipMessage.HashId, sipMessage.HashEntry))
+            CallInfo callInfo = _cachedCallRepository.GetCallInfo(sipMessage.CallId, sipMessage.HashId, sipMessage.HashEntry);
+            if (callInfo != null && callInfo.IsStarted == true)
             {
                 _logger.LogDebug("Call with id:{callId}, hash id:{hashId}, hash entry:{hashEntry} already exists", sipMessage.CallId,
                     sipMessage.HashId, sipMessage.HashEntry);
@@ -170,6 +171,12 @@ namespace CCM.Core.SipEvent
             }
 
             var call = new Call();
+
+            // Use the id to update correct item if prevously "progressed" call
+            if (callInfo.IsStarted == false)
+            {
+                call.Id = callInfo.Id;
+            }
 
             // If the user-part is numeric, we make the assumption
             // that it is a phone number (even though sip-address
