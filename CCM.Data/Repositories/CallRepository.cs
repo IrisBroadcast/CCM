@@ -359,7 +359,7 @@ namespace CCM.Data.Repositories
                 .OrderByDescending(c => c.Updated) // Last call in case several happens to exist in database
                 .FirstOrDefault(c => !c.Closed && (c.FromUsername == sipAddress || c.ToUsername == sipAddress));
 
-            if (string.IsNullOrEmpty(sipAddress))
+            if (string.IsNullOrEmpty(sipAddress) || dbCall == null)
             {
                 return null;
             }
