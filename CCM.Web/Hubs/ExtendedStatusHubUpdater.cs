@@ -86,11 +86,31 @@ namespace CCM.Web.Hubs
                         }
                         break;
                     }
-                // TODO: Add Progress here ??? Other topic though
-                // TODO: Add Failed here ???
                 case (SipEventChangeStatus.CallClosed):
                     {
                         UpdateCodecStatusCallClosed(updateResult.ChangedObjectId);
+                        break;
+                    }
+                case (SipEventChangeStatus.CallFailed):
+                    {
+                        UpdateCodecStatusCallClosed(updateResult.ChangedObjectId);
+                        break;
+                    }
+                case (SipEventChangeStatus.CallProgress):
+                    {
+                        // Load call and update to and from codecs
+                        var callId = updateResult.ChangedObjectId;
+                        CallInfo callInfo = _cachedCallRepository.GetCallInfoById(callId);
+                        if (callInfo != null)
+                        {
+                            _logger.LogDebug($"CodecStatusHub. Call started. From:{callInfo.FromId}, To:{callInfo.ToId}");
+                            UpdateCodecStatusByGuid(updateResult.ChangeStatus, callInfo.FromId, callInfo.FromSipAddress);
+                            UpdateCodecStatusByGuid(updateResult.ChangeStatus, callInfo.ToId, callInfo.ToSipAddress);
+                        }
+                        else
+                        {
+                            _logger.LogError($"CodecStatusHub. Call started but was not found in database. Call Id:{callId}");
+                        }
                         break;
                     }
                 case (SipEventChangeStatus.CodecAdded):

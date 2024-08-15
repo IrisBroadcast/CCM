@@ -83,7 +83,8 @@ namespace CCM.Web.Hubs
                 UpdateOngoingCalls();
             }
 
-            if (updateResult.ChangeStatus == SipEventChangeStatus.CallClosed)
+            if (updateResult.ChangeStatus == SipEventChangeStatus.CallClosed ||
+                updateResult.ChangeStatus == SipEventChangeStatus.CallFailed)
             {
                 UpdateOldCalls();
                 UpdateOngoingCalls();

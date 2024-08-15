@@ -85,6 +85,16 @@ namespace CCM.Web.Hubs
                         }
                         break;
                     }
+                case (SipEventChangeStatus.CallClosed):
+                    {
+                        UpdateCodecStatusCallClosed(updateResult.ChangedObjectId);
+                        break;
+                    }
+                case (SipEventChangeStatus.CallFailed):
+                    {
+                        UpdateCodecStatusCallClosed(updateResult.ChangedObjectId);
+                        break;
+                    }
                 case (SipEventChangeStatus.CallProgress):
                     {
                         // Load call and update to and from codecs
@@ -100,16 +110,6 @@ namespace CCM.Web.Hubs
                         {
                             _logger.LogError($"CodecStatusHub. Call started but was not found in database. Call Id:{callId}");
                         }
-                        break;
-                    }
-                case (SipEventChangeStatus.CallClosed):
-                    {
-                        UpdateCodecStatusCallClosed(updateResult.ChangedObjectId);
-                        break;
-                    }
-                case (SipEventChangeStatus.CallFailed):
-                    {
-                        UpdateCodecStatusCallClosed(updateResult.ChangedObjectId);
                         break;
                     }
                 case (SipEventChangeStatus.CodecAdded):
