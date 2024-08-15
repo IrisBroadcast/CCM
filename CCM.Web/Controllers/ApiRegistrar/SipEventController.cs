@@ -119,7 +119,7 @@ namespace CCM.Web.Controllers.ApiRegistrar
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
+                _logger.LogError("Could not handle sip message {error}", ex.Message);
                 _logger.LogError(ex.InnerException.ToString());
             }
 
