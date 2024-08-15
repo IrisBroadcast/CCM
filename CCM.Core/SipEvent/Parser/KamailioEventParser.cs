@@ -192,7 +192,7 @@ namespace CCM.Core.SipEvent.Parser
             int i;
             if (int.TryParse(s, out i))
             {
-                return i;    
+                return i;
             }
             return defaultValue;
         }

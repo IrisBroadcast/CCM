@@ -252,6 +252,13 @@ namespace CCM.Core.SipEvent
         {
             _logger.LogInformation("Progress call {debug}", sipMessage.ToDebugString());
 
+            if (sipMessage.Method.Contains("BYE"))
+            {
+                _logger.LogWarning("Progress call (Bye, ignoring it) {debug}", sipMessage.ToDebugString());
+                return SipEventHandlerResult.NothingChanged;
+            }
+
+
             if (_cachedCallRepository.CallExists(sipMessage.CallId, sipMessage.HashId, sipMessage.HashEntry) == false)
             {
                 _logger.LogWarning("Progress call (Creating it) {debug}", sipMessage.ToDebugString());

@@ -39,7 +39,7 @@ namespace CCM.Core.SipEvent.Event
         [JsonPropertyName("registrar")] public string Registrar { get; set; } // "registrar.com"
         [JsonPropertyName("regtype")] public string RegType { get; set; } // "rereg/new/delete"
         [JsonPropertyName("expires")] public int Expires { get; set; }
-        [JsonPropertyName("method")] public string Method { get; set; } // "REGISTER"
+        [JsonPropertyName("method")] public string Method { get; set; } // "REGISTER|BYE"
         [JsonPropertyName("from_uri")] public string FromUri { get; set; } // "sip:test1249@registrar.com"
         [JsonPropertyName("from_displayname")] public string FromDisplayName { get; set; } // "Karlstad 11"
 
@@ -62,15 +62,15 @@ namespace CCM.Core.SipEvent.Event
         [JsonPropertyName("hangup_reason")] public string HangupReason { get; set; } // "NORMAL"
 
         // Topic: Dialog Progress / Dialog Failed
-        [JsonPropertyName("code")] public string SipCode { get; set; }
-        [JsonPropertyName("message")] public string SipMessage { get; set; }
+        [JsonPropertyName("code")] public string SipCode { get; set; } // "<null>"
+        [JsonPropertyName("message")] public string SipMessage { get; set; } // "<null>"
 
         [JsonPropertyName("ip")] public IpInfo Ip { get; set; }
 
         public string ToLogString()
         {
             var timestamp = this.UnixTimeStampToDateTime(this.TimeStamp);
-            return $"Kamailio Sip Event:{this.Event}, TimeStamp:{timestamp}, Registrar:{this.Registrar}, RegType:{this.RegType}, Expires:{this.Expires}, Method:{this.Method}, User-Agent:{this.UserAgentHeader}, FromURI:{this.FromUri}, CallId:{this.CallId}" +
+            return $"Kamailio Sip Event:{this.Event}, TimeStamp:{timestamp}, Registrar:{this.Registrar}, RegType:{this.RegType}, Expires:{this.Expires}, Method:{this.Method}, User-Agent:{this.UserAgentHeader}, FromURI:{this.FromUri}, RequestUri:{this.RequestUri}, ContactUri:{this.ContactUri} CallId:{this.CallId}" +
                 $", DialogState:{this.DialogState}, DialogHashId:{this.DialogHashId}, DialogHashEntry:{this.DialogHashEntry}, HangupReason:{this.HangupReason}";
         }
 
