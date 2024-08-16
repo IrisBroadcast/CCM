@@ -431,7 +431,9 @@ namespace CCM.Data.Repositories
                 Ended = call.Updated,
                 IsPhoneCall = call.IsPhoneCall,
 
-                FromCodecTypeColor = call.FromCodec?.User?.CodecType?.Color ?? string.Empty,
+                SipCode = call.Code ?? string.Empty,
+                SipMessage = call.Message ?? string.Empty,
+
                 FromCodecTypeId = call.FromCodec?.User?.CodecType?.Id ?? Guid.Empty,
                 FromCodecTypeName = call.FromCodec?.User?.CodecType?.Name ?? string.Empty,
                 FromCodecTypeCategory = call.FromCodec?.UserAgent?.Category?.Name,
@@ -453,7 +455,6 @@ namespace CCM.Data.Repositories
                 FromUserAgentHeader = call.FromCodec?.UserAgentHeader ?? string.Empty,
                 FromUsername = call.FromCodec?.Username ?? call.FromUsername,
 
-                ToCodecTypeColor = call.ToCodec?.User?.CodecType?.Color ?? string.Empty,
                 ToCodecTypeId = call.ToCodec?.User?.CodecType?.Id ?? Guid.Empty,
                 ToCodecTypeName = call.ToCodec?.User?.CodecType?.Name ?? string.Empty,
                 ToCodecTypeCategory = call.ToCodec?.UserAgent?.Category?.Name,
@@ -484,7 +485,7 @@ namespace CCM.Data.Repositories
 
             if (call.ToCategory != null && !string.IsNullOrEmpty(call.ToCategory))
             {
-                // special case for power bi log call type / category
+                // INFO: special case for power bi log call type / category
                 if (call.ToCategory.Contains("vox-medarbetare") || call.ToCategory.Contains("medi-g"))
                 {
                     callHistory.FromCodecTypeCategory = call.ToCategory;

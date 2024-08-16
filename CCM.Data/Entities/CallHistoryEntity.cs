@@ -47,6 +47,14 @@ namespace CCM.Data.Entities
         [Column("DlgHashEnt")]
         public string DialogHashEnt { get; set; }
 
+#warning TODO: this one should be changed in the database, hijacked
+        [Column("FromCodecTypeColor")]
+        public string SipCode { get; set; }
+
+#warning TODO: this one should be changed in the database, hijacked
+        [Column("ToCodecTypeColor")]
+        public string SipMessage { get; set; }
+
         public Guid FromId { get; set; }
         public Guid? FromUserAccountId { get; set; }
         public string FromTag { get; set; }
@@ -62,7 +70,6 @@ namespace CCM.Data.Entities
         public string FromLocationCategory { get; set; }
         public Guid FromCodecTypeId { get; set; }
         public string FromCodecTypeName { get; set; }
-        public string FromCodecTypeColor { get; set; }
         [Column("FromTypeCat")]
         public string FromCodecTypeCategory { get; set; }
         public Guid FromOwnerId { get; set; }
@@ -87,7 +94,6 @@ namespace CCM.Data.Entities
         public string ToLocationCategory { get; set; }
         public Guid ToCodecTypeId { get; set; }
         public string ToCodecTypeName { get; set; }
-        public string ToCodecTypeColor { get; set; }
         [Column("ToTypeCat")]
         public string ToCodecTypeCategory { get; set; }
         public Guid ToOwnerId { get; set; }
@@ -96,5 +102,7 @@ namespace CCM.Data.Entities
         public string ToRegionName { get; set; }
         [Column("ToUserAgentHead")]
         public string ToUserAgentHeader { get; set; }
+
+        // TODO: make user virtual link here and get color
     }
 }

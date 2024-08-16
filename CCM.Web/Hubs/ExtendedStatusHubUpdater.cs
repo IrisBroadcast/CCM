@@ -233,10 +233,12 @@ namespace CCM.Web.Hubs
                     PresentationName = call.FromDisplayName,
                     DisplayName = call.FromDisplayName,
                     InCall = false,
+                    SipCode = call.SipCode,
+                    SipMessage = call.SipMessage,
                     LocationName = call.FromLocationName,
                     LocationCategory = call.FromLocationCategory,
                     CodecTypeName = call.FromCodecTypeName,
-                    CodecTypeColor = call.FromCodecTypeColor,
+                    CodecTypeColor = "",
                     CodecTypeCategory = call.FromCodecTypeCategory,
                     RegionName = call.FromRegionName,
                     UserComment = call.FromComment,
@@ -260,13 +262,15 @@ namespace CCM.Web.Hubs
                     PresentationName = call.ToDisplayName,
                     DisplayName = call.ToDisplayName,
                     InCall = false,
+                    SipCode = call.SipCode,
+                    SipMessage = call.SipMessage,
                     LocationName = call.ToLocationName,
                     LocationCategory = call.ToLocationCategory,
                     CodecTypeName = call.ToCodecTypeName,
-                    CodecTypeColor = call.ToCodecTypeColor,
+                    CodecTypeColor = "",
                     CodecTypeCategory = call.ToCodecTypeCategory,
                     RegionName = call.ToRegionName,
-                    UserComment = call.ToComment
+                    UserComment = call.ToComment,
                 };
                 _hub.Clients.All.CodecStatus(updatedCodecTo);
             }

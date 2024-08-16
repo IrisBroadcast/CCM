@@ -73,10 +73,12 @@ namespace CCM.Data.Repositories
             dbCallHistory.Ended = callHistory.Ended;
             dbCallHistory.IsPhoneCall = callHistory.IsPhoneCall;
 
+            dbCallHistory.SipCode = callHistory.SipCode;
+            dbCallHistory.SipMessage = callHistory.SipMessage;
+
             dbCallHistory.FromCodecTypeCategory = callHistory.FromCodecTypeCategory;
             dbCallHistory.FromCodecTypeId = callHistory.FromCodecTypeId;
             dbCallHistory.FromCodecTypeName = callHistory.FromCodecTypeName;
-            dbCallHistory.FromCodecTypeColor = callHistory.FromCodecTypeColor;
             dbCallHistory.FromComment = callHistory.FromComment;
             dbCallHistory.FromDisplayName = callHistory.FromDisplayName;
             dbCallHistory.FromId = callHistory.FromId;
@@ -98,7 +100,6 @@ namespace CCM.Data.Repositories
             dbCallHistory.ToCodecTypeCategory = callHistory.ToCodecTypeCategory;
             dbCallHistory.ToCodecTypeId = callHistory.ToCodecTypeId;
             dbCallHistory.ToCodecTypeName = callHistory.ToCodecTypeName;
-            dbCallHistory.ToCodecTypeColor = callHistory.ToCodecTypeColor;
             dbCallHistory.ToComment = callHistory.ToComment;
             dbCallHistory.ToDisplayName = callHistory.ToDisplayName;
             dbCallHistory.ToId = callHistory.ToId;
@@ -163,10 +164,15 @@ namespace CCM.Data.Repositories
                 Duration = dbCallHistory.Ended.Subtract(dbCallHistory.Started).ToString(@"dd\d\ hh\:mm\:ss"),
                 IsPhoneCall = dbCallHistory.IsPhoneCall,
 
+                SipCode = dbCallHistory.SipCode,
+                SipMessage = dbCallHistory.SipMessage,
+
+                FromCodecTypeColor = "#000", // TODO: This is fake
+                ToCodecTypeColor = "#000", // TODO: This is fake, get from user??
+
                 FromId = MapGuidString(dbCallHistory.FromId),
                 FromUserAccountId = MapGuidString(dbCallHistory.FromUserAccountId ?? Guid.Empty),
                 FromSip = dbCallHistory.FromUsername,
-                FromCodecTypeColor = dbCallHistory.FromCodecTypeColor,
                 FromCodecTypeName = dbCallHistory.FromCodecTypeName,
                 FromCodecTypeCategory = dbCallHistory.FromCodecTypeCategory,
                 FromComment = dbCallHistory.FromComment,
@@ -179,7 +185,6 @@ namespace CCM.Data.Repositories
                 ToId = MapGuidString(dbCallHistory.ToId),
                 ToUserAccountId = MapGuidString(dbCallHistory.ToUserAccountId ?? Guid.Empty),
                 ToSip = dbCallHistory.ToUsername,
-                ToCodecTypeColor = dbCallHistory.ToCodecTypeColor,
                 ToCodecTypeName = dbCallHistory.ToCodecTypeName,
                 ToCodecTypeCategory = dbCallHistory.ToCodecTypeCategory,
                 ToComment = dbCallHistory.ToComment,

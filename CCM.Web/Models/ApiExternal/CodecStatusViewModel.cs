@@ -62,6 +62,10 @@ namespace CCM.Web.Models.ApiExternal
         public string LocationName { get; set; }
         public string LocationCategory { get; set; }
         public string CodecTypeName { get; set; }
+        /// <summary>
+        /// TODO: This one should be removed, check if anyone is dependant on it..
+        /// </summary>
+        [Obsolete("Don't use it, will be removed")]
         public string CodecTypeColor { get; set; }
         public string CodecTypeCategory { get; set; }
         public string UserExternalReference { get; set; }
