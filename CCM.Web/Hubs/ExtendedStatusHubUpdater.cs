@@ -149,11 +149,28 @@ namespace CCM.Web.Hubs
             }
 
             var ongoingCalls = _codecStatusViewModelsProvider.GetAllCodecsNotRegisteredButInCall();
-            CodecStatusExtendedViewModel updatedCallStatus = ongoingCalls.FirstOrDefault(x => x.Id == id) as CodecStatusExtendedViewModel;
+            CodecStatusViewModel updatedCallStatus = ongoingCalls.FirstOrDefault(x => x.Id == id);
             if (updatedCallStatus != null)
             {
                 _logger.LogDebug("ExtendedStatusHub is sending codec status to clients (in call). SipAddress: {SipAddress}, State: {State}", updatedCallStatus.SipAddress, updatedCallStatus.State);
-                _hub.Clients.All.CodecStatus(updatedCallStatus);
+
+                CodecStatusExtendedViewModel extended = new()
+                {
+                    Id = updatedCallStatus.Id,
+                    State = updatedCallStatus.State,
+                    SipAddress = updatedCallStatus.SipAddress,
+                    PresentationName = updatedCallStatus.PresentationName,
+                    //DisplayName = updatedCallStatus.DisplayName,
+                    HasCodecControl = updatedCallStatus.HasCodecControl,
+                    InCall = updatedCallStatus.InCall,
+                    ConnectedToSipAddress = updatedCallStatus.ConnectedToSipAddress,
+                    ConnectedToPresentationName = updatedCallStatus.ConnectedToPresentationName,
+                    //ConnectedToDisplayName = updatedCallStatus.ConnectedToDisplayName,
+                    ConnectedToLocation = updatedCallStatus.ConnectedToLocation,
+                    IsCallingPart = updatedCallStatus.IsCallingPart,
+                    CallStartedAt = updatedCallStatus.CallStartedAt,
+                };
+                _hub.Clients.All.CodecStatus(extended);
                 return;
             }
 
