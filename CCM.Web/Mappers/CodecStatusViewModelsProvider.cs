@@ -120,7 +120,7 @@ namespace CCM.Web.Mappers
 
             //    // Check if 'to' codec is not in registered codecs
             //    var nyToGuid = Guid.Empty;
-            //    Guid.TryParse(uu.FromId, out nyToGuid);
+            //    Guid.TryParse(uu.ToId, out nyToGuid);
             //    if (String.IsNullOrEmpty(uu.ToId) || userAgentsOnline.All(x => x.Id != nyToGuid))
             //    {
             //        userAgentsOnline.Add(new CodecStatusViewModel
@@ -140,6 +140,68 @@ namespace CCM.Web.Mappers
             //        });
             //    }
             //}
+
+            return userAgentsOnline;
+        }
+
+        public IEnumerable<CodecStatusViewModel> GetAllCodecsNotRegisteredButInCall()
+        {
+            var sipDomain = _settingsManager.SipDomain;
+            var registeredUserAgents = _cachedRegisteredCodecRepository.GetRegisteredUserAgents();
+            var ongoingCalls = _cachedCallRepository.GetOngoingCalls(true);
+
+            var userAgentsOnline = new List<CodecStatusViewModel>();
+
+            // TODO: reuse this when performance review has been done, xx?
+            // Check if there is calling parts that are not registered
+            foreach (var uu in ongoingCalls)
+            {
+                // Check if 'from' codec is not in registered codecs
+                if (string.IsNullOrEmpty(uu.FromId) == false && Guid.TryParse(uu.FromId, out Guid nyFromGuid))
+                {
+                    if (registeredUserAgents.All(x => x.Id != nyFromGuid))
+                    {
+                        userAgentsOnline.Add(new CodecStatusViewModel
+                        {
+                            State = CodecState.InCall,
+                            SipAddress = uu.FromSip,
+                            Id = string.IsNullOrEmpty(uu.FromId) ? Guid.Empty : Guid.Parse(uu.FromId),
+                            PresentationName = uu.FromDisplayName,
+                            DisplayName = uu.FromDisplayName,
+                            InCall = true,
+                            ConnectedToSipAddress = uu.ToSip,
+                            ConnectedToPresentationName = uu.ToDisplayName,
+                            ConnectedToDisplayName = uu.ToDisplayName,
+                            ConnectedToLocation = uu.ToLocationName,
+                            IsCallingPart = true,
+                            CallStartedAt = uu.Started
+                        });
+                    }
+                }
+
+                // Check if 'to' codec is not in registered codecs
+                if (string.IsNullOrEmpty(uu.ToId) == false && Guid.TryParse(uu.ToId, out Guid nyToGuid))
+                {
+                    if (userAgentsOnline.All(x => x.Id != nyToGuid))
+                    {
+                        userAgentsOnline.Add(new CodecStatusViewModel
+                        {
+                            State = CodecState.InCall,
+                            SipAddress = uu.ToSip,
+                            Id = string.IsNullOrEmpty(uu.ToId) ? Guid.Empty : Guid.Parse(uu.ToId),
+                            PresentationName = uu.ToDisplayName,
+                            DisplayName = uu.ToDisplayName,
+                            InCall = true,
+                            ConnectedToSipAddress = uu.FromSip,
+                            ConnectedToPresentationName = uu.FromDisplayName,
+                            ConnectedToDisplayName = uu.FromDisplayName,
+                            ConnectedToLocation = uu.FromLocationName,
+                            IsCallingPart = false,
+                            CallStartedAt = uu.Started
+                        });
+                    }
+                }
+            }
 
             return userAgentsOnline;
         }

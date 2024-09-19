@@ -70,49 +70,49 @@ namespace CCM.Web.Hubs
             switch (updateResult.ChangeStatus)
             {
                 case (SipEventChangeStatus.CallStarted):
-                {
-                    // Load call and update to and from codecs
-                    var callId = updateResult.ChangedObjectId;
-                    CallInfo callInfo = _cachedCallRepository.GetCallInfoById(callId);
+                    {
+                        // Load call and update to and from codecs
+                        var callId = updateResult.ChangedObjectId;
+                        CallInfo callInfo = _cachedCallRepository.GetCallInfoById(callId);
 
-                    if (callInfo != null)
-                    {
-                        _logger.LogDebug($"ExtendedStatusHub. Call started. From:{callInfo.FromId}, To:{callInfo.ToId}");
-                        UpdateCodecStatusByGuid(callInfo.FromId, updateResult.ChangeStatus, callInfo.FromSipAddress);
-                        UpdateCodecStatusByGuid(callInfo.ToId, updateResult.ChangeStatus, callInfo.ToSipAddress);
+                        if (callInfo != null)
+                        {
+                            _logger.LogDebug($"ExtendedStatusHub. Call started. From:{callInfo.FromId}, To:{callInfo.ToId}");
+                            UpdateCodecStatusByGuid(callInfo.FromId, updateResult.ChangeStatus, callInfo.FromSipAddress);
+                            UpdateCodecStatusByGuid(callInfo.ToId, updateResult.ChangeStatus, callInfo.ToSipAddress);
+                        }
+                        else
+                        {
+                            _logger.LogError($"ExtendedStatusHub. Call started but was not found in database. Call Id:{callId}");
+                        }
+                        break;
                     }
-                    else
-                    {
-                        _logger.LogError($"ExtendedStatusHub. Call started but was not found in database. Call Id:{callId}");
-                    }
-                    break;
-                }
                 case (SipEventChangeStatus.CallClosed):
-                {
-                    UpdateCodecStatusCallClosed(updateResult.ChangedObjectId);
-                    break;
-                }
-                case (SipEventChangeStatus.CodecAdded):
-                {
-                    UpdateCodecStatusByGuid(updateResult.ChangedObjectId, updateResult.ChangeStatus, updateResult.SipAddress);
-                    break;
-                }
-                case (SipEventChangeStatus.CodecUpdated):
-                {
-                    UpdateCodecStatusByGuid(updateResult.ChangedObjectId, updateResult.ChangeStatus, updateResult.SipAddress);
-                    break;
-                }
-                case (SipEventChangeStatus.CodecRemoved):
-                {
-                    var codecStatus = new CodecStatusExtendedViewModel
                     {
-                        Id = updateResult.ChangedObjectId,
-                        State = CodecState.NotRegistered,
-                        SipAddress = updateResult.SipAddress
-                    };
-                    UpdateCodecStatusRemoved(codecStatus);
-                    break;
-                }
+                        UpdateCodecStatusCallClosed(updateResult.ChangedObjectId);
+                        break;
+                    }
+                case (SipEventChangeStatus.CodecAdded):
+                    {
+                        UpdateCodecStatusByGuid(updateResult.ChangedObjectId, updateResult.ChangeStatus, updateResult.SipAddress);
+                        break;
+                    }
+                case (SipEventChangeStatus.CodecUpdated):
+                    {
+                        UpdateCodecStatusByGuid(updateResult.ChangedObjectId, updateResult.ChangeStatus, updateResult.SipAddress);
+                        break;
+                    }
+                case (SipEventChangeStatus.CodecRemoved):
+                    {
+                        var codecStatus = new CodecStatusExtendedViewModel
+                        {
+                            Id = updateResult.ChangedObjectId,
+                            State = CodecState.NotRegistered,
+                            SipAddress = updateResult.SipAddress
+                        };
+                        UpdateCodecStatusRemoved(codecStatus);
+                        break;
+                    }
             }
 
             _logger.LogDebug($"ExtendedStatusHub. Status:{updateResult.ChangeStatus}, id:{updateResult.ChangedObjectId}, sip address:{updateResult.SipAddress}");
@@ -121,13 +121,13 @@ namespace CCM.Web.Hubs
         private void UpdateCodecStatusRemoved(CodecStatusExtendedViewModel codecStatusViewModel)
         {
             _logger.LogDebug($"ExtendedStatusHub is sending codec status to clients. SipAddress: {codecStatusViewModel.SipAddress}, State: {codecStatusViewModel.State}");
-            
+
             if (codecStatusViewModel == null)
             {
                 _logger.LogWarning($"Trying to tell everyone that the codec is removed, but information is null");
                 return;
             }
-            
+
             _hub.Clients.All.CodecStatus(codecStatusViewModel);
         }
 
@@ -143,13 +143,38 @@ namespace CCM.Web.Hubs
             CodecStatusExtendedViewModel updatedCodecStatus = userAgentsOnline.FirstOrDefault(x => x.Id == id);
             if (updatedCodecStatus != null)
             {
-                _logger.LogDebug($"ExtendedStatusHub is sending codec status to clients. SipAddress: {updatedCodecStatus.SipAddress}, State: {updatedCodecStatus.State}");
+                _logger.LogDebug("ExtendedStatusHub is sending codec status to clients (registered). SipAddress: {SipAddress}, State: {State}", updatedCodecStatus.SipAddress, updatedCodecStatus.State);
                 _hub.Clients.All.CodecStatus(updatedCodecStatus);
+                return;
             }
-            else
+
+            var ongoingCalls = _codecStatusViewModelsProvider.GetAllCodecsNotRegisteredButInCall();
+            CodecStatusViewModel updatedCallStatus = ongoingCalls.FirstOrDefault(x => x.Id == id);
+            if (updatedCallStatus != null)
             {
-                _logger.LogError($"Can't update ExtendedStatusHub. No codec online with id: {id}, {sipAddress}. Reason: {changeReason}");
+                _logger.LogDebug("ExtendedStatusHub is sending codec status to clients (in call). SipAddress: {SipAddress}, State: {State}", updatedCallStatus.SipAddress, updatedCallStatus.State);
+
+                CodecStatusExtendedViewModel extended = new()
+                {
+                    Id = updatedCallStatus.Id,
+                    State = updatedCallStatus.State,
+                    SipAddress = updatedCallStatus.SipAddress,
+                    PresentationName = updatedCallStatus.PresentationName,
+                    //DisplayName = updatedCallStatus.DisplayName,
+                    HasCodecControl = updatedCallStatus.HasCodecControl,
+                    InCall = updatedCallStatus.InCall,
+                    ConnectedToSipAddress = updatedCallStatus.ConnectedToSipAddress,
+                    ConnectedToPresentationName = updatedCallStatus.ConnectedToPresentationName,
+                    //ConnectedToDisplayName = updatedCallStatus.ConnectedToDisplayName,
+                    ConnectedToLocation = updatedCallStatus.ConnectedToLocation,
+                    IsCallingPart = updatedCallStatus.IsCallingPart,
+                    CallStartedAt = updatedCallStatus.CallStartedAt,
+                };
+                _hub.Clients.All.CodecStatus(extended);
+                return;
             }
+
+            _logger.LogError("Can't update ExtendedStatusHub. No codec online with id: {id}, {sipAddress}. Reason: {changeReason}", id, sipAddress, changeReason);
         }
 
         private void UpdateCodecStatusCallClosed(Guid callId)
