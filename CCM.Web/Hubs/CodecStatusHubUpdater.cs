@@ -119,7 +119,7 @@ namespace CCM.Web.Hubs
 
         private void UpdateCodecStatusRemoved(CodecStatusViewModel codecStatusViewModel)
         {
-            _logger.LogDebug($"CodecStatusHub is sending codec status to clients. SipAddress: {codecStatusViewModel.SipAddress}, State: {codecStatusViewModel.State}");
+            _logger.LogDebug("CodecStatusHub is sending codec status to clients. SipAddress: {SipAddress}, State: {State}", codecStatusViewModel.SipAddress, codecStatusViewModel.State);
             _codecStatusHub.Clients.All.CodecStatus(codecStatusViewModel);
         }
 
@@ -135,7 +135,7 @@ namespace CCM.Web.Hubs
             CodecStatusViewModel updatedCodecStatus = userAgentsOnline.FirstOrDefault(x => x.Id == id);
             if (updatedCodecStatus != null)
             {
-                _logger.LogDebug($"CodecStatusHub is sending codec status to clients (registered). SipAddress: {updatedCodecStatus.SipAddress}, State: {updatedCodecStatus.State}");
+                _logger.LogDebug("CodecStatusHub is sending codec status to clients (registered). SipAddress: {SipAddress}, State: {State}", updatedCodecStatus.SipAddress, updatedCodecStatus.State);
                 _codecStatusHub.Clients.All.CodecStatus(updatedCodecStatus);
                 return;
             }
@@ -144,7 +144,7 @@ namespace CCM.Web.Hubs
             CodecStatusViewModel updatedCallStatus = ongoingCalls.FirstOrDefault(x => x.Id == id);
             if (updatedCallStatus != null)
             {
-                _logger.LogDebug($"CodecStatusHub is sending codec status to clients (in call). SipAddress: {updatedCallStatus.SipAddress}, State: {updatedCallStatus.State}");
+                _logger.LogDebug("CodecStatusHub is sending codec status to clients (in call). SipAddress: {SipAddress}, State: {State}", updatedCallStatus.SipAddress, updatedCallStatus.State);
                 _codecStatusHub.Clients.All.CodecStatus(updatedCallStatus);
                 return;
             }
