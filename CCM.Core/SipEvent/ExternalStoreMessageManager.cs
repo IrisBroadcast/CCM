@@ -28,6 +28,7 @@ using System;
 using System.Web;
 using CCM.Core.Entities;
 using CCM.Core.Enums;
+using CCM.Core.Helpers;
 using CCM.Core.Interfaces.Managers;
 using CCM.Core.Interfaces.Repositories;
 using CCM.Core.SipEvent.Messages;
@@ -114,20 +115,20 @@ namespace CCM.Core.SipEvent
 
         public SipEventHandlerResult CloseCall(ExternalDialogMessage message)
         {
-            _logger.LogDebug("Closing call with id:{callId} (external)", HttpUtility.UrlEncode(message.CallId));
+            _logger.LogDebug("Closing call with id:{callId} (external)", message.CallId.Sanitize());
 
             try
             {
                 CallInfo call = _cachedCallRepository.GetCallInfo(message.CallId, "", "");
                 if (call == null)
                 {
-                    _logger.LogWarning("Unable to find call with call id:{callId} (external)", HttpUtility.UrlEncode(message.CallId));
+                    _logger.LogWarning("Unable to find call with call id:{callId} (external)", message.CallId.Sanitize());
                     return SipEventHandlerResult.NothingChanged;
                 }
 
                 if (call.Closed)
                 {
-                    _logger.LogWarning("Call with call id:{callId} already closed (external)", HttpUtility.UrlEncode(message.CallId));
+                    _logger.LogWarning("Call with call id:{callId} already closed (external)", message.CallId.Sanitize());
                     return SipEventHandlerResult.NothingChanged;
                 }
 
@@ -136,7 +137,7 @@ namespace CCM.Core.SipEvent
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while closing call with call id:{callId} (external)", HttpUtility.UrlEncode(message.CallId));
+                _logger.LogError(ex, "Error while closing call with call id:{callId} (external)", message.CallId.Sanitize());
                 return SipEventHandlerResult.NothingChanged;
             }
         }
