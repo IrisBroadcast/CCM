@@ -1,5 +1,4 @@
-﻿
-@using Microsoft.Extensions.Localization
+﻿@using Microsoft.Extensions.Localization
 @inject IStringLocalizer<CCM.Web.Properties.Resources> Localizer
 @model CCM.Web.Models.Account.LoginViewModel
 
@@ -9,7 +8,7 @@
 <div class="row">
     <div class="col-md-8">
         <section id="loginForm">
-            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewData["ReturnUrl"] }, FormMethod.Post, false, new { @class = "form-horizontal", role = "form" }))
+            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = (ViewData["ReturnUrl"] ??= "/") }, FormMethod.Post, false, new { @class = "form-horizontal", role = "form" }))
             {
                 @Html.AntiForgeryToken()
                 @Html.ValidationSummary(true)

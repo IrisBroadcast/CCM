@@ -80,5 +80,25 @@ namespace CCM.Web.Controllers
 
             return View(model);
         }
+
+        [CcmAuthorize(Roles = Roles.Admin)]
+        [HttpGet]
+        public ActionResult DeleteCallDirectly(string id)
+        {
+            if (!Guid.TryParse(id, out var callIdGuid))
+            {
+                return RedirectToAction("getcalls", "debug");
+            }
+
+            var call = _cachedCallRepository.GetCallInfoById(callIdGuid);
+            if (call == null)
+            {
+                return RedirectToAction("getcalls", "debug");
+            }
+
+            _cachedCallRepository.CloseCall(callIdGuid);
+
+            return RedirectToAction("getcalls", "debug");
+        }
     }
 }

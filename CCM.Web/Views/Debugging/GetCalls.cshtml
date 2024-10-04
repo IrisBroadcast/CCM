@@ -1,9 +1,9 @@
 ﻿@using Microsoft.Extensions.Localization
 @inject IStringLocalizer<CCM.Web.Properties.Resources> Localizer
-@model IEnumerable<CCM.Core.Entities.CcmUser>
+@model IEnumerable<CCM.Core.Entities.Specific.OnGoingCall>
 
 @{
-    ViewData["Title"] = "Get CCM Users";
+    ViewData["Title"] = "Get Calls";
 }
 
 <div class="row">
@@ -16,8 +16,8 @@
             <div class="navbar ccm-sub-navbar--admin--links">
                 <ul class="nav navbar-nav nav-pills ccm-sub-navbar--admin--ul">
                     <li>@Html.ActionLink(@Localizer["Logs_Link_Debugging"].Value, "Index", "Debugging", new { }, new { })</li>
-                    <li class="active">@Html.ActionLink("Get CCM Users", "GetCCMUsers", "Debugging", new { }, new { })</li>
-                    <li>@Html.ActionLink("Get Ongoing Calls", "GetCalls", "Debugging", new { }, new { })</li>
+                    <li>@Html.ActionLink("Get CCM Users", "GetCCMUsers", "Debugging", new { }, new { })</li>
+                    <li class="active">@Html.ActionLink("Get Ongoing Calls", "GetCalls", "Debugging", new { }, new { })</li>
                     <li>@Html.ActionLink("Get SIP Accounts", "GetSipAccounts", "Debugging", new { }, new { })</li>
                     <li>@Html.ActionLink("Who Am I", "WhoAmI", "Debugging", new { }, new { })</li>
                     <li>@Html.ActionLink("Cache info", "CacheInfo", "Debugging", new { }, new { })</li>
@@ -33,31 +33,34 @@
     <table class="table">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.UserName)
+                @Html.DisplayNameFor(model => model.CallId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FirstName)
+                @Html.DisplayNameFor(model => model.FromSip)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.LastName)
+                @Html.DisplayNameFor(model => model.ToSip)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Comment)
+                @Html.DisplayNameFor(model => model.FromDisplayName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.RoleId)
+                @Html.DisplayNameFor(model => model.ToDisplayName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CreatedBy)
+                @Html.DisplayNameFor(model => model.FromLocationName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CreatedOn)
+                @Html.DisplayNameFor(model => model.ToLocationName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.UpdatedBy)
+                @Html.DisplayNameFor(model => model.FromRegionName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.UpdatedOn)
+                @Html.DisplayNameFor(model => model.ToRegionName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Started)
             </th>
             <th></th>
         </tr>
@@ -66,31 +69,37 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.UserName)
+                    @Html.DisplayFor(modelItem => item.CallId)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.FirstName)
+                    @Html.DisplayFor(modelItem => item.FromSip)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.LastName)
+                    @Html.DisplayFor(modelItem => item.ToSip)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Comment)
+                    @Html.DisplayFor(modelItem => item.FromDisplayName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.RoleId)
+                    @Html.DisplayFor(modelItem => item.ToDisplayName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CreatedBy)
+                    @Html.DisplayFor(modelItem => item.FromLocationName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CreatedOn)
+                    @Html.DisplayFor(modelItem => item.ToLocationName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.UpdatedBy)
+                    @Html.DisplayFor(modelItem => item.FromLocationName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.UpdatedOn)
+                    @Html.DisplayFor(modelItem => item.ToRegionName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Started)
+                </td>
+                <td>
+                    <a href="@Url.Action("DeleteCallDirectly", "Call")/?id=@Html.DisplayFor(modelItem => item.CallId)">DELETE</a>
                 </td>
             </tr>
         }
