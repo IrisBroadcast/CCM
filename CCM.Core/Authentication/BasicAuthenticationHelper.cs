@@ -32,9 +32,9 @@ namespace CCM.Core.Authentication
 {
     public static class BasicAuthenticationHelper
     {
-        public static AuthenticationCredentials ParseCredentials(string authorizationString)
+        public static AuthenticationCredentials? ParseCredentials(string? authorizationString)
         {
-            if (String.IsNullOrEmpty(authorizationString))
+            if (string.IsNullOrEmpty(authorizationString))
             {
                 return null;
             }
@@ -69,7 +69,7 @@ namespace CCM.Core.Authentication
                 return null;
             }
 
-            if (String.IsNullOrEmpty(decodedCredentials))
+            if (string.IsNullOrEmpty(decodedCredentials))
             {
                 return null;
             }

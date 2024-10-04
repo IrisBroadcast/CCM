@@ -39,6 +39,7 @@ using CCM.Data.Helpers;
 using LazyCache;
 using Microsoft.Extensions.Logging;
 using NLog;
+using System.Web;
 
 namespace CCM.Data.Repositories
 {
@@ -145,14 +146,14 @@ namespace CCM.Data.Repositories
                     }
                     else
                     {
-                        _logger.LogWarning($"Unable to save call history with call id: {call.CallId}, hash id: {call.DialogHashId}, hash ent: {call.DialogHashEnt}");
+                        _logger.LogWarning($"Unable to save call history with call id: {HttpUtility.UrlEncode(call.CallId)}, hash id: {HttpUtility.UrlEncode(call.DialogHashId)}, hash ent: {HttpUtility.UrlEncode(call.DialogHashEnt)}");
                     }
                 }
             }
             catch (Exception ex)
             {
                 log.Error(ex);
-                _logger.LogError(ex, $"Error saving/updating call with call id: {call.CallId}, hash id: {call.DialogHashId}, hash ent: {call.DialogHashEnt}");
+                _logger.LogError(ex, $"Error saving/updating call with call id: {HttpUtility.UrlEncode(call.CallId)}, hash id: {HttpUtility.UrlEncode(call.DialogHashId)}, hash ent: {HttpUtility.UrlEncode(call.DialogHashEnt)}");
             }
         }
 

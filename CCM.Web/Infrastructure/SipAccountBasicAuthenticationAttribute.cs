@@ -60,7 +60,7 @@ namespace CCM.Web.Infrastructure
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            AuthenticationHeaderValue header = null;
+            AuthenticationHeaderValue? header;
             try
             {
                 header = AuthenticationHeaderValue.Parse(Request.Headers["Authorization"]);
@@ -83,7 +83,7 @@ namespace CCM.Web.Infrastructure
                 return AuthenticateResult.Fail("Not using basic authorization scheme");
             }
 
-            AuthenticationCredentials authenticationCredentials = BasicAuthenticationHelper.ParseCredentials(header.Parameter);
+            AuthenticationCredentials? authenticationCredentials = BasicAuthenticationHelper.ParseCredentials(header.Parameter);
             if (authenticationCredentials == null)
             {
                 // Authentication was attempted but failed. Set ErrorResult to indicate an error.

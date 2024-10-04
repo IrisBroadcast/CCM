@@ -76,8 +76,7 @@ namespace CCM.Core.Authentication
                 return AuthenticateResult.Fail("Not using basic authorization scheme");
             }
 
-
-            AuthenticationCredentials authenticationCredentials = BasicAuthenticationHelper.ParseCredentials(authReqHeader);
+            AuthenticationCredentials? authenticationCredentials = BasicAuthenticationHelper.ParseCredentials(authReqHeader);
             if (authenticationCredentials == null)
             {
                 // Authentication was attempted but failed. Set ErrorResult to indicate an error.

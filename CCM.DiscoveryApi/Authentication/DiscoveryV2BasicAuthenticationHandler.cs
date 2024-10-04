@@ -60,7 +60,7 @@ namespace CCM.DiscoveryApi.Authentication
             ISystemClock clock)
             : base(options, logger, encoder, clock)
         {
-            _logger = logger.CreateLogger(GetType().FullName);
+            _logger = logger.CreateLogger(GetType()?.FullName ?? "Discovery");
         }
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
@@ -134,7 +134,7 @@ namespace CCM.DiscoveryApi.Authentication
                 return AuthenticateResult.Fail("Not using basic authorization scheme");
             }
 
-            AuthenticationCredentials authenticationCredentials = BasicAuthenticationHelper.ParseCredentials(header.Parameter);
+            AuthenticationCredentials? authenticationCredentials = BasicAuthenticationHelper.ParseCredentials(header.Parameter);
             if (authenticationCredentials == null)
             {
                 // Authentication was attempted but failed. Set ErrorResult to indicate an error.
