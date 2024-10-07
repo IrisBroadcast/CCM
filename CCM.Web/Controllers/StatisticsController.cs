@@ -237,11 +237,10 @@ namespace CCM.Web.Controllers
 
         #region Region
         [HttpPost]
-        public ActionResult RegionNumberOfCallsView(DateBasedFilterType filterType, DateBasedChartType chartType, DateTime startDate, DateTime endDate, Guid filterId)
+        public ActionResult RegionNumberOfCallsView(DateTime startDate, DateTime endDate, Guid filterId)
         {
             if (filterId == Guid.Empty)
             {
-                //throw new Exception("Please choose a region");
                 return BadRequest("Please choose a region");
             }
             var model = new DateBasedChartViewModel
@@ -260,11 +259,10 @@ namespace CCM.Web.Controllers
 
         #region SIP Account
         [HttpPost]
-        public ActionResult SipAccountNumberOfCallsView(DateBasedFilterType filterType, DateBasedChartType chartType, DateTime startDate, DateTime endDate, Guid filterId)
+        public ActionResult SipAccountNumberOfCallsView(DateTime startDate, DateTime endDate, Guid filterId)
         {
             if (filterId == Guid.Empty)
             {
-                //throw new Exception("Please choose a sip account");
                 return BadRequest("Please choose a sip account");
             }
             var model = new DateBasedChartViewModel
@@ -283,7 +281,7 @@ namespace CCM.Web.Controllers
 
         #region Codec Type
         [HttpPost]
-        public ActionResult CodecTypeNumberOfCallsView(DateBasedFilterType filterType, DateBasedChartType chartType, DateTime startDate, DateTime endDate, Guid filterId)
+        public ActionResult CodecTypeNumberOfCallsView(DateTime startDate, DateTime endDate, Guid filterId)
         {
             if (filterId == Guid.Empty)
             {
@@ -306,7 +304,7 @@ namespace CCM.Web.Controllers
 
         #region Category
         [HttpPost]
-        public ActionResult CategoryCallNumberOfCallsView(DateBasedFilterType filterType, DateBasedChartType chartType, DateTime startDate, DateTime endDate)
+        public ActionResult CategoryCallNumberOfCallsView(DateTime startDate, DateTime endDate)
         {
 
             var model = new DateBasedChartCallCategoriesViewModel
@@ -322,23 +320,7 @@ namespace CCM.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult CategoryNumberOfCallsView(DateBasedFilterType filterType, DateBasedChartType chartType, DateTime startDate, DateTime endDate)
-        {
-
-            var model = new DateBasedChartCategoriesViewModel
-            {
-                FilterType = DateBasedFilterType.Categories,
-                ChartType = DateBasedChartType.NumberOfCalls,
-                EndDate = endDate,
-                StartDate = startDate,
-                Stats = _statisticsManager.GetCategoryStatistics(startDate.ToUniversalTime(), endDate.ToUniversalTime())
-            };
-
-            return PartialView("CategoryStatisticsTable", model);
-        }
-
-        [HttpPost]
-        public ActionResult CategoryNumberOfCallsViewOld(DateBasedFilterType filterType, DateBasedChartType chartType, DateTime startDate, DateTime endDate)
+        public ActionResult CategoryNumberOfCallsView(DateTime startDate, DateTime endDate)
         {
 
             var model = new DateBasedChartCategoriesViewModel

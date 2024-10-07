@@ -30,7 +30,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using CCM.Core.Entities;
 using CCM.Core.Entities.Specific;
-using CCM.Core.Helpers;
 using CCM.Core.Interfaces.Repositories;
 using CCM.Data.Entities;
 using LazyCache;
@@ -142,6 +141,10 @@ namespace CCM.Data.Repositories
             return callHistories.Select(MapToOldCall).ToList().AsReadOnly();
         }
 
+        /// <summary>
+        /// Used by Codec Status Hub
+        /// </summary>
+        /// <returns></returns>
         public IReadOnlyCollection<CallHistory> GetOneMonthCallHistories()
         {
             var nowTime = DateTime.Now;
@@ -153,50 +156,6 @@ namespace CCM.Data.Repositories
                 .ToList();
             return callHistories.Select(MapToCallHistory).ToList().AsReadOnly();
         }
-
-        private OldCall MapToOldCall(CallHistoryEntity dbCallHistory)
-        {
-            return new OldCall
-            {
-                CallId = MapGuidString(dbCallHistory.CallId),
-                Started = dbCallHistory.Started.ToLocalTime(),
-                Ended = dbCallHistory.Ended.ToLocalTime(),
-                Duration = dbCallHistory.Ended.Subtract(dbCallHistory.Started).ToString(@"dd\d\ hh\:mm\:ss"),
-                IsPhoneCall = dbCallHistory.IsPhoneCall,
-
-                SipCode = dbCallHistory.SipCode,
-                SipMessage = dbCallHistory.SipMessage,
-
-                FromCodecTypeColor = "#000", // TODO: This is fake
-                ToCodecTypeColor = "#000", // TODO: This is fake, get from user??
-
-                FromId = MapGuidString(dbCallHistory.FromId),
-                FromUserAccountId = MapGuidString(dbCallHistory.FromUserAccountId ?? Guid.Empty),
-                FromSip = dbCallHistory.FromUsername,
-                FromCodecTypeName = dbCallHistory.FromCodecTypeName,
-                FromCodecTypeCategory = dbCallHistory.FromCodecTypeCategory,
-                FromComment = dbCallHistory.FromComment,
-                FromDisplayName = dbCallHistory.FromDisplayName,
-                FromLocationName = dbCallHistory.FromLocationName,
-                FromLocationShortName = dbCallHistory.FromLocationShortName,
-                FromRegionName = dbCallHistory.FromRegionName,
-                FromLocationCategory = dbCallHistory.FromLocationCategory,
-
-                ToId = MapGuidString(dbCallHistory.ToId),
-                ToUserAccountId = MapGuidString(dbCallHistory.ToUserAccountId ?? Guid.Empty),
-                ToSip = dbCallHistory.ToUsername,
-                ToCodecTypeName = dbCallHistory.ToCodecTypeName,
-                ToCodecTypeCategory = dbCallHistory.ToCodecTypeCategory,
-                ToComment = dbCallHistory.ToComment,
-                ToDisplayName = dbCallHistory.ToDisplayName,
-                ToLocationName = dbCallHistory.ToLocationName,
-                ToLocationShortName = dbCallHistory.ToLocationShortName,
-                ToRegionName = dbCallHistory.ToRegionName,
-                ToLocationCategory = dbCallHistory.ToLocationCategory
-            };
-        }
-
-        private string MapGuidString(Guid guid) { return guid == Guid.Empty ? string.Empty : guid.ToString(); }
 
         #region Statistics
         public IReadOnlyList<CallHistory> GetOneYearCallHistory()
@@ -281,6 +240,7 @@ namespace CCM.Data.Repositories
                 .ToList();
             return dbCallHistories.Select(MapToCallHistory).ToList();
         }
+        #endregion
 
         private CallHistory MapToCallHistory(CallHistoryEntity dbCallHistory)
         {
@@ -294,6 +254,9 @@ namespace CCM.Data.Repositories
                 Started = dbCallHistory.Started,
                 Ended = dbCallHistory.Ended,
                 IsPhoneCall = dbCallHistory.IsPhoneCall,
+
+                SipCode = dbCallHistory.SipCode,
+                SipMessage = dbCallHistory.SipMessage,
 
                 FromCodecTypeCategory = dbCallHistory.FromCodecTypeCategory,
                 FromCodecTypeId = dbCallHistory.FromCodecTypeId,
@@ -338,7 +301,49 @@ namespace CCM.Data.Repositories
                 ToUsername = dbCallHistory.ToUsername
             };
         }
-        #endregion
 
+        private string MapGuidString(Guid guid) { return guid == Guid.Empty ? string.Empty : guid.ToString(); }
+
+        private OldCall MapToOldCall(CallHistoryEntity dbCallHistory)
+        {
+            return new OldCall
+            {
+                CallId = MapGuidString(dbCallHistory.CallId),
+                Started = dbCallHistory.Started.ToLocalTime(),
+                Ended = dbCallHistory.Ended.ToLocalTime(),
+                Duration = dbCallHistory.Ended.Subtract(dbCallHistory.Started).ToString(@"dd\d\ hh\:mm\:ss"),
+                IsPhoneCall = dbCallHistory.IsPhoneCall,
+
+                SipCode = dbCallHistory.SipCode,
+                SipMessage = dbCallHistory.SipMessage,
+
+                FromCodecTypeColor = "#000", // TODO: This is fake
+                ToCodecTypeColor = "#000", // TODO: This is fake, get from user??
+
+                FromId = MapGuidString(dbCallHistory.FromId),
+                FromUserAccountId = MapGuidString(dbCallHistory.FromUserAccountId ?? Guid.Empty),
+                FromSip = dbCallHistory.FromUsername,
+                FromCodecTypeName = dbCallHistory.FromCodecTypeName,
+                FromCodecTypeCategory = dbCallHistory.FromCodecTypeCategory,
+                FromComment = dbCallHistory.FromComment,
+                FromDisplayName = dbCallHistory.FromDisplayName,
+                FromLocationName = dbCallHistory.FromLocationName,
+                FromLocationShortName = dbCallHistory.FromLocationShortName,
+                FromRegionName = dbCallHistory.FromRegionName,
+                FromLocationCategory = dbCallHistory.FromLocationCategory,
+
+                ToId = MapGuidString(dbCallHistory.ToId),
+                ToUserAccountId = MapGuidString(dbCallHistory.ToUserAccountId ?? Guid.Empty),
+                ToSip = dbCallHistory.ToUsername,
+                ToCodecTypeName = dbCallHistory.ToCodecTypeName,
+                ToCodecTypeCategory = dbCallHistory.ToCodecTypeCategory,
+                ToComment = dbCallHistory.ToComment,
+                ToDisplayName = dbCallHistory.ToDisplayName,
+                ToLocationName = dbCallHistory.ToLocationName,
+                ToLocationShortName = dbCallHistory.ToLocationShortName,
+                ToRegionName = dbCallHistory.ToRegionName,
+                ToLocationCategory = dbCallHistory.ToLocationCategory
+            };
+        }
     }
 }

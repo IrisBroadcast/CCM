@@ -39,6 +39,11 @@ namespace CCM.Core.Entities
         public string DialogHashId { get; set; }
         public string DialogHashEnt { get; set; }
 
+#warning renamed/Hijacked from FromCodecTypeColor
+        public string SipCode { get; set; }
+#warning renamed/Hijacked from ToCodecTypeColor
+        public string SipMessage { get; set; }
+
         public Guid FromId { get; set; }
         public Guid? FromUserAccountId { get; set; }
         public string FromTag { get; set; }
@@ -53,8 +58,6 @@ namespace CCM.Core.Entities
         public string FromLocationCategory { get; set; }
         public Guid FromCodecTypeId { get; set; }
         public string FromCodecTypeName { get; set; }
-#warning renamed/Hijacked from FromCodecTypeColor
-        public string SipCode { get; set; }
         public string FromCodecTypeCategory { get; set; }
         public Guid FromOwnerId { get; set; }
         public string FromOwnerName { get; set; }
@@ -76,8 +79,6 @@ namespace CCM.Core.Entities
         public string ToLocationCategory { get; set; }
         public Guid ToCodecTypeId { get; set; }
         public string ToCodecTypeName { get; set; }
-#warning renamed/Hijacked from ToCodecTypeColor
-        public string SipMessage { get; set; }
         public string ToCodecTypeCategory { get; set; }
         public Guid ToOwnerId { get; set; }
         public string ToOwnerName { get; set; }

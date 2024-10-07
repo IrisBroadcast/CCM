@@ -63,6 +63,11 @@ namespace CCM.Core.Cache
             return _internalRepository.GetById(id);
         }
 
+        /// <summary>
+        /// Used by Codec Status Hub
+        /// </summary>
+        /// <param name="callId"></param>
+        /// <returns></returns>
         public CallHistory GetCallHistoryByCallId(Guid callId)
         {
             try
@@ -74,12 +79,6 @@ namespace CCM.Core.Cache
             {
                 return null;
             }
-        }
-
-        public IList<OldCall> GetOldCalls(int callCount = 0)
-        {
-            var history = _lazyCache.GetOrAddOldCalls(() => _internalRepository.GetOneMonthOldCalls(), _settingsManager.CacheTimeLiveData);
-            return history.Take(callCount).ToList();
         }
 
         public IList<OldCall> GetOldCallsFiltered(string region, string codecType, string sipAddress, string searchString, bool onlyPhoneCalls, int callCount, bool limitByMonth)

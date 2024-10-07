@@ -50,6 +50,7 @@ namespace CCM.Core.Entities.Specific
         public string FromComment { get; set; }
         public string FromRegionName { get; set; }
         public string FromCodecTypeName { get; set; }
+        [Obsolete("This one should be removed, no relevance anymore")]
         public string FromCodecTypeColor { get; set; }
         public string FromCodecTypeCategory { get; set; }
 
@@ -63,6 +64,7 @@ namespace CCM.Core.Entities.Specific
         public string ToComment { get; set; }
         public string ToRegionName { get; set; }
         public string ToCodecTypeName { get; set; }
+        [Obsolete("This one should be removed, no relevance anymore")]
         public string ToCodecTypeColor { get; set; }
         public string ToCodecTypeCategory { get; set; }
     }

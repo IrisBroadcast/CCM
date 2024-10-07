@@ -31,7 +31,6 @@ using CCM.Core.Entities;
 using CCM.Core.Entities.Statistics;
 using CCM.Core.Interfaces.Managers;
 using CCM.Core.Interfaces.Repositories;
-using Microsoft.AspNetCore.Http.Internal;
 
 namespace CCM.Core.Managers
 {
@@ -109,12 +108,12 @@ namespace CCM.Core.Managers
             if (!callHistories.Any()) return new List<CategoryCallStatistic>();
 
             Dictionary<Tuple<string, string>, CategoryCallStatistic> receivers = new Dictionary<Tuple<string, string>, CategoryCallStatistic>();
-            
+
             foreach (var call in callHistories)
             {
                 var fromCat = string.IsNullOrEmpty(call.FromCodecTypeCategory) == false ? call.FromCodecTypeCategory.ToLower() : string.IsNullOrEmpty(call.FromLocationCategory) == false ? call.FromLocationCategory.ToLower() : "";
                 var toCat = string.IsNullOrEmpty(call.ToCodecTypeCategory) == false ? call.ToCodecTypeCategory.ToLower() : string.IsNullOrEmpty(call.ToLocationCategory) == false ? call.ToLocationCategory.ToLower() : "";
-                
+
                 string[] combi = { fromCat, toCat };
                 Array.Sort(combi);
                 var key = new Tuple<string, string>(combi[0], combi[1]);
@@ -157,7 +156,7 @@ namespace CCM.Core.Managers
                 var toCat = string.IsNullOrEmpty(call.ToCodecTypeCategory) == false ? call.ToCodecTypeCategory.ToLower() : string.IsNullOrEmpty(call.ToLocationCategory) == false ? call.ToLocationCategory.ToLower() : "";
 
                 double callTime = (call.Ended - call.Started).TotalSeconds;
-                
+
                 // Categories statistics
                 if (string.IsNullOrEmpty(fromCat))
                 {

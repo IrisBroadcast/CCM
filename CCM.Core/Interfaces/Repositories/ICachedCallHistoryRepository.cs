@@ -35,8 +35,12 @@ namespace CCM.Core.Interfaces.Repositories
     {
         bool Save(CallHistory callHistory);
         CallHistory GetById(Guid id);
+        /// <summary>
+        /// Used by Codec Status Hub
+        /// </summary>
+        /// <param name="callId"></param>
+        /// <returns></returns>
         CallHistory GetCallHistoryByCallId(Guid callId);
-        IList<OldCall> GetOldCalls(int callCount);
         IList<OldCall> GetOldCallsFiltered(string region, string codecType, string sipAddress, string searchString, bool onlyPhoneCalls, int callCount, bool limitByMonth);
 
         IList<CallHistory> GetCallHistoriesByDate(DateTime startDate, DateTime endDate);
@@ -51,13 +55,17 @@ namespace CCM.Core.Interfaces.Repositories
         bool Save(CallHistory callHistory);
         CallHistory GetById(Guid id);
         IReadOnlyCollection<OldCall> GetOneMonthOldCalls();
+        /// <summary>
+        /// Used by Codec Status Hub
+        /// </summary>
+        /// <returns></returns>
         IReadOnlyCollection<CallHistory> GetOneMonthCallHistories();
 
         IReadOnlyList<CallHistory> GetOneYearCallHistory();
 
         IList<CallHistory> GetCallHistoriesByDate(DateTime startTime, DateTime endTime);
         IList<CallHistory> GetCallHistoriesByDate(IReadOnlyList<CallHistory> callHistories, DateTime startTime, DateTime endTime);
-        
+
         IList<CallHistory> GetCallHistoriesForRegion(DateTime startDate, DateTime endDate, Guid regionId);
         IList<CallHistory> GetCallHistoriesForRegion(IReadOnlyList<CallHistory> callHistories, DateTime startDate, DateTime endDate, Guid regionId);
 
