@@ -24,11 +24,6 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System.Net;
-using System.Net.Security;
-using CCM.Core.Helpers;
-using NLog;
-
 namespace CCM.Web.Infrastructure
 {
     // TODO: Might be implemented again if ccm and discovery have differenc HTTPS certificates

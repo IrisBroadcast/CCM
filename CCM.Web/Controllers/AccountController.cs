@@ -24,9 +24,6 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using CCM.Core.Entities;
 using CCM.Core.Interfaces.Repositories;
 using CCM.Web.Infrastructure;
@@ -37,6 +34,9 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using System;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using Claim = System.Security.Claims.Claim;
 using ClaimsIdentity = System.Security.Claims.ClaimsIdentity;
 using ClaimTypes = System.Security.Claims.ClaimTypes;

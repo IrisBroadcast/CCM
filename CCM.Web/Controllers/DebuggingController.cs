@@ -25,7 +25,9 @@
  */
 
 using CCM.Core.Entities;
+using CCM.Core.Entities.Specific;
 using CCM.Core.Interfaces.Repositories;
+using CCM.Web.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using NLog;
@@ -34,8 +36,6 @@ using NLog.Targets;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using CCM.Web.Infrastructure;
-using CCM.Core.Entities.Specific;
 
 namespace CCM.Web.Controllers
 {

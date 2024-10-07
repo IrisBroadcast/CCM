@@ -24,14 +24,14 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Linq;
 using CCM.Core.Interfaces.Repositories;
 using CCM.Core.SipEvent.Models;
 using CCM.Web.Hubs;
 using CCM.Web.Infrastructure;
 using CCM.Web.Models.Home;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
 
 namespace CCM.Web.Controllers
 {

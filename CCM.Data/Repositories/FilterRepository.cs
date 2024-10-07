@@ -24,14 +24,13 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using CCM.Core.Entities;
 using CCM.Core.Interfaces.Repositories;
 using CCM.Data.Entities;
 using LazyCache;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CCM.Data.Repositories
 {
@@ -54,27 +53,28 @@ namespace CCM.Data.Repositories
                 var ty = typeof(UserAgentEntity).GetProperty(columnName);
                 return db.UserAgents.Where(ua => ua != null).Select(ua => (string)ty.GetValue(ua)).Distinct().ToList();
             }
-            else if(tableName == "Locations")
+            else if (tableName == "Locations")
             {
                 var ty = typeof(LocationEntity).GetProperty(columnName);
                 return db.Locations.Where(lo => lo != null).Select(lo => (string)ty.GetValue(lo)).Distinct().ToList();
             }
-            else if(tableName == "Regions")
+            else if (tableName == "Regions")
             {
                 var ty = typeof(RegionEntity).GetProperty(columnName);
-                return db.Regions.Where(r => r != null).Select(re => (string)ty.GetValue(re)).Distinct().ToList();   
+                return db.Regions.Where(r => r != null).Select(re => (string)ty.GetValue(re)).Distinct().ToList();
             }
-            else if(tableName == "Cities")
+            else if (tableName == "Cities")
             {
                 var ty = typeof(CityEntity).GetProperty(columnName);
                 return db.Cities.Where(c => c != null).Select(c => (string)ty.GetValue(c)).Distinct().ToList();
             }
-            else if(tableName == "CodecTypes")
+            else if (tableName == "CodecTypes")
             {
                 var ty = typeof(CodecTypeEntity).GetProperty(columnName);
                 return db.CodecTypes.Where(ct => ct != null).Select(ct => (string)ty.GetValue(ct)).Distinct().ToList();
             }
-            else {
+            else
+            {
                 return new List<string>();
             }
         }

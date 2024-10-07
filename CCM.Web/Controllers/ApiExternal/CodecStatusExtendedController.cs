@@ -24,9 +24,6 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using CCM.Core.Interfaces.Repositories;
 using CCM.Web.Mappers;
 using CCM.Web.Models.Api;
@@ -34,6 +31,9 @@ using CCM.Web.Models.ApiExternal;
 using CCM.Web.Models.Home;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CCM.Web.Controllers.ApiExternal
 {

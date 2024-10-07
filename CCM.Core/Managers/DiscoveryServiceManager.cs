@@ -24,9 +24,6 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using CCM.Core.Cache;
 using CCM.Core.Entities;
 using CCM.Core.Entities.Discovery;
@@ -37,6 +34,9 @@ using CCM.Core.Interfaces.Managers;
 using CCM.Core.Interfaces.Repositories;
 using LazyCache;
 using NLog;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CCM.Core.Service
 {

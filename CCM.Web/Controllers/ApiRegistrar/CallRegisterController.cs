@@ -25,13 +25,12 @@
  */
 
 using CCM.Core.Interfaces.Managers;
-using Microsoft.AspNetCore.Mvc;
-using NLog;
-using CCM.Core.Interfaces.Parser;
 using CCM.Core.SipEvent.Messages;
 using CCM.Core.SipEvent.Models;
 using CCM.Web.Hubs;
 using CCM.Web.Models.ApiRegistrar;
+using Microsoft.AspNetCore.Mvc;
+using NLog;
 
 namespace CCM.Web.Controllers.ApiRegistrar
 {

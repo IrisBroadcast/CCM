@@ -24,9 +24,9 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CCM.Web.Models.Log
 {
@@ -41,7 +41,7 @@ namespace CCM.Web.Models.Log
         public int SelectedLevel { get; set; }
         public IEnumerable<SelectListItem> LastOptions { get; set; }
         public string SelectedLastOption { get; set; }
-        public Guid ActivityId{ get; set; }
+        public Guid ActivityId { get; set; }
         public List<Core.Entities.Log> LogRows { get; set; }
     }
 }

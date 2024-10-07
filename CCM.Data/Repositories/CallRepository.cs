@@ -24,10 +24,6 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using CCM.Core.Entities;
 using CCM.Core.Entities.Specific;
 using CCM.Core.Enums;
@@ -37,8 +33,12 @@ using CCM.Core.Interfaces.Repositories;
 using CCM.Data.Entities;
 using CCM.Data.Helpers;
 using LazyCache;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using NLog;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CCM.Data.Repositories
 {

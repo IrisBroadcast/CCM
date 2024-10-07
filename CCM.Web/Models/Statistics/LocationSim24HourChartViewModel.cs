@@ -24,10 +24,10 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using CCM.Web.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using CCM.Web.Properties;
 
 namespace CCM.Web.Models.Statistics
 {
@@ -42,7 +42,7 @@ namespace CCM.Web.Models.Statistics
         public Guid LocationId { get; set; }
     }
 
-    public class ChartLocationModel 
+    public class ChartLocationModel
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

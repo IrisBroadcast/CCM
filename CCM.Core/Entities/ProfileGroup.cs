@@ -24,12 +24,12 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System.Collections.Generic;
 using CCM.Core.Entities.Base;
+using System.Collections.Generic;
 
 namespace CCM.Core.Entities
 {
-    public class ProfileGroup: CoreEntityWithTimestamps
+    public class ProfileGroup : CoreEntityWithTimestamps
     {
         public ProfileGroup()
         {

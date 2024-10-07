@@ -24,15 +24,15 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using CCM.Core.Entities;
 using CCM.Core.Interfaces.Repositories;
 using CCM.Data.Entities;
 using LazyCache;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 
 namespace CCM.Data.Repositories
 {
@@ -129,7 +129,7 @@ namespace CCM.Data.Repositories
             }
             else
             {
-                dbProfileGroup = new ProfileGroupEntity() { Id = Guid.NewGuid() };          
+                dbProfileGroup = new ProfileGroupEntity() { Id = Guid.NewGuid() };
 
                 dbProfileGroup.OrderedProfiles = new List<ProfileGroupProfileOrdersEntity>();
 

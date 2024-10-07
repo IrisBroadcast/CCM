@@ -24,20 +24,20 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using CCM.Core.Entities;
 using CCM.Core.Helpers;
 using CCM.Core.Interfaces.Repositories;
 using CCM.Web.Infrastructure;
 using CCM.Web.Models.UserAgents;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace CCM.Web.Controllers
 {
@@ -333,7 +333,8 @@ namespace CCM.Web.Controllers
             {
                 if (!profilelist.Any(p => p.Id == profile.Id))
                 {
-                    profilelist.Add(new ProfileListItemViewModel {
+                    profilelist.Add(new ProfileListItemViewModel
+                    {
                         Id = profile.Id,
                         Name = profile.Name,
                         Selected = false

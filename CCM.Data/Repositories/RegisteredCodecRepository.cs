@@ -24,11 +24,6 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using Microsoft.EntityFrameworkCore;
 using CCM.Core.Entities;
 using CCM.Core.Entities.Registration;
 using CCM.Core.Enums;
@@ -38,8 +33,13 @@ using CCM.Core.Interfaces.Repositories;
 using CCM.Core.SipEvent.Models;
 using CCM.Data.Entities;
 using LazyCache;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace CCM.Data.Repositories
 {
@@ -128,7 +128,8 @@ namespace CCM.Data.Repositories
                 var sipAccount = _cachedSipAccountRepository.GetSipAccountByUserName(registeredSipUsername);
                 dbSip.User_UserId = sipAccount?.Id;
                 // Log to SIP account that it has been used if it's a new registration
-                if (isNewRegistration && sipAccount != null) {
+                if (isNewRegistration && sipAccount != null)
+                {
                     var dbUser = db.SipAccounts.FirstOrDefault(rs => rs.Id == sipAccount.Id);
                     dbUser.LastUsed = DateTime.UtcNow;
                     dbUser.LastKnownAddress = registration.IpAddress;
@@ -225,7 +226,7 @@ namespace CCM.Data.Repositories
 
             if (entry.State == EntityState.Deleted)
             {
-               _logger.LogDebug($"User-agent deleted '{dbCodec.SIP}'");
+                _logger.LogDebug($"User-agent deleted '{dbCodec.SIP}'");
                 return SipEventChangeStatus.CodecRemoved;
             }
 
@@ -265,7 +266,8 @@ namespace CCM.Data.Repositories
 
         private IList<string> GetChangedProperties(EntityEntry entity) // TODO: check new implementation of DbEntityEntry not same as EntityEntry
         {
-            if (entity.State != EntityState.Modified) {
+            if (entity.State != EntityState.Modified)
+            {
                 return new List<string>();
             }
 

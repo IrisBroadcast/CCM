@@ -24,13 +24,13 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc;
 using CCM.Core.Helpers;
 using CCM.Core.Interfaces.Repositories;
 using CCM.Web.Infrastructure;
 using CCM.Web.Models.Meta;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
 
 namespace CCM.Web.Controllers
 {
@@ -47,7 +47,7 @@ namespace CCM.Web.Controllers
         public ActionResult Index(string search = "")
         {
             var metaTypes = string.IsNullOrWhiteSpace(search) ? _metaRepository.GetAll() : _metaRepository.FindMetaTypes(search);
-            var model = metaTypes.Select(metaType => new MetaViewModel() {Id = metaType.Id, Name = metaType.Name}).ToList();
+            var model = metaTypes.Select(metaType => new MetaViewModel() { Id = metaType.Id, Name = metaType.Name }).ToList();
 
             ViewData["SearchString"] = search;
             return View(model);
@@ -56,7 +56,7 @@ namespace CCM.Web.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            var model = new MetaFormViewModel {MetaTypeValues = _metaRepository.GetMetaTypeProperties()};
+            var model = new MetaFormViewModel { MetaTypeValues = _metaRepository.GetMetaTypeProperties() };
             return View(model);
         }
 

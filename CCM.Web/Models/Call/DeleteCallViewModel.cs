@@ -24,10 +24,9 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using CCM.Web.Properties;
 using System;
 using System.ComponentModel.DataAnnotations;
-using CCM.Web.Properties;
-using CCM.Core.Entities;
 
 namespace CCM.Web.Models.Call
 {
@@ -38,7 +37,7 @@ namespace CCM.Web.Models.Call
         public string CallFromSipAddress { get; set; }
         public string CallToSipAddress { get; set; }
         public DateTime CallStarted { get; set; }
-        
+
         [Display(ResourceType = typeof(Resources), Name = "Delete_Call_I_Have_Checked")]
         public bool IHaveChecked { get; set; }
 

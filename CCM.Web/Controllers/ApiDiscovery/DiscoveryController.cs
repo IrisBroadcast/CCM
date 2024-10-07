@@ -24,10 +24,10 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System.Collections.Generic;
 using CCM.Core.Entities.Discovery;
 using CCM.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace CCM.Web.Controllers.ApiDiscovery
 {
@@ -61,7 +61,7 @@ namespace CCM.Web.Controllers.ApiDiscovery
 
         [HttpPost]
         [Route("useragents")]
-        public ActionResult UserAgents([FromBody]UserAgentSearchParamsDto searchParams)
+        public ActionResult UserAgents([FromBody] UserAgentSearchParamsDto searchParams)
         {
             if (searchParams == null)
             {

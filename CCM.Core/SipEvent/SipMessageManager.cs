@@ -24,9 +24,6 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Linq;
-using System.Web;
 using CCM.Core.Entities;
 using CCM.Core.Extensions;
 using CCM.Core.Helpers;
@@ -36,6 +33,8 @@ using CCM.Core.SipEvent.Messages;
 using CCM.Core.SipEvent.Models;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Linq;
 
 namespace CCM.Core.SipEvent
 {

@@ -35,6 +35,6 @@ namespace CCM.Core.Entities.Discovery
         public string ConnectedTo { get; set; }
         public bool InCall { get; set; }
         public List<string> Profiles { get; set; }
-        public List<KeyValuePair<string,string>> MetaData { get; set; }
+        public List<KeyValuePair<string, string>> MetaData { get; set; }
     }
 }

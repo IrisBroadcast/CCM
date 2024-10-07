@@ -24,12 +24,7 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using CCM.Core.Helpers;
+using CCM.Core.Interfaces.Managers;
 using CCM.Core.Interfaces.Repositories;
 using CCM.Core.Managers;
 using CCM.Web.Models.Log;
@@ -37,10 +32,13 @@ using CCM.Web.Properties;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Options;
-using System.Text.Json;
-using CCM.Core.Interfaces.Managers;
 using NLog;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace CCM.Web.Controllers
 {
@@ -184,7 +182,8 @@ namespace CCM.Web.Controllers
 
         private async Task<string> GetDiscoveryLogLevelAsync()
         {
-            try {
+            try
+            {
                 using var client = new HttpClient();
                 var response = await client.GetAsync($"{_settingsManager.DiscoveryServiceUrl}/api/loglevel");
                 if (response.IsSuccessStatusCode)

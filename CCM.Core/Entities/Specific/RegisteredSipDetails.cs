@@ -38,7 +38,7 @@ namespace CCM.Core.Entities.Specific
         public string Api { get; set; }
         public string Image { get; set; }
         public string Registrar { get; set; }
-        
+
         public string Comment { get; set; }
         public string UserExternalReference { get; set; }
 

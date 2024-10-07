@@ -25,10 +25,10 @@
  */
 
 using CCM.Web.Infrastructure.PasswordGeneration;
-using System;
-using System.ComponentModel.DataAnnotations;
 using CCM.Web.Infrastructure.ValidationAttributes;
 using CCM.Web.Properties;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace CCM.Web.Models.SipAccount
 {

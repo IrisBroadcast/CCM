@@ -24,9 +24,9 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
 using CCM.Core.Entities.Base;
 using CCM.Core.Enums;
+using System;
 
 namespace CCM.Core.Entities
 {

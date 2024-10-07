@@ -24,9 +24,9 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using CCM.Core.Entities;
 using System;
 using System.Collections.Generic;
-using CCM.Core.Entities;
 
 namespace CCM.Core.Interfaces.Managers
 {

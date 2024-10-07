@@ -32,7 +32,7 @@ namespace CCM.DiscoveryApi.Models.Discovery
     {
         public string Caller { get; set; }
         public string Callee { get; set; }
-        public IList<KeyValuePair<string,string>> Filters { get; set; }
+        public IList<KeyValuePair<string, string>> Filters { get; set; }
         public bool IncludeCodecsInCall { get; set; }
     }
 }

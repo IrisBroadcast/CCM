@@ -24,11 +24,11 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using CCM.Core.Helpers;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using CCM.Core.Helpers;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CCM.Web.Infrastructure.Extensions
 {

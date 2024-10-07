@@ -58,8 +58,8 @@ namespace CCM.Core.Entities.Statistics
                 if (_maxSimultaneousCallsPerDay == null || _maxSimultaneousCallsPerDay.Count == 0) return 0;
                 if (_maxSimultaneousCallsPerDay.Count == 1) return _maxSimultaneousCallsPerDay[0];
                 var orderedList = _maxSimultaneousCallsPerDay.OrderBy(i => i).ToList();
-                var half = _maxSimultaneousCallsPerDay.Count/2;
-                if (_maxSimultaneousCallsPerDay.Count%2 == 0)
+                var half = _maxSimultaneousCallsPerDay.Count / 2;
+                if (_maxSimultaneousCallsPerDay.Count % 2 == 0)
                     return Math.Max(_maxSimultaneousCallsPerDay[half - 1], _maxSimultaneousCallsPerDay[half]);
                 return _maxSimultaneousCallsPerDay[half];
             }
@@ -122,7 +122,7 @@ namespace CCM.Core.Entities.Statistics
             {
                 Date = hour,
                 Hour = hour.ToLocalTime().Hour,
-                _maxSimultaneousCallsPerDay = new List<int> {0},
+                _maxSimultaneousCallsPerDay = new List<int> { 0 },
                 OngoingCalls = 0,
             };
         }

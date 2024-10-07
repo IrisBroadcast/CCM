@@ -24,12 +24,12 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System.Linq;
-using Microsoft.AspNetCore.Mvc;
 using CCM.Core.Helpers;
 using CCM.Core.Interfaces.Managers;
 using CCM.Web.Infrastructure;
 using CCM.Web.Models.Settings;
+using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace CCM.Web.Controllers
 {

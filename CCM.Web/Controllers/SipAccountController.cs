@@ -24,10 +24,6 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc;
-using NLog;
 using CCM.Core.Entities;
 using CCM.Core.Enums;
 using CCM.Core.Helpers;
@@ -37,7 +33,11 @@ using CCM.Web.Infrastructure.Extensions;
 using CCM.Web.Models.SipAccount;
 using CCM.Web.Models.User;
 using CCM.Web.Properties;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using NLog;
+using System;
+using System.Linq;
 
 namespace CCM.Web.Controllers
 {
@@ -208,7 +208,7 @@ namespace CCM.Web.Controllers
                     log.Error(ex, "Could not edit SIP account");
                     ModelState.AddModelError("EditUser", ex.Message);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     log.Error(ex, "Could not edit SIP account");
                     ModelState.AddModelError("EditUser", _localizer["Sip_Account_Could_Not_Be_Saved"]);

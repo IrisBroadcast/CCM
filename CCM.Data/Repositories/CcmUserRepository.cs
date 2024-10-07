@@ -24,17 +24,17 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading.Tasks;
 using CCM.Core.Entities;
 using CCM.Core.Helpers;
 using CCM.Core.Interfaces.Repositories;
 using CCM.Data.Entities;
 using LazyCache;
+using Microsoft.EntityFrameworkCore;
 using NLog;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace CCM.Data.Repositories
 {
@@ -171,8 +171,8 @@ namespace CCM.Data.Repositories
             dbUser.Comment = ccmUser.Comment;
 
             // Only admins allowed to assign admin role to account
-            dbUser.Role =  string.IsNullOrWhiteSpace(ccmUser.RoleId) ? null : _ccmDbContext.Roles.SingleOrDefault(r => r.Id == new Guid(ccmUser.RoleId));
-          
+            dbUser.Role = string.IsNullOrWhiteSpace(ccmUser.RoleId) ? null : _ccmDbContext.Roles.SingleOrDefault(r => r.Id == new Guid(ccmUser.RoleId));
+
             if (!string.IsNullOrEmpty(ccmUser.Password))
             {
                 var saltBytes = CryptoHelper.GenerateSaltBytes();

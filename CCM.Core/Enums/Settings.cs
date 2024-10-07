@@ -30,7 +30,7 @@ namespace CCM.Core.Enums
 {
     public enum SettingsEnum
     {
-        [DefaultSetting("Time in seconds before SIP registration is obsolete","120")]
+        [DefaultSetting("Time in seconds before SIP registration is obsolete", "120")]
         MaxRegistrationAge,
         [DefaultSetting("The SIP domain", "@domain.sip.com")] // TODO: Is this in use? and really necessary??
         SIPDomain,

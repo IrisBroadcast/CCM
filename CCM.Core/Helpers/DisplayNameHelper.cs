@@ -24,10 +24,10 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
 using CCM.Core.Entities;
 using CCM.Core.Entities.Specific;
 using CCM.Core.Extensions;
+using System;
 
 namespace CCM.Core.Helpers
 {

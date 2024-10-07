@@ -24,13 +24,13 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using CCM.Core.Entities.Specific;
 using CCM.Core.Interfaces.Repositories;
 using CCM.Data.Entities;
 using LazyCache;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
 
 namespace CCM.Data.Repositories
 {

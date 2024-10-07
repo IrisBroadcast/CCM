@@ -24,10 +24,6 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Globalization;
-using System.IO;
-using System.Text.Json.Serialization;
 using CCM.Core.Cache;
 using CCM.Core.Helpers;
 using CCM.Core.Helpers.PasswordGeneration;
@@ -58,6 +54,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using System;
+using System.Globalization;
+using System.IO;
+using System.Text.Json.Serialization;
 
 namespace CCM.Web;
 

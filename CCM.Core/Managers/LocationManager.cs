@@ -24,11 +24,11 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using CCM.Core.Interfaces.Managers;
+using CCM.Core.Interfaces.Repositories;
 using System;
 using System.Linq;
 using System.Net;
-using CCM.Core.Interfaces.Managers;
-using CCM.Core.Interfaces.Repositories;
 
 namespace CCM.Core.Managers
 {
@@ -84,11 +84,11 @@ namespace CCM.Core.Managers
         public string GetRegionNameByIp(string ip)
         {
             var location = GetLocationIdByIp(ip);
-            if(location == Guid.Empty)
+            if (location == Guid.Empty)
             {
                 return string.Empty;
             }
-            
+
             var regionName = _cachedLocationRepository.GetById(location).Region.Name ?? string.Empty;
 
             return regionName;

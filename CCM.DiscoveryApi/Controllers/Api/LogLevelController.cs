@@ -25,8 +25,8 @@
  */
 
 using CCM.Core.Managers;
-using NLog;
 using Microsoft.AspNetCore.Mvc;
+using NLog;
 
 namespace CCM.DiscoveryApi.Controllers.Api
 {

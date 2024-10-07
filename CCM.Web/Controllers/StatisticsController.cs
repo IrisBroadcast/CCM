@@ -24,13 +24,6 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using CCM.Core.Entities;
 using CCM.Core.Entities.Statistics;
 using CCM.Core.Extensions;
@@ -39,6 +32,13 @@ using CCM.Web.Models.Statistics;
 using CCM.Web.Properties;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace CCM.Web.Controllers
 {

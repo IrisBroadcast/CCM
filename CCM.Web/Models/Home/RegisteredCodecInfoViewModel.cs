@@ -24,11 +24,11 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using CCM.Web.Properties;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Net.Sockets;
-using CCM.Web.Properties;
 
 namespace CCM.Web.Models.Home
 {
@@ -96,10 +96,12 @@ namespace CCM.Web.Models.Home
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(UserInterfaceLink)) {
+                if (string.IsNullOrWhiteSpace(UserInterfaceLink))
+                {
                     return string.Empty;
                 }
-                if (!UserInterfaceIsOpen) {
+                if (!UserInterfaceIsOpen)
+                {
                     return string.Empty;
                 }
                 string ip = Ip;

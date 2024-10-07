@@ -24,13 +24,13 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using CCM.Core.Entities;
 using CCM.Core.Entities.Statistics;
 using CCM.Core.Interfaces.Managers;
 using CCM.Core.Interfaces.Repositories;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CCM.Core.Managers
 {

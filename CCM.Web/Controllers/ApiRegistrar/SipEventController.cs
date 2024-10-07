@@ -24,19 +24,15 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Threading.Tasks;
 using CCM.Core.Interfaces.Managers;
-using CCM.Core.SipEvent;
-using Microsoft.AspNetCore.Mvc;
 using CCM.Core.Interfaces.Parser;
 using CCM.Core.SipEvent.Event;
 using CCM.Core.SipEvent.Messages;
 using CCM.Core.SipEvent.Models;
 using CCM.Web.Hubs;
-using Microsoft.Extensions.Hosting.Internal;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using NLog;
+using System;
 
 namespace CCM.Web.Controllers.ApiRegistrar
 {

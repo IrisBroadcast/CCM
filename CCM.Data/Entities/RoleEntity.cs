@@ -24,9 +24,9 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using CCM.Data.Entities.Base;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using CCM.Data.Entities.Base;
 
 namespace CCM.Data.Entities
 {

@@ -24,6 +24,7 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using CCM.Web.Mappers;
 using CCM.Web.Models.ApiExternal;
 using Microsoft.AspNetCore.SignalR;
 using NLog;
@@ -31,7 +32,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CCM.Web.Mappers;
 
 namespace CCM.Web.Hubs
 {
@@ -128,4 +128,3 @@ namespace CCM.Web.Hubs
         }
     }
 }
-    
