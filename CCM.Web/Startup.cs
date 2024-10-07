@@ -185,10 +185,11 @@ public class Startup
 
         // AddDataAnnotationsLocalization adds support for localized DataAnnotations
         // validation messages through IStringLocalizer abstractions.
-        services.AddControllersWithViews().AddDataAnnotationsLocalization().AddViewLocalization().AddJsonOptions(options =>
+        _ = services.AddControllersWithViews().AddDataAnnotationsLocalization().AddViewLocalization().AddJsonOptions(options =>
         {
             options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            options.JsonSerializerOptions.IgnoreNullValues = true;
+            //options.JsonSerializerOptions.IgnoreNullValues = true;
+            options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
         });
     }
 
