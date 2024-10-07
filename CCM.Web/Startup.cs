@@ -205,6 +205,9 @@ public class Startup
         }
         else
         {
+            // StatusCode pages to gracefully handle status codes 400-599.
+            app.UseStatusCodePagesWithRedirects("~/Home/StatusCodePage");
+
             app.UseExceptionHandler("/Home/Error");
             // The default HSTS value is 30 days. You may want to change this
             // for production scenarios, see https://aka.ms/aspnetcore-hsts.
@@ -276,7 +279,8 @@ public class Startup
     }
 }
 
-public static class ServiceExtensionsDependencyInjection {
+public static class ServiceExtensionsDependencyInjection
+{
     public static void AddGeneralDependencyInjection(this IServiceCollection services)
     {
         services.AddScoped<CodecStatusViewModelsProvider>();
