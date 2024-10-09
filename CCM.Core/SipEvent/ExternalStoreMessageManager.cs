@@ -43,6 +43,7 @@ namespace CCM.Core.SipEvent
         private readonly ICachedCallRepository _cachedCallRepository;
         private readonly ICachedRegisteredCodecRepository _cachedRegisteredCodecRepository;
         private readonly ILocationManager _locationManager;
+
         public ExternalStoreMessageManager(ICachedRegisteredCodecRepository cachedRegisteredCodecRepository, ICachedCallRepository cachedCallRepository, ILogger<SipMessageManager> logger, ILocationManager locationManager)
         {
             _cachedRegisteredCodecRepository = cachedRegisteredCodecRepository;
@@ -105,6 +106,7 @@ namespace CCM.Core.SipEvent
                 State = SipCallState.NONE,
                 SDP = message.SDP,
                 IsStarted = true,
+                IsExternal = true,
             };
 
             _cachedCallRepository.UpdateOrAddCall(call);

@@ -38,6 +38,7 @@ namespace CCM.Core.Entities.Specific
         public string SipCode { get; set; }
         public string SipMessage { get; set; }
         public bool IsStarted { get; set; }
+        public bool IsExternal { get; set; }
 
         public string FromDisplayName { get; set; }
         public string FromSip { get; set; }

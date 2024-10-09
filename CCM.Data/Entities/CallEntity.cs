@@ -57,6 +57,8 @@ namespace CCM.Data.Entities
         [Column("IsStarted")]
         public bool IsStarted { get; set; }
 
+        public bool IsExternal { get; set; }
+
         public Guid? FromId { get; set; }
         [ForeignKey("FromId")]
         public virtual RegisteredCodecEntity FromCodec { get; set; } // TODO: Rename "FromUserAgent"

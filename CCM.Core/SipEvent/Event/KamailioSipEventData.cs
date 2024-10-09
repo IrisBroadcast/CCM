@@ -69,12 +69,12 @@ namespace CCM.Core.SipEvent.Event
 
         public string ToLogString()
         {
-            var timestamp = this.UnixTimeStampToDateTime(this.TimeStamp);
+            var timestamp = UnixTimeStampToDateTime(this.TimeStamp);
             return $"Kamailio Sip Event:{this.Event}, TimeStamp:{timestamp}, Registrar:{this.Registrar}, RegType:{this.RegType}, Expires:{this.Expires}, Method:{this.Method}, User-Agent:{this.UserAgentHeader}, FromURI:{this.FromUri}, RequestUri:{this.RequestUri}, ContactUri:{this.ContactUri} CallId:{this.CallId}" +
                 $", DialogState:{this.DialogState}, DialogHashId:{this.DialogHashId}, DialogHashEntry:{this.DialogHashEntry}, HangupReason:{this.HangupReason}";
         }
 
-        public string UnixTimeStampToDateTime(long unixTimeStamp)
+        public static string UnixTimeStampToDateTime(long unixTimeStamp)
         {
             DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
 

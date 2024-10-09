@@ -117,6 +117,7 @@ namespace CCM.Data.Repositories
                         Code = call.SipCode,
                         Message = call.SipMessage,
                         IsStarted = call.IsStarted,
+                        IsExternal = call.IsExternal,
                     };
 
                     _ccmDbContext.Calls.Add(dbCall);
@@ -382,6 +383,7 @@ namespace CCM.Data.Repositories
                 SipCode = dbCall.Code,
                 SipMessage = dbCall.Message,
                 IsStarted = dbCall.IsStarted,
+                IsExternal = dbCall.IsExternal,
 
                 FromId = GuidHelper.AsString(dbCall.FromId),
                 FromSip = anonymize ? DisplayNameHelper.AnonymizePhonenumber(dbCall.FromUsername) : dbCall.FromUsername,

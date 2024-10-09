@@ -44,6 +44,7 @@ namespace CCM.Core.Entities
         public string SipCode { get; set; }
         public string SipMessage { get; set; }
         public bool IsStarted { get; set; } = false;
+        public bool IsExternal { get; set; } = false;
 
         public Guid? FromId { get; set; }
         public string FromSip { get; set; }

@@ -233,6 +233,7 @@ namespace CCM.Core.SipEvent
 
             call.Started = DateTime.UtcNow;
             call.IsStarted = true;
+            call.IsExternal = false;
             call.CallId = sipMessage.CallId;
             call.DialogHashId = sipMessage.HashId;
             call.DialogHashEnt = sipMessage.HashEntry;
