@@ -59,6 +59,8 @@ namespace CCM.Core.Managers
         public int CacheTimeLiveData => GetSetting<int>(SettingsEnum.CacheTimeLiveData);
         public int CacheTimeConfigData => GetSetting<int>(SettingsEnum.CacheTimeConfigData);
 
+        public string ExternalApiCode => GetSetting<string>(SettingsEnum.ExternalApiCode);
+
         public void SaveSettings(List<Setting> newSettings, string userName)
         {
             _cachedSettingsRepository.Save(newSettings, userName);

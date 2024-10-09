@@ -47,5 +47,7 @@ namespace CCM.Core.Interfaces.Managers
         string CodecControlPassword { get; }
         int CacheTimeLiveData { get; }
         int CacheTimeConfigData { get; }
+
+        string ExternalApiCode { get; }
     }
 }

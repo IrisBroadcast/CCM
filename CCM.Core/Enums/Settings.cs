@@ -56,6 +56,8 @@ namespace CCM.Core.Enums
         CacheTimeLiveData,
         [DefaultSetting("Cache time for information that is changed less often in seconds", "60")]
         CacheTimeConfigData,
+        [DefaultSetting("Add a secret used to authenticate api endpoints", "secret-api-code")]
+        ExternalApiCode,
     }
 
     [AttributeUsage(AttributeTargets.All)]

@@ -46,17 +46,20 @@ namespace CCM.Web.Controllers.ApiRegistrar
         private readonly IWebGuiHubUpdater _webGuiHubUpdater;
         private readonly ICodecStatusHubUpdater _codecStatusHubUpdater;
         private readonly IExtendedStatusHubUpdater _extendedStatusHubUpdater;
+        private readonly ISettingsManager _settingsManager;
 
         public CallRegisterController(
             IExternalStoreMessageManager externalStoreMessageManager,
             IWebGuiHubUpdater webGuiHubUpdater,
             ICodecStatusHubUpdater codecStatusHubUpdater,
-            IExtendedStatusHubUpdater extendedStatusHubUpdater)
+            IExtendedStatusHubUpdater extendedStatusHubUpdater,
+            ISettingsManager settingsManager)
         {
             _externalStoreMessageManager = externalStoreMessageManager;
             _webGuiHubUpdater = webGuiHubUpdater;
             _codecStatusHubUpdater = codecStatusHubUpdater;
             _extendedStatusHubUpdater = extendedStatusHubUpdater;
+            _settingsManager = settingsManager;
         }
 
         [HttpGet]
@@ -109,5 +112,33 @@ namespace CCM.Web.Controllers.ApiRegistrar
 
             return Ok();
         }
+
+        /// <summary>
+        /// Add { "apiKey": "secret-key" } to the raw body of the request.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public IActionResult ListExternalCalls([FromBody] RequestModel model)
+        {
+            log.Warn("ListExternalCalls, {code}", model.ApiKey);
+            if (string.IsNullOrWhiteSpace(model.ApiKey))
+            {
+                return BadRequest();
+            }
+
+            string apiKey = model.ApiKey;
+            if (_settingsManager.ExternalApiCode == apiKey)
+            {
+                return Unauthorized();
+            }
+
+            return Ok();
+        }
+    }
+
+    public class RequestModel
+    {
+        public string? ApiKey { get; set; }
     }
 }
