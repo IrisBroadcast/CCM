@@ -101,10 +101,7 @@ namespace CCM.Data.Repositories
                 .SingleOrDefault(g => g.Id == id);
             if (dbRegion != null)
             {
-                if (dbRegion.Locations != null)
-                {
-                    dbRegion.Locations.Clear();
-                }
+                dbRegion.Locations?.Clear();
 
                 db.Regions.Remove(dbRegion);
                 db.SaveChanges();

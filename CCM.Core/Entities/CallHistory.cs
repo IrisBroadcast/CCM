@@ -59,6 +59,7 @@ namespace CCM.Core.Entities
         public Guid FromCodecTypeId { get; set; }
         public string FromCodecTypeName { get; set; }
         public string FromCodecTypeCategory { get; set; }
+        public string FromTool { get; set; }
         public Guid FromOwnerId { get; set; }
         public string FromOwnerName { get; set; }
         public Guid FromRegionId { get; set; }
@@ -80,6 +81,7 @@ namespace CCM.Core.Entities
         public Guid ToCodecTypeId { get; set; }
         public string ToCodecTypeName { get; set; }
         public string ToCodecTypeCategory { get; set; }
+        public string ToTool { get; set; }
         public Guid ToOwnerId { get; set; }
         public string ToOwnerName { get; set; }
         public Guid ToRegionId { get; set; }

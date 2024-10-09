@@ -53,6 +53,7 @@ namespace CCM.Core.Entities.Specific
         [Obsolete("This one should be removed, no relevance anymore")]
         public string FromCodecTypeColor { get; set; }
         public string FromCodecTypeCategory { get; set; }
+        public string FromTool { get; set; }
 
         public string ToDisplayName { get; set; }
         public string ToSip { get; set; }
@@ -67,5 +68,6 @@ namespace CCM.Core.Entities.Specific
         [Obsolete("This one should be removed, no relevance anymore")]
         public string ToCodecTypeColor { get; set; }
         public string ToCodecTypeCategory { get; set; }
+        public string ToTool { get; set; }
     }
 }

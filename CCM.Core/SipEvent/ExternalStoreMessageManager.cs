@@ -70,17 +70,17 @@ namespace CCM.Core.SipEvent
 
         public SipEventHandlerResult RegisterCall(ExternalDialogMessage message)
         {
-            _logger.LogDebug($"Register call from:{message.FromUsername} to:{message.ToUsername}, call id:{message.CallId}");
+            _logger.LogDebug("Register call from:{fromUsername} to:{toUsername}, call id:{callId}", message.FromUsername.Sanitize(), message.ToUsername.Sanitize(), message.CallId.Sanitize());
 
             if (_cachedCallRepository.CallExists(message.CallId, "", "") && message.Ended != null)
             {
-                _logger.LogDebug($"Call with id:{message.CallId} should be Ended closing it instead of registering it");
+                _logger.LogDebug("Call with id:{callId} should be Ended closing it instead of registering it", message.CallId.Sanitize());
                 return CloseCall(message);
             }
 
             if (_cachedCallRepository.CallExists(message.CallId, "", ""))
             {
-                _logger.LogDebug($"Call with id:{message.CallId} already exists");
+                _logger.LogDebug("Call with id:{callId} already exists", message.CallId.Sanitize());
                 return SipEventHandlerResult.NothingChanged;
             }
 

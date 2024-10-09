@@ -106,12 +106,12 @@ namespace CCM.Core.Service
             if (!string.IsNullOrEmpty(caller))
             {
                 callerProfiles = GetProfileListForRegisteredSipId(caller, registeredUserAgents);
-                log.Debug($"Found {callerProfiles.Count} profiles for caller '{caller}'");
+                log.Debug("Found {count} profiles for caller '{caller}'", callerProfiles.Count, caller.Sanitize());
             }
             else
             {
                 callerProfiles = _cachedProfileRepository.GetAllProfileNamesAndSdp();
-                log.Debug($"Found {callerProfiles.Count} profiles, no caller specified");
+                log.Debug("Found {count} profiles, no caller specified", callerProfiles.Count);
             }
 
             // Filter out all user agents that can be called
@@ -143,7 +143,7 @@ namespace CCM.Core.Service
 
                 if (calleeSip == null)
                 {
-                    log.Trace($"Registered user agent is null, returning empty result. Callee '{callee}' parameter is received.");
+                    log.Trace("Registered user agent is null, returning empty result. Callee '{callee}' parameter is received.", callee.Sanitize());
                     return new UserAgentsResultDto()
                     {
                         Profiles = new List<ProfileDto>(),
@@ -255,7 +255,7 @@ namespace CCM.Core.Service
                 registeredUserAgents = registeredUserAgents.Where(rs => MetadataHelper.GetPropertyValue(rs, filterSelection.Property) == filterSelection.Value).ToList();
             }
 
-            log.Debug($"Found {registeredUserAgents.Count} registered user-agents.");
+            log.Debug("Found {count} registered user-agents.", registeredUserAgents.Count);
             return registeredUserAgents;
         }
     }

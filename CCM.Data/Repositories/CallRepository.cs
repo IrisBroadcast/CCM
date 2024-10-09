@@ -26,7 +26,6 @@
 
 using CCM.Core.Entities;
 using CCM.Core.Entities.Specific;
-using CCM.Core.Enums;
 using CCM.Core.Helpers;
 using CCM.Core.Interfaces.Managers;
 using CCM.Core.Interfaces.Repositories;
@@ -485,44 +484,42 @@ namespace CCM.Data.Repositories
 
             if (call.ToCategory != null && !string.IsNullOrEmpty(call.ToCategory))
             {
-                // INFO: special case for power bi log call type / category
-                if (call.ToCategory.Contains("vox-medarbetare") || call.ToCategory.Contains("medi-g"))
-                {
-                    callHistory.FromCodecTypeCategory = call.ToCategory;
-                }
                 callHistory.ToCodecTypeCategory = call.ToCategory;
             }
 
-            return callHistory;
-        }
-
-        private Call MapToCall(CallEntity dbCall)
-        {
-            return dbCall == null ? null : new Call
+            // INFO: Special PowerBI
+            var fromStatGroup = callHistory.FromCodecTypeName;
+            if (!string.IsNullOrEmpty(callHistory.FromLocationCategory))
             {
-                Id = dbCall.Id,
-                FromId = dbCall.FromId ?? Guid.Empty,
-                ToId = dbCall.ToId ?? Guid.Empty,
-                Started = dbCall.Started,
-                State = dbCall.State ?? SipCallState.NONE,
-                Updated = dbCall.Updated,
-                CallId = dbCall.DialogCallId,
-                Closed = dbCall.Closed,
-                DialogHashId = dbCall.DialogHashId,
-                DialogHashEnt = dbCall.DialogHashEnt,
-                From = MapToRegisteredCodec(dbCall.FromCodec),
-                To = MapToRegisteredCodec(dbCall.ToCodec),
-                FromSip = dbCall.FromUsername,
-                ToSip = dbCall.ToUsername,
-                FromTag = dbCall.FromTag,
-                ToTag = dbCall.ToTag,
-                FromCategory = dbCall.FromCategory,
-                ToCategory = dbCall.ToCategory,
-                IsPhoneCall = dbCall.IsPhoneCall,
-                SDP = dbCall.SDP,
-                SipCode = dbCall.Code,
-                SipMessage = dbCall.Message,
-            };
+                fromStatGroup = callHistory.FromLocationCategory;
+            }
+            if (!string.IsNullOrEmpty(callHistory.FromCodecTypeCategory))
+            {
+                fromStatGroup = callHistory.FromCodecTypeCategory;
+            }
+            callHistory.FromTool = fromStatGroup;
+
+            var toStatGroup = callHistory.ToCodecTypeName;
+            if (!string.IsNullOrEmpty(callHistory.ToLocationCategory))
+            {
+                toStatGroup = callHistory.ToLocationCategory;
+            }
+            if (!string.IsNullOrEmpty(callHistory.ToCodecTypeCategory))
+            {
+                toStatGroup = callHistory.ToCodecTypeCategory;
+            }
+            callHistory.ToTool = toStatGroup;
+
+            // INFO: special case for power bi log call type / category
+            //if (call.ToCategory != null && !string.IsNullOrEmpty(call.ToCategory))
+            //{
+            //    if (call.ToCategory.Contains("vox-medarbetare") || call.ToCategory.Contains("medi-g"))
+            //    {
+            //        callHistory.FromCodecTypeCategory = call.ToCategory;
+            //    }
+            //}
+
+            return callHistory;
         }
 
         private CallInfo? MapToCallInfo(CallEntity dbCall)
@@ -540,37 +537,66 @@ namespace CCM.Data.Repositories
             };
         }
 
-        private CallRegisteredCodec MapToRegisteredCodec(RegisteredCodecEntity dbCodec)
-        {
-            var sip = dbCodec == null ? null : new CallRegisteredCodec()
-            {
-                Id = dbCodec.Id,
-                SIP = dbCodec.SIP,
-                DisplayName = dbCodec.DisplayName,
-                UserAgentHead = dbCodec.UserAgentHeader,
-                UserName = dbCodec.Username,
-                PresentationName = DisplayNameHelper.GetDisplayName(
-                    dbCodec?.DisplayName ?? string.Empty,
-                    dbCodec?.User?.DisplayName ?? string.Empty,
-                    string.Empty,
-                    dbCodec?.Username ?? string.Empty,
-                    dbCodec?.SIP ?? string.Empty,
-                    string.Empty,
-                    _settingsManager.SipDomain),
-                User = MapToSipAccount(dbCodec.User),
-            };
+        //private Call MapToCall(CallEntity dbCall)
+        //{
+        //    return dbCall == null ? null : new Call
+        //    {
+        //        Id = dbCall.Id,
+        //        FromId = dbCall.FromId ?? Guid.Empty,
+        //        ToId = dbCall.ToId ?? Guid.Empty,
+        //        Started = dbCall.Started,
+        //        State = dbCall.State ?? SipCallState.NONE,
+        //        Updated = dbCall.Updated,
+        //        CallId = dbCall.DialogCallId,
+        //        Closed = dbCall.Closed,
+        //        DialogHashId = dbCall.DialogHashId,
+        //        DialogHashEnt = dbCall.DialogHashEnt,
+        //        From = MapToRegisteredCodec(dbCall.FromCodec),
+        //        To = MapToRegisteredCodec(dbCall.ToCodec),
+        //        FromSip = dbCall.FromUsername,
+        //        ToSip = dbCall.ToUsername,
+        //        FromTag = dbCall.FromTag,
+        //        ToTag = dbCall.ToTag,
+        //        FromCategory = dbCall.FromCategory,
+        //        ToCategory = dbCall.ToCategory,
+        //        IsPhoneCall = dbCall.IsPhoneCall,
+        //        SDP = dbCall.SDP,
+        //        SipCode = dbCall.Code,
+        //        SipMessage = dbCall.Message,
+        //    };
+        //}
 
-            return sip;
-        }
+        //private CallRegisteredCodec MapToRegisteredCodec(RegisteredCodecEntity dbCodec)
+        //{
+        //    var sip = dbCodec == null ? null : new CallRegisteredCodec()
+        //    {
+        //        Id = dbCodec.Id,
+        //        SIP = dbCodec.SIP,
+        //        DisplayName = dbCodec.DisplayName,
+        //        UserAgentHead = dbCodec.UserAgentHeader,
+        //        UserName = dbCodec.Username,
+        //        PresentationName = DisplayNameHelper.GetDisplayName(
+        //            dbCodec?.DisplayName ?? string.Empty,
+        //            dbCodec?.User?.DisplayName ?? string.Empty,
+        //            string.Empty,
+        //            dbCodec?.Username ?? string.Empty,
+        //            dbCodec?.SIP ?? string.Empty,
+        //            string.Empty,
+        //            _settingsManager.SipDomain),
+        //        User = MapToSipAccount(dbCodec.User),
+        //    };
 
-        private CallRegisteredCodecSipAccount MapToSipAccount(SipAccountEntity dbAccount)
-        {
-            return dbAccount == null ? null : new CallRegisteredCodecSipAccount()
-            {
-                Id = dbAccount.Id,
-                UserName = dbAccount.UserName,
-                DisplayName = dbAccount.DisplayName
-            };
-        }
+        //    return sip;
+        //}
+
+        //private CallRegisteredCodecSipAccount MapToSipAccount(SipAccountEntity dbAccount)
+        //{
+        //    return dbAccount == null ? null : new CallRegisteredCodecSipAccount()
+        //    {
+        //        Id = dbAccount.Id,
+        //        UserName = dbAccount.UserName,
+        //        DisplayName = dbAccount.DisplayName
+        //    };
+        //}
     }
 }

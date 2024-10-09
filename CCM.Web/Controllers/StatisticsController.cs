@@ -239,10 +239,6 @@ namespace CCM.Web.Controllers
         [HttpPost]
         public ActionResult RegionNumberOfCallsView(DateTime startDate, DateTime endDate, Guid filterId)
         {
-            if (filterId == Guid.Empty)
-            {
-                return BadRequest("Please choose a region");
-            }
             var model = new DateBasedChartViewModel
             {
                 FilterType = DateBasedFilterType.Regions,
@@ -283,11 +279,6 @@ namespace CCM.Web.Controllers
         [HttpPost]
         public ActionResult CodecTypeNumberOfCallsView(DateTime startDate, DateTime endDate, Guid filterId)
         {
-            if (filterId == Guid.Empty)
-            {
-                //throw new Exception("Please choose a codec type");
-                return BadRequest("Please choose a codec type");
-            }
             var model = new DateBasedChartViewModel
             {
                 FilterType = DateBasedFilterType.CodecTypes,
@@ -306,7 +297,6 @@ namespace CCM.Web.Controllers
         [HttpPost]
         public ActionResult CategoryCallNumberOfCallsView(DateTime startDate, DateTime endDate)
         {
-
             var model = new DateBasedChartCallCategoriesViewModel
             {
                 FilterType = DateBasedFilterType.Categories,
@@ -322,7 +312,6 @@ namespace CCM.Web.Controllers
         [HttpPost]
         public ActionResult CategoryNumberOfCallsView(DateTime startDate, DateTime endDate)
         {
-
             var model = new DateBasedChartCategoriesViewModel
             {
                 FilterType = DateBasedFilterType.Categories,

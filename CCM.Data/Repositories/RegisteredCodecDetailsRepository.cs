@@ -79,7 +79,7 @@ namespace CCM.Data.Repositories
             return MapToRegisteredSipDetails(dbCodec);
         }
 
-        private RegisteredSipDetails MapToRegisteredSipDetails(RegisteredCodecEntity rs)
+        private static RegisteredSipDetails MapToRegisteredSipDetails(RegisteredCodecEntity rs)
         {
             if (rs == null)
             {

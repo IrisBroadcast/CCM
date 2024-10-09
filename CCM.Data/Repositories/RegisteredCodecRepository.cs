@@ -160,7 +160,6 @@ namespace CCM.Data.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error while updating registered sip {ex.Message}");
                 _logger.LogError(ex, "Error while updating registered sip {0}", registration.SipUri);
                 return SipEventHandlerResult.NothingChanged;
             }
@@ -251,7 +250,7 @@ namespace CCM.Data.Repositories
         /// Makes sure change has been done to database fields that we are interested in.
         /// Since SaveChanges triggers a full reload of the cache.
         /// </summary>
-        private bool HasRelevantChange(EntityEntry<RegisteredCodecEntity> entry) // TODO: check new implementation of DbEntityEntry not same as EntityEntry
+        private bool HasRelevantChange(EntityEntry<RegisteredCodecEntity> entry)
         {
             var changedProperties = GetChangedProperties(entry);
 
@@ -264,7 +263,7 @@ namespace CCM.Data.Repositories
             return changedProperties.Any();
         }
 
-        private IList<string> GetChangedProperties(EntityEntry entity) // TODO: check new implementation of DbEntityEntry not same as EntityEntry
+        private IList<string> GetChangedProperties(EntityEntry entity)
         {
             if (entity.State != EntityState.Modified)
             {

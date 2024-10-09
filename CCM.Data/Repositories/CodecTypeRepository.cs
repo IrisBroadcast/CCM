@@ -88,10 +88,7 @@ namespace CCM.Data.Repositories
 
             if (dbCodecType != null)
             {
-                if (dbCodecType.SipAccounts != null)
-                {
-                    dbCodecType.SipAccounts.Clear();
-                }
+                dbCodecType.SipAccounts?.Clear();
 
                 db.CodecTypes.Remove(dbCodecType);
                 db.SaveChanges();

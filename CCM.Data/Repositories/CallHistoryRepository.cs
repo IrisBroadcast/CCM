@@ -87,6 +87,7 @@ namespace CCM.Data.Repositories
             dbCallHistory.FromLocationName = callHistory.FromLocationName;
             dbCallHistory.FromLocationShortName = callHistory.FromLocationShortName;
             dbCallHistory.FromLocationCategory = callHistory.FromLocationCategory;
+            dbCallHistory.FromTool = callHistory.FromTool;
             dbCallHistory.FromOwnerId = callHistory.FromOwnerId;
             dbCallHistory.FromOwnerName = callHistory.FromOwnerName;
             dbCallHistory.FromRegionId = callHistory.FromRegionId;
@@ -108,6 +109,7 @@ namespace CCM.Data.Repositories
             dbCallHistory.ToLocationName = callHistory.ToLocationName;
             dbCallHistory.ToLocationShortName = callHistory.ToLocationShortName;
             dbCallHistory.ToLocationCategory = callHistory.ToLocationCategory;
+            dbCallHistory.ToTool = callHistory.ToTool;
             dbCallHistory.ToOwnerId = callHistory.ToOwnerId;
             dbCallHistory.ToOwnerName = callHistory.ToOwnerName;
             dbCallHistory.ToRegionId = callHistory.ToRegionId;
@@ -161,13 +163,13 @@ namespace CCM.Data.Repositories
         public IReadOnlyList<CallHistory> GetOneYearCallHistory()
         {
             var nowTime = DateTime.Now;
-            var startTime = DateTime.Now.AddMonths(-4); // .AddYears(-1);
+            var startTime = DateTime.Now.AddMonths(-4);
             var callHistories = _ccmDbContext.CallHistories
                 .AsNoTracking()
                 .OrderByDescending(callHistory => callHistory.Ended)
                 .Where(c => c.Started <= nowTime && c.Ended >= startTime)
                 .ToList();
-            return callHistories.Select(MapToCallHistory).ToList();
+            return callHistories.Select(MapToCallHistory).ToList().AsReadOnly();
         }
 
         public IList<CallHistory> GetCallHistoriesByDate(DateTime startTime, DateTime endTime)
@@ -270,6 +272,7 @@ namespace CCM.Data.Repositories
                 FromLocationName = dbCallHistory.FromLocationName,
                 FromLocationShortName = dbCallHistory.FromLocationShortName,
                 FromLocationCategory = dbCallHistory.FromLocationCategory,
+                FromTool = dbCallHistory.FromTool,
                 FromOwnerId = dbCallHistory.FromOwnerId,
                 FromOwnerName = dbCallHistory.FromOwnerName,
                 FromRegionId = dbCallHistory.FromRegionId,
@@ -291,6 +294,7 @@ namespace CCM.Data.Repositories
                 ToLocationName = dbCallHistory.ToLocationName,
                 ToLocationShortName = dbCallHistory.ToLocationShortName,
                 ToLocationCategory = dbCallHistory.ToLocationCategory,
+                ToTool = dbCallHistory.ToTool,
                 ToOwnerId = dbCallHistory.ToOwnerId,
                 ToOwnerName = dbCallHistory.ToOwnerName,
                 ToRegionId = dbCallHistory.ToRegionId,
@@ -325,6 +329,7 @@ namespace CCM.Data.Repositories
                 FromSip = dbCallHistory.FromUsername,
                 FromCodecTypeName = dbCallHistory.FromCodecTypeName,
                 FromCodecTypeCategory = dbCallHistory.FromCodecTypeCategory,
+                FromTool = dbCallHistory.FromTool,
                 FromComment = dbCallHistory.FromComment,
                 FromDisplayName = dbCallHistory.FromDisplayName,
                 FromLocationName = dbCallHistory.FromLocationName,
@@ -337,6 +342,7 @@ namespace CCM.Data.Repositories
                 ToSip = dbCallHistory.ToUsername,
                 ToCodecTypeName = dbCallHistory.ToCodecTypeName,
                 ToCodecTypeCategory = dbCallHistory.ToCodecTypeCategory,
+                ToTool = dbCallHistory.ToTool,
                 ToComment = dbCallHistory.ToComment,
                 ToDisplayName = dbCallHistory.ToDisplayName,
                 ToLocationName = dbCallHistory.ToLocationName,
