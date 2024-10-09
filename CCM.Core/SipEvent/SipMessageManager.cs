@@ -120,7 +120,7 @@ namespace CCM.Core.SipEvent
             var sipAddress = expireMessage.SipAddress.UserAtHost;
             if (regType == "delete") // TODO: Should this be an enum? Maybe define when this happen
             {
-                _logger.LogInformation("Unregister Codec {sipAddress}, type:{regType}", sipAddress.Sanitize(), regType.Sanitize());
+                _logger.LogInformation("Unregister Codec {sipAddress}, type:{regType}", sipAddress, regType);
                 bool codecInCall = _cachedCallRepository.CallExistsBySipAddress(sipAddress);
                 if (codecInCall)
                 {
@@ -165,8 +165,8 @@ namespace CCM.Core.SipEvent
             CallInfo callInfo = _cachedCallRepository.GetCallInfo(sipMessage.CallId, sipMessage.HashId, sipMessage.HashEntry);
             if (callInfo != null && callInfo.IsStarted == true)
             {
-                _logger.LogDebug("Call with id:{callId}, hash id:{hashId}, hash entry:{hashEntry} already exists", sipMessage.CallId.Sanitize(),
-                    sipMessage.HashId.Sanitize(), sipMessage.HashEntry.Sanitize());
+                _logger.LogDebug("Call with id:{callId}, hash id:{hashId}, hash entry:{hashEntry} already exists", sipMessage.CallId,
+                    sipMessage.HashId, sipMessage.HashEntry);
                 return SipEventHandlerResult.NothingChanged;
             }
 
@@ -345,13 +345,13 @@ namespace CCM.Core.SipEvent
                 CallInfo call = _cachedCallRepository.GetCallInfo(sipMessage.CallId, sipMessage.HashId, sipMessage.HashEntry);
                 if (call == null)
                 {
-                    _logger.LogWarning("Unable to find call with call id:{callId}, hash id:{hashId}, hash entry:{hashEntry} (Progress)", sipMessage.CallId.Sanitize(), sipMessage.HashId.Sanitize(), sipMessage.HashEntry.Sanitize());
+                    _logger.LogWarning("Unable to find call with call id:{callId}, hash id:{hashId}, hash entry:{hashEntry} (Progress)", sipMessage.CallId, sipMessage.HashId, sipMessage.HashEntry);
                     return SipEventHandlerResult.NothingChanged;
                 }
 
                 if (call.Closed)
                 {
-                    _logger.LogWarning("Call with call id:{callId} already closed (Progress)", sipMessage.CallId.Sanitize());
+                    _logger.LogWarning("Call with call id:{callId} already closed (Progress)", sipMessage.CallId);
                     return SipEventHandlerResult.NothingChanged;
                 }
 
@@ -360,7 +360,7 @@ namespace CCM.Core.SipEvent
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while adding progress to call with call id:{callId}", sipMessage.CallId.Sanitize());
+                _logger.LogError(ex, "Error while adding progress to call with call id:{callId}", sipMessage.CallId);
                 return SipEventHandlerResult.NothingChanged;
             }
         }
@@ -380,7 +380,7 @@ namespace CCM.Core.SipEvent
 
                 if (call.Closed)
                 {
-                    _logger.LogWarning("Failed call with call id:{callId} already closed", sipMessage.CallId.Sanitize());
+                    _logger.LogWarning("Failed call with call id:{callId} already closed", sipMessage.CallId);
                     return SipEventHandlerResult.NothingChanged;
                 }
 
@@ -389,7 +389,7 @@ namespace CCM.Core.SipEvent
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while closing failed call with call id:{callId}", sipMessage.CallId.Sanitize());
+                _logger.LogError(ex, "Error while closing failed call with call id:{callId}", sipMessage.CallId);
                 return SipEventHandlerResult.NothingChanged;
             }
         }
@@ -409,7 +409,7 @@ namespace CCM.Core.SipEvent
 
                 if (call.Closed)
                 {
-                    _logger.LogWarning("Call with call id:{callId} already closed", sipMessage.CallId.Sanitize());
+                    _logger.LogWarning("Call with call id:{callId} already closed", sipMessage.CallId);
                     return SipEventHandlerResult.NothingChanged;
                 }
 
@@ -418,7 +418,7 @@ namespace CCM.Core.SipEvent
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while closing call with call id:{callId}", sipMessage.CallId.Sanitize());
+                _logger.LogError(ex, "Error while closing call with call id:{callId}", sipMessage.CallId);
                 return SipEventHandlerResult.NothingChanged;
             }
         }

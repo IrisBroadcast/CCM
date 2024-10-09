@@ -145,14 +145,14 @@ namespace CCM.Data.Repositories
                     }
                     else
                     {
-                        _logger.LogWarning("Unable to save call history with call id: {callId}, hash id: {dialogHashId}, hash ent: {dialogHashEnt}", call.CallId.Sanitize(), call.DialogHashId.Sanitize(), call.DialogHashEnt.Sanitize());
+                        _logger.LogWarning("Unable to save call history with call id: {callId}, hash id: {dialogHashId}, hash ent: {dialogHashEnt}", call.CallId, call.DialogHashId, call.DialogHashEnt);
                     }
                 }
             }
             catch (Exception ex)
             {
                 log.Error(ex);
-                _logger.LogError(ex, "Error saving/updating call with call id: {callId}, hash id: {dialogHashId}, hash ent: {dialogHashEnt}", call.CallId.Sanitize(), call.DialogHashId.Sanitize(), call.DialogHashEnt.Sanitize());
+                _logger.LogError(ex, "Error saving/updating call with call id: {callId}, hash id: {dialogHashId}, hash ent: {dialogHashEnt}", call.CallId, call.DialogHashId, call.DialogHashEnt);
             }
         }
 
@@ -169,7 +169,7 @@ namespace CCM.Data.Repositories
                 var dbCall = callId != Guid.Empty ? _ccmDbContext.Calls.FirstOrDefault(c => c.Id == callId) : null;
                 if (dbCall == null)
                 {
-                    _logger.LogError("Could not update progress for {callId} since there is no call to be found.", callId.ToString().Sanitize());
+                    _logger.LogError("Could not update progress for {callId} since there is no call to be found.", callId.ToString());
                     return;
                 }
 
@@ -184,7 +184,7 @@ namespace CCM.Data.Repositories
             catch (Exception ex)
             {
                 log.Error(ex);
-                _logger.LogError(ex, "Error saving/updating progress on call with call id: {callId}, sipCode:{code}, sipMessage:{message}", callId.ToString().Sanitize(), code.Sanitize(), message.Sanitize());
+                _logger.LogError(ex, "Error saving/updating progress on call with call id: {callId}, sipCode:{code}, sipMessage:{message}", callId.ToString(), code, message);
             }
         }
 
