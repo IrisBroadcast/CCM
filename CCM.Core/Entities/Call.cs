@@ -46,7 +46,6 @@ namespace CCM.Core.Entities
         public bool IsStarted { get; set; } = false;
 
         public Guid? FromId { get; set; }
-        public CallRegisteredCodec From { get; set; }
         public string FromSip { get; set; }
         public string FromDisplayName { get; set; }
         public Guid? FromUserAccountId { get; set; }
@@ -55,7 +54,6 @@ namespace CCM.Core.Entities
         public string? FromExternalLocation { get; set; }
 
         public Guid? ToId { get; set; }
-        public CallRegisteredCodec To { get; set; }
         public string ToSip { get; set; }
         public string ToDisplayName { get; set; }
         public Guid? ToUserAccountId { get; set; }

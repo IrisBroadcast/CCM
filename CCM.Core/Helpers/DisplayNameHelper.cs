@@ -42,18 +42,6 @@ namespace CCM.Core.Helpers
     /// </summary>
     public class DisplayNameHelper
     {
-        public static string GetDisplayName(CallRegisteredCodec registeredCodec, string callDisplayName, string callUserName, string sipDomain)
-        {
-            return GetDisplayName(
-                registeredCodec?.User?.DisplayName ?? string.Empty,
-                registeredCodec?.DisplayName ?? string.Empty,
-                callDisplayName,
-                registeredCodec?.SIP ?? string.Empty,
-                callUserName,
-                string.Empty,
-                sipDomain);
-        }
-
         public static string GetDisplayName(RegisteredSipDetails registeredSip, string sipDomain)
         {
             return GetDisplayName(
