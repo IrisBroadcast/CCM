@@ -24,6 +24,7 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using CCM.Core.Helpers;
 using CCM.Core.Interfaces.Managers;
 using CCM.Core.Interfaces.Parser;
 using CCM.Core.SipEvent.Event;
@@ -100,7 +101,7 @@ namespace CCM.Web.Controllers.ApiRegistrar
 
                 SipEventHandlerResult result = _sipMessageManager.HandleSipMessage(sipMessage);
 
-                _logger.LogDebug($"SIP message, Handled: {sipEventData.FromUri.Replace("sip:", "")} '{sipEventData.FromDisplayName ?? ""}' Expires:{sipEventData.Expires} -- RAW:${sipEventData.Event}: Timestamp:{KamailioSipEventData.UnixTimeStampToDateTime(sipEventData.TimeStamp)} {sipEventData.RegType} (SAVING_)");
+                _logger.LogDebug($"SIP message, Handled: {sipEventData.FromUri.Replace("sip:", "").Sanitize()} '{(sipEventData.FromDisplayName ?? "").Sanitize()}' Expires:{sipEventData.Expires} -- RAW:${sipEventData.Event}: Timestamp:{KamailioSipEventData.UnixTimeStampToDateTime(sipEventData.TimeStamp)} {sipEventData.RegType.Sanitize()} (SAVING_)");
 
                 if (result == null)
                 {

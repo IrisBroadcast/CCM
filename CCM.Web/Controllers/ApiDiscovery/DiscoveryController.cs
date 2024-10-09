@@ -25,6 +25,7 @@
  */
 
 using CCM.Core.Entities.Discovery;
+using CCM.Core.Helpers;
 using CCM.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -74,7 +75,7 @@ namespace CCM.Web.Controllers.ApiDiscovery
                 return BadRequest("No search parameters");
             }
 
-            _logger.LogDebug("Unauthenticated request to useragents - Caller:{caller}, Callee:{callee}", searchParams.Caller, searchParams.Callee);
+            _logger.LogDebug("Unauthenticated request to useragents - Caller:{caller}, Callee:{callee}", searchParams.Caller.Sanitize(), searchParams.Callee.Sanitize());
 
             UserAgentsResultDto uaResult = _discoveryService.GetUserAgents(searchParams.Caller, searchParams.Callee, searchParams.Filters, searchParams.IncludeCodecsInCall);
             return Ok(uaResult);
