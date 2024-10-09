@@ -24,8 +24,6 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Linq;
 using CCM.Core.Entities;
 using CCM.Core.Interfaces.Repositories;
 using CCM.Core.SipEvent.Models;
@@ -34,6 +32,8 @@ using CCM.Web.Models.ApiExternal;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Linq;
 
 namespace CCM.Web.Hubs
 {
@@ -73,12 +73,11 @@ namespace CCM.Web.Hubs
                         // Load call and update to and from codecs
                         var callId = updateResult.ChangedObjectId;
                         CallInfo callInfo = _cachedCallRepository.GetCallInfoById(callId);
-
                         if (callInfo != null)
                         {
                             _logger.LogDebug($"CodecStatusHub. Call started. From:{callInfo.FromId}, To:{callInfo.ToId}");
-                            UpdateCodecStatusByGuid(callInfo.FromId);
-                            UpdateCodecStatusByGuid(callInfo.ToId);
+                            UpdateCodecStatusByGuid(updateResult.ChangeStatus, callInfo.FromId, callInfo.FromSipAddress);
+                            UpdateCodecStatusByGuid(updateResult.ChangeStatus, callInfo.ToId, callInfo.ToSipAddress);
                         }
                         else
                         {
@@ -91,14 +90,36 @@ namespace CCM.Web.Hubs
                         UpdateCodecStatusCallClosed(updateResult.ChangedObjectId);
                         break;
                     }
+                case (SipEventChangeStatus.CallFailed):
+                    {
+                        UpdateCodecStatusCallClosed(updateResult.ChangedObjectId);
+                        break;
+                    }
+                case (SipEventChangeStatus.CallProgress):
+                    {
+                        // Load call and update to and from codecs
+                        var callId = updateResult.ChangedObjectId;
+                        CallInfo callInfo = _cachedCallRepository.GetCallInfoById(callId);
+                        if (callInfo != null)
+                        {
+                            _logger.LogDebug($"CodecStatusHub. Call started. From:{callInfo.FromId}, To:{callInfo.ToId}");
+                            UpdateCodecStatusByGuid(updateResult.ChangeStatus, callInfo.FromId, callInfo.FromSipAddress);
+                            UpdateCodecStatusByGuid(updateResult.ChangeStatus, callInfo.ToId, callInfo.ToSipAddress);
+                        }
+                        else
+                        {
+                            _logger.LogError($"CodecStatusHub. Call started but was not found in database. Call Id:{callId}");
+                        }
+                        break;
+                    }
                 case (SipEventChangeStatus.CodecAdded):
                     {
-                        UpdateCodecStatusByGuid(updateResult.ChangedObjectId);
+                        UpdateCodecStatusByGuid(updateResult.ChangeStatus, updateResult.ChangedObjectId, updateResult.SipAddress);
                         break;
                     }
                 case (SipEventChangeStatus.CodecUpdated):
                     {
-                        UpdateCodecStatusByGuid(updateResult.ChangedObjectId);
+                        UpdateCodecStatusByGuid(updateResult.ChangeStatus, updateResult.ChangedObjectId, updateResult.SipAddress);
                         break;
                     }
                 case (SipEventChangeStatus.CodecRemoved):
@@ -123,7 +144,7 @@ namespace CCM.Web.Hubs
             _codecStatusHub.Clients.All.CodecStatus(codecStatusViewModel);
         }
 
-        private void UpdateCodecStatusByGuid(Guid id)
+        private void UpdateCodecStatusByGuid(SipEventChangeStatus changeReason, Guid id, string sipAddress = "")
         {
             if (id == Guid.Empty)
             {

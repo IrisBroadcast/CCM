@@ -24,13 +24,13 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using CCM.Core.Entities;
 using CCM.Core.Interfaces.Repositories;
 using CCM.Data.Entities;
 using LazyCache;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CCM.Data.Repositories
 {
@@ -51,7 +51,7 @@ namespace CCM.Data.Repositories
 
         public CcmRole GetById(string roleId)
         {
-            return string.IsNullOrWhiteSpace(roleId) ? null : GetById(new Guid(roleId)); 
+            return string.IsNullOrWhiteSpace(roleId) ? null : GetById(new Guid(roleId));
         }
 
         public CcmRole GetById(Guid roleId)

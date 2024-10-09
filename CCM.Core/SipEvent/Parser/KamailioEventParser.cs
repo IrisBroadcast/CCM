@@ -24,15 +24,15 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Linq;
-using System.Text.RegularExpressions;
 using CCM.Core.Interfaces.Managers;
 using CCM.Core.Interfaces.Parser;
 using CCM.Core.SipEvent.Event;
 using CCM.Core.SipEvent.Messages;
 using CCM.Core.SipEvent.Models;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace CCM.Core.SipEvent.Parser
 {
@@ -73,8 +73,9 @@ namespace CCM.Core.SipEvent.Parser
                     return ParseDialog(kamailioData);
                 case SipEventMessageType.RegExpire:
                     return ParseExpiredRegistration(kamailioData);
+                default:
+                    return null;
             }
-            return null;
         }
 
         private SipRegistrationMessage ParseRegistration(KamailioMessageData kamailioData)
@@ -104,7 +105,7 @@ namespace CCM.Core.SipEvent.Parser
             return registration;
         }
 
-        private SipRegistrationExpireMessage ParseExpiredRegistration(KamailioMessageData kamailioData)
+        private static SipRegistrationExpireMessage ParseExpiredRegistration(KamailioMessageData kamailioData)
         {
             var expire = new SipRegistrationExpireMessage()
             {
@@ -117,8 +118,7 @@ namespace CCM.Core.SipEvent.Parser
 
         private SipDialogMessage ParseDialog(KamailioMessageData kamailioData)
         {
-            SipDialogStatus sipDialogStatus;
-            if (!Enum.TryParse(kamailioData.GetField("dstat"), true, out sipDialogStatus))
+            if (!Enum.TryParse(kamailioData.GetField("dstat"), true, out SipDialogStatus sipDialogStatus))
             {
                 _logger.LogWarning("Unable to parse dstat field of Kamailio dialog message");
                 return null;
@@ -167,8 +167,7 @@ namespace CCM.Core.SipEvent.Parser
                 return null;
             }
 
-            SipEventMessageType msgType;
-            if (!Enum.TryParse(dataFields[0], true, out msgType))
+            if (!Enum.TryParse(dataFields[0], true, out SipEventMessageType msgType))
             {
                 _logger.LogWarning("Unable to get message type from {0}", dataFields[0]);
                 return null;
@@ -189,19 +188,20 @@ namespace CCM.Core.SipEvent.Parser
 
         private static int ParseInt(string s, int defaultValue = 0)
         {
-            int i;
-            if (int.TryParse(s, out i))
+            if (int.TryParse(s, out int i))
             {
-                return i;    
+                return i;
             }
             return defaultValue;
         }
 
-        private static long ParseLong(string s)
+        private static long ParseLong(string s, long defaultValue = 0)
         {
-            long i;
-            long.TryParse(s, out i);
-            return i;
+            if (long.TryParse(s, out long i))
+            {
+                return i;
+            }
+            return defaultValue;
         }
     }
 }

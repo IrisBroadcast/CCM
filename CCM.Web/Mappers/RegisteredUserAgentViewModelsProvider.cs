@@ -24,12 +24,12 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System.Collections.Generic;
-using System.Linq;
 using CCM.Core.Helpers;
 using CCM.Core.Interfaces.Managers;
 using CCM.Core.Interfaces.Repositories;
 using CCM.Web.Models.Home;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CCM.Web.Mappers
 {
@@ -77,7 +77,8 @@ namespace CCM.Web.Mappers
                     HasCodecControl = (string.IsNullOrEmpty(regSip.CodecApi) == false)
                 };
 
-                if (calls != null) { 
+                if (calls != null)
+                {
                     var call = calls.FirstOrDefault(c => c.FromSip == regSip.SipUri || c.ToSip == regSip.SipUri);
                     bool inCall = call != null;
                     result.InCall = inCall;

@@ -25,7 +25,9 @@
  */
 
 using CCM.Core.Entities;
+using CCM.Core.Entities.Specific;
 using CCM.Core.Interfaces.Repositories;
+using CCM.Web.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using NLog;
@@ -34,7 +36,6 @@ using NLog.Targets;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using CCM.Web.Infrastructure;
 
 namespace CCM.Web.Controllers
 {
@@ -45,11 +46,13 @@ namespace CCM.Web.Controllers
         protected static readonly Logger log = LogManager.GetCurrentClassLogger();
 
         private readonly ICcmUserRepository _ccmUserRepository;
+        private readonly ICallRepository _callRepository;
         private readonly ICachedSipAccountRepository _cachedSipAccountRepository;
 
-        public DebuggingController(ICcmUserRepository ccmUserRepository, ICachedSipAccountRepository cachedSipAccountRepository)
+        public DebuggingController(ICcmUserRepository ccmUserRepository, ICachedSipAccountRepository cachedSipAccountRepository, ICallRepository callRepository)
         {
             _ccmUserRepository = ccmUserRepository;
+            _callRepository = callRepository;
             _cachedSipAccountRepository = cachedSipAccountRepository;
         }
 
@@ -64,6 +67,13 @@ namespace CCM.Web.Controllers
         {
             List<CcmUser> users = _ccmUserRepository.GetAll();
             return View(users);
+        }
+
+        [Route("getcalls")]
+        public ActionResult GetCalls()
+        {
+            IEnumerable<OnGoingCall> calls = _callRepository.GetOngoingCalls(false);
+            return View(calls);
         }
 
         [Route("getsipaccounts")]
@@ -88,7 +98,7 @@ namespace CCM.Web.Controllers
             return View("ShowLog", target.Logs);
         }
 
-        private void EnableLoggingTarget(out MemoryTarget target, out LoggingRule loggingRule)
+        private static void EnableLoggingTarget(out MemoryTarget target, out LoggingRule loggingRule)
         {
             target = new MemoryTarget
             {

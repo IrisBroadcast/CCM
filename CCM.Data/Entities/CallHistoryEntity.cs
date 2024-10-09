@@ -24,9 +24,9 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System.ComponentModel.DataAnnotations.Schema;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CCM.Data.Entities
 {
@@ -47,6 +47,14 @@ namespace CCM.Data.Entities
         [Column("DlgHashEnt")]
         public string DialogHashEnt { get; set; }
 
+#warning TODO: this one should be changed in the database, hijacked
+        [Column("FromCodecTypeColor")]
+        public string SipCode { get; set; }
+
+#warning TODO: this one should be changed in the database, hijacked
+        [Column("ToCodecTypeColor")]
+        public string SipMessage { get; set; }
+
         public Guid FromId { get; set; }
         public Guid? FromUserAccountId { get; set; }
         public string FromTag { get; set; }
@@ -62,9 +70,9 @@ namespace CCM.Data.Entities
         public string FromLocationCategory { get; set; }
         public Guid FromCodecTypeId { get; set; }
         public string FromCodecTypeName { get; set; }
-        public string FromCodecTypeColor { get; set; }
         [Column("FromTypeCat")]
         public string FromCodecTypeCategory { get; set; }
+        public string FromTool { get; set; }
         public Guid FromOwnerId { get; set; }
         public string FromOwnerName { get; set; }
         public Guid FromRegionId { get; set; }
@@ -87,14 +95,16 @@ namespace CCM.Data.Entities
         public string ToLocationCategory { get; set; }
         public Guid ToCodecTypeId { get; set; }
         public string ToCodecTypeName { get; set; }
-        public string ToCodecTypeColor { get; set; }
         [Column("ToTypeCat")]
         public string ToCodecTypeCategory { get; set; }
+        public string ToTool { get; set; }
         public Guid ToOwnerId { get; set; }
         public string ToOwnerName { get; set; }
         public Guid ToRegionId { get; set; }
         public string ToRegionName { get; set; }
         [Column("ToUserAgentHead")]
         public string ToUserAgentHeader { get; set; }
+
+        // TODO: make user virtual link here and get color
     }
 }

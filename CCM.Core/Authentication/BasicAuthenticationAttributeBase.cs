@@ -24,17 +24,17 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using NLog;
 using System;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using NLog;
 
 namespace CCM.Core.Authentication
 {
@@ -76,8 +76,7 @@ namespace CCM.Core.Authentication
                 return AuthenticateResult.Fail("Not using basic authorization scheme");
             }
 
-
-            AuthenticationCredentials authenticationCredentials = BasicAuthenticationHelper.ParseCredentials(authReqHeader);
+            AuthenticationCredentials? authenticationCredentials = BasicAuthenticationHelper.ParseCredentials(authReqHeader);
             if (authenticationCredentials == null)
             {
                 // Authentication was attempted but failed. Set ErrorResult to indicate an error.

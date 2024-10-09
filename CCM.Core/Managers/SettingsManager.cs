@@ -24,15 +24,14 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using CCM.Core.Entities;
 using CCM.Core.Enums;
-using CCM.Core.Helpers;
 using CCM.Core.Interfaces.Managers;
 using CCM.Core.Interfaces.Repositories;
 using NLog;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CCM.Core.Managers
 {
@@ -59,6 +58,8 @@ namespace CCM.Core.Managers
         public string CodecControlPassword => GetSetting<string>(SettingsEnum.CodecControlPassword);
         public int CacheTimeLiveData => GetSetting<int>(SettingsEnum.CacheTimeLiveData);
         public int CacheTimeConfigData => GetSetting<int>(SettingsEnum.CacheTimeConfigData);
+
+        public string ExternalApiCode => GetSetting<string>(SettingsEnum.ExternalApiCode);
 
         public void SaveSettings(List<Setting> newSettings, string userName)
         {

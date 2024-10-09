@@ -24,15 +24,15 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using CCM.Core.Entities;
 using CCM.Core.Interfaces.Repositories;
 using CCM.Data.Entities;
 using LazyCache;
+using Microsoft.EntityFrameworkCore;
 using NLog;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CCM.Data.Repositories
 {
@@ -54,7 +54,7 @@ namespace CCM.Data.Repositories
                 dbCodecType = db.CodecTypes
                     .Include(c => c.SipAccounts)
                     .SingleOrDefault(c => c.Id == codecType.Id);
-                if(dbCodecType == null)
+                if (dbCodecType == null)
                 {
                     throw new Exception("Codec type could not be found");
                 }
@@ -88,10 +88,7 @@ namespace CCM.Data.Repositories
 
             if (dbCodecType != null)
             {
-                if (dbCodecType.SipAccounts != null)
-                {
-                    dbCodecType.SipAccounts.Clear();
-                }
+                dbCodecType.SipAccounts?.Clear();
 
                 db.CodecTypes.Remove(dbCodecType);
                 db.SaveChanges();

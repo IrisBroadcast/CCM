@@ -26,19 +26,17 @@
  */
 #endregion copyright
 
-using System;
-using System.IO;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Security.Claims;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
 using CCM.Core.Authentication;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System;
+using System.Net.Http.Headers;
+using System.Security.Claims;
+using System.Text.Encodings.Web;
+using System.Threading.Tasks;
 
 namespace CCM.DiscoveryApi.Authentication
 {
@@ -60,7 +58,7 @@ namespace CCM.DiscoveryApi.Authentication
             ISystemClock clock)
             : base(options, logger, encoder, clock)
         {
-            _logger = logger.CreateLogger(GetType().FullName);
+            _logger = logger.CreateLogger(GetType()?.FullName ?? "Discovery");
         }
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
@@ -134,7 +132,7 @@ namespace CCM.DiscoveryApi.Authentication
                 return AuthenticateResult.Fail("Not using basic authorization scheme");
             }
 
-            AuthenticationCredentials authenticationCredentials = BasicAuthenticationHelper.ParseCredentials(header.Parameter);
+            AuthenticationCredentials? authenticationCredentials = BasicAuthenticationHelper.ParseCredentials(header.Parameter);
             if (authenticationCredentials == null)
             {
                 // Authentication was attempted but failed. Set ErrorResult to indicate an error.

@@ -1,0 +1,108 @@
+﻿@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CCM.Web.Properties.Resources> Localizer
+@model IEnumerable<CCM.Core.Entities.Specific.OnGoingCall>
+
+@{
+    ViewData["Title"] = "Get Calls";
+}
+
+<div class="row">
+    <nav class="navbar navbar-default ccm-sub-navbar--admin" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header ccm-sub-navbar--admin--header">
+                <h2>CCM-Users</h2>
+                <span class="navbar-page-description"></span>
+            </div>
+            <div class="navbar ccm-sub-navbar--admin--links">
+                <ul class="nav navbar-nav nav-pills ccm-sub-navbar--admin--ul">
+                    <li>@Html.ActionLink(@Localizer["Logs_Link_Debugging"].Value, "Index", "Debugging", new { }, new { })</li>
+                    <li>@Html.ActionLink("Get CCM Users", "GetCCMUsers", "Debugging", new { }, new { })</li>
+                    <li class="active">@Html.ActionLink("Get Ongoing Calls", "GetCalls", "Debugging", new { }, new { })</li>
+                    <li>@Html.ActionLink("Get SIP Accounts", "GetSipAccounts", "Debugging", new { }, new { })</li>
+                    <li>@Html.ActionLink("Who Am I", "WhoAmI", "Debugging", new { }, new { })</li>
+                    <li>@Html.ActionLink("Cache info", "CacheInfo", "Debugging", new { }, new { })</li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>
+
+<hr />
+
+<div class="row">
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CallId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FromSip)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ToSip)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FromDisplayName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ToDisplayName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FromLocationName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ToLocationName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FromRegionName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ToRegionName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Started)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CallId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FromSip)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ToSip)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FromDisplayName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ToDisplayName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FromLocationName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ToLocationName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FromLocationName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ToRegionName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Started)
+                </td>
+                <td>
+                    <a href="@Url.Action("DeleteCallDirectly", "Call")/?id=@Html.DisplayFor(modelItem => item.CallId)">DELETE</a>
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>

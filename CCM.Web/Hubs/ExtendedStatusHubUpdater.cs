@@ -24,8 +24,6 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Linq;
 using CCM.Core.Entities;
 using CCM.Core.Interfaces.Repositories;
 using CCM.Core.SipEvent.Models;
@@ -34,6 +32,8 @@ using CCM.Web.Models.ApiExternal;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Linq;
 
 namespace CCM.Web.Hubs
 {
@@ -74,12 +74,11 @@ namespace CCM.Web.Hubs
                         // Load call and update to and from codecs
                         var callId = updateResult.ChangedObjectId;
                         CallInfo callInfo = _cachedCallRepository.GetCallInfoById(callId);
-
                         if (callInfo != null)
                         {
                             _logger.LogDebug($"ExtendedStatusHub. Call started. From:{callInfo.FromId}, To:{callInfo.ToId}");
-                            UpdateCodecStatusByGuid(callInfo.FromId, updateResult.ChangeStatus, callInfo.FromSipAddress);
-                            UpdateCodecStatusByGuid(callInfo.ToId, updateResult.ChangeStatus, callInfo.ToSipAddress);
+                            UpdateCodecStatusByGuid(updateResult.ChangeStatus, callInfo.FromId, callInfo.FromSipAddress);
+                            UpdateCodecStatusByGuid(updateResult.ChangeStatus, callInfo.ToId, callInfo.ToSipAddress);
                         }
                         else
                         {
@@ -92,14 +91,36 @@ namespace CCM.Web.Hubs
                         UpdateCodecStatusCallClosed(updateResult.ChangedObjectId);
                         break;
                     }
+                case (SipEventChangeStatus.CallFailed):
+                    {
+                        UpdateCodecStatusCallClosed(updateResult.ChangedObjectId);
+                        break;
+                    }
+                case (SipEventChangeStatus.CallProgress):
+                    {
+                        // Load call and update to and from codecs
+                        var callId = updateResult.ChangedObjectId;
+                        CallInfo callInfo = _cachedCallRepository.GetCallInfoById(callId);
+                        if (callInfo != null)
+                        {
+                            _logger.LogDebug($"CodecStatusHub. Call started. From:{callInfo.FromId}, To:{callInfo.ToId}");
+                            UpdateCodecStatusByGuid(updateResult.ChangeStatus, callInfo.FromId, callInfo.FromSipAddress);
+                            UpdateCodecStatusByGuid(updateResult.ChangeStatus, callInfo.ToId, callInfo.ToSipAddress);
+                        }
+                        else
+                        {
+                            _logger.LogError($"CodecStatusHub. Call started but was not found in database. Call Id:{callId}");
+                        }
+                        break;
+                    }
                 case (SipEventChangeStatus.CodecAdded):
                     {
-                        UpdateCodecStatusByGuid(updateResult.ChangedObjectId, updateResult.ChangeStatus, updateResult.SipAddress);
+                        UpdateCodecStatusByGuid(updateResult.ChangeStatus, updateResult.ChangedObjectId, updateResult.SipAddress);
                         break;
                     }
                 case (SipEventChangeStatus.CodecUpdated):
                     {
-                        UpdateCodecStatusByGuid(updateResult.ChangedObjectId, updateResult.ChangeStatus, updateResult.SipAddress);
+                        UpdateCodecStatusByGuid(updateResult.ChangeStatus, updateResult.ChangedObjectId, updateResult.SipAddress);
                         break;
                     }
                 case (SipEventChangeStatus.CodecRemoved):
@@ -131,7 +152,7 @@ namespace CCM.Web.Hubs
             _hub.Clients.All.CodecStatus(codecStatusViewModel);
         }
 
-        private void UpdateCodecStatusByGuid(Guid id, SipEventChangeStatus changeReason, string sipAddress = "")
+        private void UpdateCodecStatusByGuid(SipEventChangeStatus changeReason, Guid id, string sipAddress = "")
         {
             if (id == Guid.Empty)
             {
@@ -212,13 +233,15 @@ namespace CCM.Web.Hubs
                     PresentationName = call.FromDisplayName,
                     DisplayName = call.FromDisplayName,
                     InCall = false,
+                    SipCode = call.SipCode,
+                    SipMessage = call.SipMessage,
                     LocationName = call.FromLocationName,
                     LocationCategory = call.FromLocationCategory,
                     CodecTypeName = call.FromCodecTypeName,
-                    CodecTypeColor = call.FromCodecTypeColor,
+                    CodecTypeColor = "",
                     CodecTypeCategory = call.FromCodecTypeCategory,
                     RegionName = call.FromRegionName,
-                    UserComment = call.FromComment
+                    UserComment = call.FromComment,
                 };
                 _hub.Clients.All.CodecStatus(updatedCodecFrom);
             }
@@ -239,13 +262,15 @@ namespace CCM.Web.Hubs
                     PresentationName = call.ToDisplayName,
                     DisplayName = call.ToDisplayName,
                     InCall = false,
+                    SipCode = call.SipCode,
+                    SipMessage = call.SipMessage,
                     LocationName = call.ToLocationName,
                     LocationCategory = call.ToLocationCategory,
                     CodecTypeName = call.ToCodecTypeName,
-                    CodecTypeColor = call.ToCodecTypeColor,
+                    CodecTypeColor = "",
                     CodecTypeCategory = call.ToCodecTypeCategory,
                     RegionName = call.ToRegionName,
-                    UserComment = call.ToComment
+                    UserComment = call.ToComment,
                 };
                 _hub.Clients.All.CodecStatus(updatedCodecTo);
             }

@@ -24,9 +24,6 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using CCM.Core.Helpers;
-using CCM.Data.Repositories;
 using NUnit.Framework;
 
 namespace CCM.UnitTests

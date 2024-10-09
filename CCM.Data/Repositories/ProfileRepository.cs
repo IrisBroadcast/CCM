@@ -24,17 +24,17 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Linq.Expressions;
 using CCM.Core.Entities;
 using CCM.Core.Entities.Specific;
 using CCM.Core.Interfaces.Repositories;
 using CCM.Data.Entities;
 using LazyCache;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace CCM.Data.Repositories
 {
@@ -175,14 +175,8 @@ namespace CCM.Data.Repositories
 
             if (profile != null)
             {
-                if (profile.ProfileGroups != null)
-                {
-                    profile.ProfileGroups.Clear();
-                }
-                if (profile.UserAgents != null)
-                {
-                    profile.UserAgents.Clear();
-                }
+                profile.ProfileGroups?.Clear();
+                profile.UserAgents?.Clear();
 
                 db.Profiles.Remove(profile);
                 db.SaveChanges();
@@ -216,7 +210,7 @@ namespace CCM.Data.Repositories
             return profile;
         }
 
-        private ICollection<ProfileGroupInfo> MapToProfileGroups(ICollection<ProfileGroupProfileOrdersEntity> groups)
+        private static ICollection<ProfileGroupInfo> MapToProfileGroups(ICollection<ProfileGroupProfileOrdersEntity> groups)
         {
             var profileGroupInfos = groups.Select(x =>
             new ProfileGroupInfo

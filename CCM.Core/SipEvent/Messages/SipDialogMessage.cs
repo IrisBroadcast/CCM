@@ -30,6 +30,9 @@ namespace CCM.Core.SipEvent.Messages
 {
     public class SipDialogMessage : SipMessageBase
     {
+        /// <summary>
+        /// Contains the state of the dialog. Should be in order Start - (Progress) - Failed or End.
+        /// </summary>
         public SipDialogStatus Status { get; set; }
         public string CallId { get; set; }
         public string HashId { get; set; }
@@ -42,20 +45,17 @@ namespace CCM.Core.SipEvent.Messages
         public string ToTag { get; set; }
         public string Sdp { get; set; }
         public string HangupReason { get; set; }
+        /// <summary>
+        /// Method like "REGISTER|BYE"
+        /// </summary>
+        public string Method { get; set; }
+
+        public string SipCode { get; set; }
+        public string SipMessage { get; set; }
 
         public override string ToDebugString()
         {
-            if (Status == SipDialogStatus.SingleBye)
-            {
-                return $"CallId:{CallId}, FromSip:{FromSipUri?.UserAtHost ?? string.Empty}, ToSip:{ToSipUri?.UserAtHost ?? string.Empty}, FromTag:{FromTag}, ToTag:{ToTag}";
-            }
-
-            if (Status == SipDialogStatus.End)
-            {
-                return $"CallId:{CallId}, HashId:{HashId}, HashEntry:{HashEntry}, Hangup reason:{HangupReason}, FromDisplayName:{FromDisplayName} FromSip:{FromSipUri?.UserAtHost ?? string.Empty}, ToDisplayName:{ToDisplayName} ToSip:{ToSipUri?.UserAtHost ?? string.Empty}, FromTag:{FromTag}, ToTag:{ToTag}";
-            }
-
-            return $"CallId:{CallId}, HashId:{HashId}, HashEntry:{HashEntry}, FromDisplayName:{FromDisplayName} FromSip:{FromSipUri?.UserAtHost ?? string.Empty}, ToDisplayName:{ToDisplayName} ToSip:{ToSipUri?.UserAtHost ?? string.Empty}, FromTag:{FromTag}, ToTag:{ToTag}";
+            return $"Method:{Method}, Status:{Status}, CallId:{CallId}, HashId:{HashId}, HashEntry:{HashEntry}, FromDisplayName:{FromDisplayName} FromSip:{FromSipUri?.UserAtHost ?? string.Empty}, ToDisplayName:{ToDisplayName} ToSip:{ToSipUri?.UserAtHost ?? string.Empty}, FromTag:{FromTag}, ToTag:{ToTag}, SipCode:{SipCode}, SipMessage:{SipMessage}, HangupReason:{HangupReason}";
         }
     }
 }

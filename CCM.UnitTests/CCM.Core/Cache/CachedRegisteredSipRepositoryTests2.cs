@@ -24,17 +24,14 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using CCM.Core.Cache;
 using CCM.Core.Entities;
-using CCM.Core.Entities.Specific;
-using CCM.Core.Interfaces.Repositories;
-using CCM.Core.SipEvent;
 using FakeItEasy;
 using LazyCache;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CCM.UnitTests.CCM.Core.Cache
 {
@@ -171,7 +168,7 @@ namespace CCM.UnitTests.CCM.Core.Cache
             Assert.IsNotNull(regSipList);
             Assert.AreEqual(2, regSipList.Count);
             Assert.AreEqual("a@acip.example.com", regSipList.First().SipUri);
-            
+
             var regSipList2 = _sut.GetRegisteredUserAgents().ToList();
 
             Assert.IsNotNull(regSipList2);
@@ -230,13 +227,13 @@ namespace CCM.UnitTests.CCM.Core.Cache
         //    // Act
         //    _sut.GetCachedRegisteredSips();
         //    A.CallTo(() => _internalRegisteredSipRepository.GetCachedRegisteredSips()).MustHaveHappened(Repeated.Exactly.Once);
-            
+
         //    _sut.UpdateRegisteredSip(new RegisteredSip { SIP = "a@acip.example.com" });
         //    A.CallTo(() => _internalRegisteredSipRepository.GetCachedRegisteredSips()).MustHaveHappened(Repeated.Exactly.Once);
 
         //    _sut.GetCachedRegisteredSips();
         //    A.CallTo(() => _internalRegisteredSipRepository.GetCachedRegisteredSips()).MustHaveHappened(Repeated.Exactly.Twice);
         //}
-        
+
     }
 }

@@ -24,13 +24,11 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using Microsoft.Extensions.Localization;
+using CCM.Core.Enums;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 using System.Resources;
-using CCM.Core.Enums;
 
 namespace CCM.Core.Helpers
 {
@@ -73,7 +71,7 @@ namespace CCM.Core.Helpers
             {
                 return (enumValue.ToString(), "Unknown description");
             }
-            return (((DefaultSettingAttribute) attributes[0]).Value, ((DefaultSettingAttribute)attributes[0]).Description);
+            return (((DefaultSettingAttribute)attributes[0]).Value, ((DefaultSettingAttribute)attributes[0]).Description);
         }
     }
 }

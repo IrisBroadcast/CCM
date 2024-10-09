@@ -24,13 +24,13 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using CCM.Core.Entities.Statistics;
+using CCM.Web.Properties;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using CCM.Core.Entities.Statistics;
-using CCM.Web.Properties;
 
 namespace CCM.Web.Models.Statistics
 {
@@ -62,7 +62,7 @@ namespace CCM.Web.Models.Statistics
             if (Statistics == null || Statistics.Count == 0)
                 yield break;
             var maxValue = Math.Max(GetMaxValue(), 1.0);
-            var multiplier = 1.0/maxValue;
+            var multiplier = 1.0 / maxValue;
             foreach (var stats in Statistics)
             {
                 yield return new LocationStatisticsRow
@@ -88,7 +88,7 @@ namespace CCM.Web.Models.Statistics
         private static string GetWidth(LocationStatisticsMode mode, LocationBasedStatistics stats, double multiplier)
         {
             return string.Format(CultureInfo.InvariantCulture, "{0:0.#}",
-                Math.Max(0.1, GetRawValue(mode, stats)*multiplier*100));
+                Math.Max(0.1, GetRawValue(mode, stats) * multiplier * 100));
         }
 
         private static string GetValue(LocationStatisticsMode mode, LocationBasedStatistics stats)

@@ -33,7 +33,7 @@ namespace CCM.Core.Attributes
     /// </summary>
     public class FilterPropertyAttribute : Attribute
     {
-        public string TableName { get; set; }
-        public string ColumnName { get; set; }
+        public string TableName { get; set; } = "";
+        public string ColumnName { get; set; } = "";
     }
 }

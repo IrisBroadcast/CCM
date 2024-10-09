@@ -30,7 +30,7 @@ namespace CCM.Core.Enums
 {
     public enum SettingsEnum
     {
-        [DefaultSetting("Time in seconds before SIP registration is obsolete","120")]
+        [DefaultSetting("Time in seconds before SIP registration is obsolete", "120")]
         MaxRegistrationAge,
         [DefaultSetting("The SIP domain", "@domain.sip.com")] // TODO: Is this in use? and really necessary??
         SIPDomain,
@@ -56,6 +56,8 @@ namespace CCM.Core.Enums
         CacheTimeLiveData,
         [DefaultSetting("Cache time for information that is changed less often in seconds", "60")]
         CacheTimeConfigData,
+        [DefaultSetting("Add a secret used to authenticate api endpoints", "secret-api-code")]
+        ExternalApiCode,
     }
 
     [AttributeUsage(AttributeTargets.All)]

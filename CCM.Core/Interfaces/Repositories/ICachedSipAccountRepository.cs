@@ -24,11 +24,11 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using CCM.Core.Entities;
+using CCM.Core.Interfaces.Repositories.Base;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using CCM.Core.Entities;
-using CCM.Core.Interfaces.Repositories.Base;
 
 namespace CCM.Core.Interfaces.Repositories
 {

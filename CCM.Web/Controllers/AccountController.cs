@@ -24,9 +24,6 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using CCM.Core.Entities;
 using CCM.Core.Interfaces.Repositories;
 using CCM.Web.Infrastructure;
@@ -37,6 +34,9 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using System;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using Claim = System.Security.Claims.Claim;
 using ClaimsIdentity = System.Security.Claims.ClaimsIdentity;
 using ClaimTypes = System.Security.Claims.ClaimTypes;
@@ -98,9 +98,15 @@ namespace CCM.Web.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpGet]
+        public ActionResult Forbidden()
+        {
+            return RedirectToAction("Account", "Login");
+        }
+
         public async Task<IActionResult> SignIn(CcmUser user, bool isPersistent = false, string returnUrl = null)
         {
-            ClaimsIdentity userIdentity = new ClaimsIdentity("SuperSecureLogin");
+            ClaimsIdentity userIdentity = new("SuperSecureLogin");
             userIdentity.AddClaim(new Claim(ClaimTypes.Name, user.UserName));
             userIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
             userIdentity.AddClaim(new Claim("FullName", $"{user.FirstName} {user.LastName}".Trim()));
@@ -121,7 +127,7 @@ namespace CCM.Web.Controllers
 
         private IActionResult RedirectToLocal(string returnUrl)
         {
-            return Url.IsLocalUrl(returnUrl) ? (ActionResult) Redirect(returnUrl) : RedirectToAction("Index", "Home");
+            return Url.IsLocalUrl(returnUrl) ? (ActionResult)Redirect(returnUrl) : RedirectToAction("Index", "Home");
         }
     }
 }

@@ -25,9 +25,9 @@
  */
 
 using CCM.Core.Helpers.PasswordGeneration;
-using System.Linq;
 using FakeItEasy;
 using NUnit.Framework;
+using System.Linq;
 
 namespace CCM.UnitTests.CCM.Core.Helpers.PasswordGeneration
 {

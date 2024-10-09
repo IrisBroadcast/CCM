@@ -24,15 +24,15 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using CCM.Core.Entities;
 using CCM.Core.Interfaces.Repositories;
 using CCM.Data.Entities;
 using LazyCache;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace CCM.Data.Repositories
 {
@@ -101,10 +101,7 @@ namespace CCM.Data.Repositories
                 .SingleOrDefault(g => g.Id == id);
             if (dbRegion != null)
             {
-                if (dbRegion.Locations != null)
-                {
-                    dbRegion.Locations.Clear();
-                }
+                dbRegion.Locations?.Clear();
 
                 db.Regions.Remove(dbRegion);
                 db.SaveChanges();

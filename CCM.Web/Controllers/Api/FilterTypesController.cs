@@ -24,11 +24,11 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System.Linq;
 using CCM.Core.Interfaces.Repositories;
 using CCM.Web.Models.Api;
 using CCM.Web.Models.Home;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace CCM.Web.Controllers.Api
 {

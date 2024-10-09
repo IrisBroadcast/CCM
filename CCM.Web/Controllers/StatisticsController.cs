@@ -24,13 +24,6 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using CCM.Core.Entities;
 using CCM.Core.Entities.Statistics;
 using CCM.Core.Extensions;
@@ -39,6 +32,13 @@ using CCM.Web.Models.Statistics;
 using CCM.Web.Properties;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace CCM.Web.Controllers
 {
@@ -55,9 +55,10 @@ namespace CCM.Web.Controllers
 
         public ActionResult Index()
         {
-            var model = new StatisticsFilterViewModel();
-
-            model.CodecTypes = _statisticsManager.GetCodecTypes();
+            var model = new StatisticsFilterViewModel
+            {
+                CodecTypes = _statisticsManager.GetCodecTypes()
+            };
             model.CodecTypes.Insert(0, new CodecType() { Name = Resources.All, Id = Guid.Empty });
 
             model.Owners = _statisticsManager.GetOwners();
@@ -171,7 +172,7 @@ namespace CCM.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult LocationSim24HourViewData(DateTime startDate, DateTime endDate, Guid regionId, Guid locationId)
+        public ActionResult LocationSim24HourViewData(DateTime startDate, DateTime endDate, Guid locationId)
         {
             var model = _statisticsManager.GetHourStatisticsForLocation(startDate.ToUniversalTime(), endDate.ToUniversalTime(), locationId, false);
             return PartialView(model);
@@ -184,8 +185,8 @@ namespace CCM.Web.Controllers
             var csv = new StringBuilder();
             csv.AddCsvValue(_localizer["Statistics"]).AddCsvSeparator().AddCsvValue(_localizer["Call_Sim24Hour"]).AppendLine();
             csv.AddCsvValue(_localizer["Location"]).AddCsvSeparator().AddCsvValue(stats.LocationName).AppendLine();
-            csv.AddCsvValue(_localizer["From"]).AddCsvSeparator().AddCsvValue(string.Format(CultureInfo.InvariantCulture, "{ 0:yyyy-MM-dd}", startDate)).AppendLine();
-            csv.AddCsvValue(_localizer["To"]).AddCsvSeparator().AddCsvValue(string.Format(CultureInfo.InvariantCulture, "{ 0:yyyy-MM-dd}", endDate)).AppendLine();
+            csv.AddCsvValue(_localizer["From"]).AddCsvSeparator().AddCsvValue(string.Format(CultureInfo.InvariantCulture, "{0:yyyy-MM-dd}", startDate)).AppendLine();
+            csv.AddCsvValue(_localizer["To"]).AddCsvSeparator().AddCsvValue(string.Format(CultureInfo.InvariantCulture, "{0:yyyy-MM-dd}", endDate)).AppendLine();
             csv.AppendLine();
             csv.AddCsvValue(_localizer["Hour"]).AddCsvSeparator().AddCsvValue(_localizer["Stats_Number_Of_Simultaneous_Calls"]).AppendLine();
             foreach (var hour in stats.Statistics)
@@ -237,13 +238,8 @@ namespace CCM.Web.Controllers
 
         #region Region
         [HttpPost]
-        public ActionResult RegionNumberOfCallsView(DateBasedFilterType filterType, DateBasedChartType chartType, DateTime startDate, DateTime endDate, Guid filterId)
+        public ActionResult RegionNumberOfCallsView(DateTime startDate, DateTime endDate, Guid filterId)
         {
-            if (filterId == Guid.Empty)
-            {
-                //throw new Exception("Please choose a region");
-                return BadRequest("Please choose a region");
-            }
             var model = new DateBasedChartViewModel
             {
                 FilterType = DateBasedFilterType.Regions,
@@ -260,11 +256,10 @@ namespace CCM.Web.Controllers
 
         #region SIP Account
         [HttpPost]
-        public ActionResult SipAccountNumberOfCallsView(DateBasedFilterType filterType, DateBasedChartType chartType, DateTime startDate, DateTime endDate, Guid filterId)
+        public ActionResult SipAccountNumberOfCallsView(DateTime startDate, DateTime endDate, Guid filterId)
         {
             if (filterId == Guid.Empty)
             {
-                //throw new Exception("Please choose a sip account");
                 return BadRequest("Please choose a sip account");
             }
             var model = new DateBasedChartViewModel
@@ -283,13 +278,8 @@ namespace CCM.Web.Controllers
 
         #region Codec Type
         [HttpPost]
-        public ActionResult CodecTypeNumberOfCallsView(DateBasedFilterType filterType, DateBasedChartType chartType, DateTime startDate, DateTime endDate, Guid filterId)
+        public ActionResult CodecTypeNumberOfCallsView(DateTime startDate, DateTime endDate, Guid filterId)
         {
-            if (filterId == Guid.Empty)
-            {
-                //throw new Exception("Please choose a codec type");
-                return BadRequest("Please choose a codec type");
-            }
             var model = new DateBasedChartViewModel
             {
                 FilterType = DateBasedFilterType.CodecTypes,
@@ -306,9 +296,8 @@ namespace CCM.Web.Controllers
 
         #region Category
         [HttpPost]
-        public ActionResult CategoryCallNumberOfCallsView(DateBasedFilterType filterType, DateBasedChartType chartType, DateTime startDate, DateTime endDate)
+        public ActionResult CategoryCallNumberOfCallsView(DateTime startDate, DateTime endDate)
         {
-
             var model = new DateBasedChartCallCategoriesViewModel
             {
                 FilterType = DateBasedFilterType.Categories,
@@ -322,25 +311,8 @@ namespace CCM.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult CategoryNumberOfCallsView(DateBasedFilterType filterType, DateBasedChartType chartType, DateTime startDate, DateTime endDate)
+        public ActionResult CategoryNumberOfCallsView(DateTime startDate, DateTime endDate)
         {
-
-            var model = new DateBasedChartCategoriesViewModel
-            {
-                FilterType = DateBasedFilterType.Categories,
-                ChartType = DateBasedChartType.NumberOfCalls,
-                EndDate = endDate,
-                StartDate = startDate,
-                Stats = _statisticsManager.GetCategoryStatistics(startDate.ToUniversalTime(), endDate.ToUniversalTime())
-            };
-
-            return PartialView("CategoryStatisticsTable", model);
-        }
-
-        [HttpPost]
-        public ActionResult CategoryNumberOfCallsViewOld(DateBasedFilterType filterType, DateBasedChartType chartType, DateTime startDate, DateTime endDate)
-        {
-
             var model = new DateBasedChartCategoriesViewModel
             {
                 FilterType = DateBasedFilterType.Categories,
@@ -357,7 +329,7 @@ namespace CCM.Web.Controllers
         public ActionResult GetDateBasedCsv(DateBasedFilterType filterType, DateTime startDate, DateTime endDate, Guid filterId)
         {
             IList<DateBasedStatistics> stats;
-            var prefix = "";
+            string prefix;
             switch (filterType)
             {
                 case DateBasedFilterType.Regions:

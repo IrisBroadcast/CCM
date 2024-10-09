@@ -24,10 +24,10 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System.Collections.Generic;
 using CCM.Core.Entities.Base;
 using CCM.Core.Enums;
 using CCM.Core.Interfaces;
+using System.Collections.Generic;
 
 namespace CCM.Core.Entities
 {
@@ -43,8 +43,8 @@ namespace CCM.Core.Entities
         public UserAgentPatternMatchType MatchType { get; set; }
         public string Api { get; set; }
         public Category Category { get; set; }
-        // TODO: XXX Limit the amount of things returned here. Functions don't really need api information. That's mostly codec control
-        // Everything below move to separate table
+
+#warning TODO: Everything below move to separate table (XXX Limit the amount of things returned here. Functions don't really need api information. That's mostly codec control)
         public string Image { get; set; }
         public string UserInterfaceLink { get; set; }
         public int Width { get; set; }

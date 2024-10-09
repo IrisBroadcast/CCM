@@ -32,12 +32,10 @@ namespace CCM.Core.Helpers
 {
     public class IpAddressComparer : IComparer<string>
     {
-        public int Compare(string x, string y)
+        public int Compare(string? x, string? y)
         {
-            IPAddress xAddress;
-            IPAddress yAddress;
-            IPAddress.TryParse(x, out xAddress);
-            IPAddress.TryParse(y, out yAddress);
+            bool xAddrValid = IPAddress.TryParse(x, out var xAddress);
+            bool yAddrValid = IPAddress.TryParse(y, out var yAddress);
 
             if (xAddress == null && yAddress == null) { return 0; }
             if (xAddress == null) { return -1; }

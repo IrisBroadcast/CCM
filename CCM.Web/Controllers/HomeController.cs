@@ -24,15 +24,14 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Linq;
 using CCM.Core.Interfaces.Repositories;
-using CCM.Core.SipEvent;
 using CCM.Core.SipEvent.Models;
 using CCM.Web.Hubs;
 using CCM.Web.Infrastructure;
 using CCM.Web.Models.Home;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
 
 namespace CCM.Web.Controllers
 {
@@ -108,7 +107,7 @@ namespace CCM.Web.Controllers
             if (model.SipAccountId != Guid.Empty)
             {
                 _cachedSipAccountRepository.UpdateComment(model.SipAccountId, model.Comment);
-                
+
                 var updateResult = new SipEventHandlerResult()
                 {
                     ChangeStatus = SipEventChangeStatus.CodecUpdated,
@@ -157,6 +156,21 @@ namespace CCM.Web.Controllers
                 return Ok();
             }
             return BadRequest();
+        }
+
+        public IActionResult Error()
+        {
+            return View("~/Views/Home/Error.cshtml");
+        }
+
+        public IActionResult StatusCodePage()
+        {
+            return View("~/Views/Home/StatusCodePage.cshtml");
+        }
+
+        public IActionResult AccessDenied()
+        {
+            return View("~/Views/Home/AccessDenied.cshtml");
         }
     }
 }

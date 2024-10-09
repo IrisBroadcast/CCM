@@ -31,7 +31,7 @@ namespace CCM.Web.Controllers.ApiExternal
     /// <summary>
     /// For health checks (used during deploy process for verification)
     /// </summary>
-    public class HealthController: ControllerBase
+    public class HealthController : ControllerBase
     {
         public IActionResult Get() => Ok();
     }

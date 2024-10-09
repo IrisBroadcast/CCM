@@ -24,14 +24,17 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
 using CCM.Core.Entities.Specific;
 using CCM.Core.Interfaces.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 
 namespace CCM.Web.Controllers.Api
 {
+    /// <summary>
+    /// Used by the CCM Frontpage to get ongoing calls
+    /// </summary>
     public class OngoingCallController : ControllerBase
     {
         private readonly ICachedCallRepository _cachedCallRepository;
@@ -50,6 +53,6 @@ namespace CCM.Web.Controllers.Api
         public OnGoingCall ById(Guid id)
         {
             return id != Guid.Empty ? _cachedCallRepository.GetOngoingCallById(id) : null;
-        } 
+        }
     }
 }

@@ -24,8 +24,6 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Linq;
 using CCM.Core.Entities;
 using CCM.Core.Extensions;
 using CCM.Core.Helpers;
@@ -35,6 +33,8 @@ using CCM.Core.SipEvent.Messages;
 using CCM.Core.SipEvent.Models;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Linq;
 
 namespace CCM.Core.SipEvent
 {
@@ -90,10 +90,9 @@ namespace CCM.Core.SipEvent
                         // Handle dialog information
                         return HandleDialog(dialogMessage);
                     }
-                // TODO: add case for dialog progress!
                 default:
                     {
-                        _logger.LogInformation("Unhandled Kamailio message: {0}", sipMessage.ToDebugString());
+                        _logger.LogInformation("Unhandled Kamailio message: {debug}", sipMessage.ToDebugString());
                         return SipEventHandlerResult.NothingChanged;
                     }
             }
@@ -116,16 +115,16 @@ namespace CCM.Core.SipEvent
             return _cachedRegisteredCodecRepository.UpdateRegisteredSip(userAgentRegistration);
         }
 
-        private SipEventHandlerResult UnregisterCodec(SipRegistrationExpireMessage expireMessage, string regType = null)
+        private SipEventHandlerResult UnregisterCodec(SipRegistrationExpireMessage expireMessage, string? regType = null)
         {
             var sipAddress = expireMessage.SipAddress.UserAtHost;
             if (regType == "delete") // TODO: Should this be an enum? Maybe define when this happen
             {
-                _logger.LogInformation($"Unregister Codec {sipAddress}, type:{regType}");
-                Call codecCall = _cachedCallRepository.GetCallBySipAddress(sipAddress);
-                if (codecCall != null)
+                _logger.LogInformation("Unregister Codec {sipAddress}, type:{regType}", sipAddress.Sanitize(), regType.Sanitize());
+                bool codecInCall = _cachedCallRepository.CallExistsBySipAddress(sipAddress);
+                if (codecInCall)
                 {
-                    _logger.LogError($"Unregistrating codec but it's in a call {sipAddress}");
+                    _logger.LogError("Unregistrating codec but it's in a call {sipAddress}", sipAddress);
                 }
             }
             return _cachedRegisteredCodecRepository.DeleteRegisteredSip(sipAddress);
@@ -137,15 +136,17 @@ namespace CCM.Core.SipEvent
         /// <param name="sipDialogMessage"></param>
         private SipEventHandlerResult HandleDialog(SipDialogMessage sipDialogMessage)
         {
-            _logger.LogDebug($"Handle Dialog {sipDialogMessage.ToDebugString()}"); // TODO: check this
+            _logger.LogInformation("Handle Dialog {debug}", sipDialogMessage.ToDebugString());
+
             switch (sipDialogMessage.Status)
             {
                 case SipDialogStatus.Start:
                     return RegisterCall(sipDialogMessage);
+                case SipDialogStatus.Progress:
+                    return ProgressCall(sipDialogMessage);
+                case SipDialogStatus.Failed:
+                    return FailedCall(sipDialogMessage);
                 case SipDialogStatus.End:
-                    // TODO: Check hangup reason. Only close calls where reason = Normal
-                    // TODO: Handle timeout message and add warning to call but don't end it
-                    _logger.LogInformation("Received End command from Kamailio. HangUp reason:{0}, from:{1}, to:{2}", sipDialogMessage.HangupReason, sipDialogMessage.FromSipUri, sipDialogMessage.ToSipUri);
                     return CloseCall(sipDialogMessage);
                 case SipDialogStatus.SingleBye:
                     // If BYE in Kamailio and no dialog is in Kamailio, a single bye is sent to CCM
@@ -157,18 +158,25 @@ namespace CCM.Core.SipEvent
             }
         }
 
-        public SipEventHandlerResult RegisterCall(SipDialogMessage sipMessage)
+        private SipEventHandlerResult RegisterCall(SipDialogMessage sipMessage)
         {
-            //_logger.LogDebug("Register call from:{0} to:{1}, call id:{2}, hash id:{3}, hash entry:{4}",
-            //    sipMessage.FromSipUri.UserAtHost, sipMessage.ToSipUri.UserAtHost, sipMessage.CallId, sipMessage.HashId, sipMessage.HashEntry);
+            _logger.LogInformation("Register call {debug}", sipMessage.ToDebugString());
 
-            if (_cachedCallRepository.CallExists(sipMessage.CallId, sipMessage.HashId, sipMessage.HashEntry))
+            CallInfo callInfo = _cachedCallRepository.GetCallInfo(sipMessage.CallId, sipMessage.HashId, sipMessage.HashEntry);
+            if (callInfo != null && callInfo.IsStarted == true)
             {
-                _logger.LogDebug("Call with id:{0}, hash id:{1}, hash entry:{2} already exists", sipMessage.CallId,
-                    sipMessage.HashId, sipMessage.HashEntry);
+                _logger.LogDebug("Call with id:{callId}, hash id:{hashId}, hash entry:{hashEntry} already exists", sipMessage.CallId.Sanitize(),
+                    sipMessage.HashId.Sanitize(), sipMessage.HashEntry.Sanitize());
                 return SipEventHandlerResult.NothingChanged;
             }
+
             var call = new Call();
+
+            // Use the id to update correct item if prevously "progressed" call
+            if (callInfo.IsStarted == false)
+            {
+                call.Id = callInfo.Id;
+            }
 
             // If the user-part is numeric, we make the assumption
             // that it is a phone number (even though sip-address
@@ -224,45 +232,193 @@ namespace CCM.Core.SipEvent
             call.ToId = regTo?.Id ?? Guid.Empty;
 
             call.Started = DateTime.UtcNow;
+            call.IsStarted = true;
+            call.IsExternal = false;
             call.CallId = sipMessage.CallId;
             call.DialogHashId = sipMessage.HashId;
             call.DialogHashEnt = sipMessage.HashEntry;
+            call.SipCode = sipMessage.SipCode;
+            call.SipMessage = sipMessage.SipMessage;
             call.Updated = DateTime.UtcNow;
             call.ToTag = sipMessage.ToTag;
             call.FromTag = sipMessage.FromTag;
-            call.SDP = sipMessage.Sdp;
+            call.SDP = sipMessage.Sdp; ;
 
             _cachedCallRepository.UpdateOrAddCall(call);
 
-            return SipEventHandlerResult.SipMessageResult(SipEventChangeStatus.CallStarted, call.Id, call.FromSip);
+            return SipEventHandlerResult.CallStarted(call.Id, call.FromSip);
         }
 
-        public SipEventHandlerResult CloseCall(SipDialogMessage sipMessage)
+        private SipEventHandlerResult ProgressCall(SipDialogMessage sipMessage)
         {
-            //_logger.LogDebug("Closing call with id:{0}, hash id:{1}, hash entry:{2}", sipMessage.CallId, sipMessage.HashId, sipMessage.HashEntry);
+            _logger.LogInformation("Progress call {debug}", sipMessage.ToDebugString());
+
+            if (sipMessage.Method.Contains("BYE"))
+            {
+                _logger.LogWarning("Progress call (Bye, ignoring it) {debug}", sipMessage.ToDebugString());
+                return SipEventHandlerResult.NothingChanged;
+            }
+
+            if (_cachedCallRepository.CallExists(sipMessage.CallId, sipMessage.HashId, sipMessage.HashEntry) == false)
+            {
+                _logger.LogWarning("Progress call (Creating it) {debug}", sipMessage.ToDebugString());
+
+                ////////////////////////////////////////////////////////////////
+
+                var call = new Call();
+
+                // If the user-part is numeric, we make the assumption
+                // that it is a phone number (even though sip-address
+                // can be of the numeric kind)
+                var regFrom = _cachedRegisteredCodecRepository
+                    .GetRegisteredUserAgents()
+                    .FirstOrDefault(x =>
+                        (x.SipUri == sipMessage.FromSipUri.User || x.SipUri == sipMessage.FromSipUri.UserAtHost));
+
+                call.FromDisplayName = sipMessage.FromDisplayName;
+                if (regFrom != null)
+                {
+                    call.FromSip = regFrom.SipUri;
+                    call.FromDisplayName = DisplayNameHelper.GetDisplayName(regFrom, _settingsManager.SipDomain);
+                    call.FromUserAccountId = regFrom.UserAccountId;
+                }
+                else if (sipMessage.FromSipUri.User.IsNumeric())
+                {
+                    call.FromSip = sipMessage.FromSipUri.User;
+                    call.IsPhoneCall = true;
+                    call.FromCategory = _localizer["Telephone"];
+                }
+                else
+                {
+                    call.FromSip = sipMessage.FromSipUri.UserAtHost;
+                }
+
+                call.FromId = regFrom?.Id ?? Guid.Empty;
+
+                var regTo = _cachedRegisteredCodecRepository
+                    .GetRegisteredUserAgents()
+                    .FirstOrDefault(x =>
+                        (x.SipUri == sipMessage.ToSipUri.User || x.SipUri == sipMessage.ToSipUri.UserAtHost));
+
+                call.ToDisplayName = sipMessage.ToDisplayName;
+                if (regTo != null)
+                {
+                    call.ToSip = regTo.SipUri;
+                    call.ToDisplayName = DisplayNameHelper.GetDisplayName(regTo, _settingsManager.SipDomain);
+                    call.ToUserAccountId = regTo.UserAccountId;
+                }
+                else if (sipMessage.ToSipUri.User.IsNumeric())
+                {
+                    call.ToSip = sipMessage.ToSipUri.User;
+                    call.IsPhoneCall = true;
+                    call.ToCategory = _localizer["Telephone"];
+                }
+                else
+                {
+                    call.ToSip = sipMessage.ToSipUri.UserAtHost;
+                }
+
+                call.ToId = regTo?.Id ?? Guid.Empty;
+
+                call.Started = DateTime.UtcNow;
+                call.IsStarted = false;
+                call.CallId = sipMessage.CallId;
+                call.DialogHashId = sipMessage.HashId;
+                call.DialogHashEnt = sipMessage.HashEntry;
+                call.SipCode = sipMessage.SipCode;
+                call.SipMessage = sipMessage.SipMessage;
+                call.Updated = DateTime.UtcNow;
+                call.ToTag = sipMessage.ToTag;
+                call.FromTag = sipMessage.FromTag;
+                call.SDP = sipMessage.Sdp;
+
+                _cachedCallRepository.UpdateOrAddCall(call);
+
+                ////////////////////////////////////////////////////////////////////////////////////////
+
+                return SipEventHandlerResult.CallStarted(call.Id, call.FromSip);
+                //return SipEventHandlerResult.NothingChanged;
+            }
 
             try
             {
                 CallInfo call = _cachedCallRepository.GetCallInfo(sipMessage.CallId, sipMessage.HashId, sipMessage.HashEntry);
-
                 if (call == null)
                 {
-                    _logger.LogWarning("Unable to find call with call id:{0}, hash id:{1}, hash entry:{2}", sipMessage.CallId, sipMessage.HashId, sipMessage.HashEntry);
+                    _logger.LogWarning("Unable to find call with call id:{callId}, hash id:{hashId}, hash entry:{hashEntry} (Progress)", sipMessage.CallId.Sanitize(), sipMessage.HashId.Sanitize(), sipMessage.HashEntry.Sanitize());
                     return SipEventHandlerResult.NothingChanged;
                 }
 
                 if (call.Closed)
                 {
-                    _logger.LogWarning("Call with call id:{0} already closed", sipMessage.CallId);
+                    _logger.LogWarning("Call with call id:{callId} already closed (Progress)", sipMessage.CallId.Sanitize());
+                    return SipEventHandlerResult.NothingChanged;
+                }
+
+                _cachedCallRepository.UpdateCallProgress(call.Id, sipMessage.SipCode, sipMessage.SipMessage);
+                return SipEventHandlerResult.CallProgress(call.Id, call.FromSipAddress); // TODO: Add information here about to & from
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while adding progress to call with call id:{callId}", sipMessage.CallId.Sanitize());
+                return SipEventHandlerResult.NothingChanged;
+            }
+        }
+
+        private SipEventHandlerResult FailedCall(SipDialogMessage sipMessage)
+        {
+            _logger.LogInformation("Failed call {debug}", sipMessage.ToDebugString());
+
+            try
+            {
+                CallInfo call = _cachedCallRepository.GetCallInfo(sipMessage.CallId, sipMessage.HashId, sipMessage.HashEntry);
+                if (call == null)
+                {
+                    _logger.LogWarning("Unable to find call with call id {debug} (Failed)", sipMessage.ToDebugString());
+                    return SipEventHandlerResult.NothingChanged;
+                }
+
+                if (call.Closed)
+                {
+                    _logger.LogWarning("Failed call with call id:{callId} already closed", sipMessage.CallId.Sanitize());
+                    return SipEventHandlerResult.NothingChanged;
+                }
+
+                _cachedCallRepository.FailAndCloseCall(call.Id, sipMessage.SipCode, sipMessage.SipMessage);
+                return SipEventHandlerResult.CallFailed(call.Id, call.FromSipAddress);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while closing failed call with call id:{callId}", sipMessage.CallId.Sanitize());
+                return SipEventHandlerResult.NothingChanged;
+            }
+        }
+
+        private SipEventHandlerResult CloseCall(SipDialogMessage sipMessage)
+        {
+            _logger.LogInformation("Closing call {debug}", sipMessage.ToDebugString());
+
+            try
+            {
+                CallInfo call = _cachedCallRepository.GetCallInfo(sipMessage.CallId, sipMessage.HashId, sipMessage.HashEntry);
+                if (call == null)
+                {
+                    _logger.LogWarning("Unable to find call with call id {debug} (Closed)", sipMessage.ToDebugString());
+                    return SipEventHandlerResult.NothingChanged;
+                }
+
+                if (call.Closed)
+                {
+                    _logger.LogWarning("Call with call id:{callId} already closed", sipMessage.CallId.Sanitize());
                     return SipEventHandlerResult.NothingChanged;
                 }
 
                 _cachedCallRepository.CloseCall(call.Id);
-                return SipEventHandlerResult.SipMessageResult(SipEventChangeStatus.CallClosed, call.Id, call.FromSipAddress);
+                return SipEventHandlerResult.CallClosed(call.Id, call.FromSipAddress);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while closing call with call id:{0}", sipMessage.CallId);
+                _logger.LogError(ex, "Error while closing call with call id:{callId}", sipMessage.CallId.Sanitize());
                 return SipEventHandlerResult.NothingChanged;
             }
         }

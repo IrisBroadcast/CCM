@@ -84,7 +84,7 @@ namespace CCM.Core.Entities.Statistics
             {
                 var next = currentDate.AddDays(1.0);
                 var duration = (maxDate > next ? next : maxDate) - (minDate < currentDate ? currentDate : minDate);
-                yield return new DateBasedCallEvent { Date = currentDate.ToLocalTime(), Duration = duration.TotalMinutes};
+                yield return new DateBasedCallEvent { Date = currentDate.ToLocalTime(), Duration = duration.TotalMinutes };
                 currentDate = next;
             }
         }

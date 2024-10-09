@@ -24,11 +24,11 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using CCM.Core.Enums;
+using CCM.Web.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using CCM.Core.Enums;
-using CCM.Web.Properties;
 
 namespace CCM.Web.Models.UserAgents
 {

@@ -24,14 +24,13 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Text.RegularExpressions;
 using CCM.Core.Interfaces.Parser;
 using CCM.Core.SipEvent.Event;
 using CCM.Core.SipEvent.Messages;
 using CCM.Core.SipEvent.Models;
 using Microsoft.Extensions.Logging;
-using NLog;
+using System;
+using System.Text.RegularExpressions;
 
 namespace CCM.Core.SipEvent.Parser
 {
@@ -115,6 +114,7 @@ namespace CCM.Core.SipEvent.Parser
 
             var dialog = new SipDialogMessage()
             {
+                Method = kamailioData.Method,
                 Status = dialogStatus,
                 CallId = kamailioData.CallId,
                 HashId = kamailioData.DialogHashId,
@@ -126,7 +126,9 @@ namespace CCM.Core.SipEvent.Parser
                 HangupReason = kamailioData.HangupReason,
                 FromTag = kamailioData.FromTag,
                 ToTag = kamailioData.ToTag,
-                Sdp = kamailioData.Sdp
+                Sdp = kamailioData.Sdp,
+                SipCode = kamailioData.SipCode == "<null>" ? string.Empty : kamailioData.SipCode,
+                SipMessage = kamailioData.SipMessage == "<null>" ? string.Empty : kamailioData.SipMessage,
             };
 
             return dialog;

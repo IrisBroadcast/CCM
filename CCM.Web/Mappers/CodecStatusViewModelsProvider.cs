@@ -24,13 +24,13 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using CCM.Core.Helpers;
 using CCM.Core.Interfaces.Managers;
 using CCM.Core.Interfaces.Repositories;
 using CCM.Web.Models.ApiExternal;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CCM.Web.Mappers
 {
@@ -83,6 +83,9 @@ namespace CCM.Web.Mappers
                     result.ConnectedToDisplayName = isFromCaller ? call.ToDisplayName : call.FromDisplayName;
                     result.ConnectedToLocation = isFromCaller ? call.ToLocationName : call.FromLocationName;
                     result.CallStartedAt = call.Started;
+
+                    result.SipCode = call.SipCode;
+                    result.SipMessage = call.SipMessage;
                 }
 
                 result.State = regSip.Id == Guid.Empty
@@ -244,6 +247,9 @@ namespace CCM.Web.Mappers
                     result.ConnectedToDisplayName = isFromCaller ? call.ToDisplayName : call.FromDisplayName;
                     result.ConnectedToLocation = isFromCaller ? call.ToLocationName : call.FromLocationName;
                     result.CallStartedAt = call.Started;
+
+                    result.SipCode = call.SipCode;
+                    result.SipMessage = call.SipMessage;
                 }
 
                 result.State = regSip.Id == Guid.Empty
@@ -346,6 +352,9 @@ namespace CCM.Web.Mappers
                     result.ConnectedToDisplayName = isFromCaller ? call.ToDisplayName : call.FromDisplayName;
                     result.ConnectedToLocation = isFromCaller ? call.ToLocationName : call.FromLocationName;
                     result.CallStartedAt = call.Started;
+
+                    result.SipCode = call.SipCode;
+                    result.SipMessage = call.SipMessage;
                 }
 
                 result.State = regSip.Id == Guid.Empty
@@ -410,6 +419,9 @@ namespace CCM.Web.Mappers
                     result.ConnectedToDisplayName = isFromCaller ? call.ToDisplayName : call.FromDisplayName;
                     result.ConnectedToLocation = isFromCaller ? call.ToLocationName : call.FromLocationName;
                     result.CallStartedAt = call.Started;
+
+                    result.SipCode = call.SipCode;
+                    result.SipMessage = call.SipMessage;
                 }
 
                 result.State = regSip.Id == Guid.Empty

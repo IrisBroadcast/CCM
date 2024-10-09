@@ -24,19 +24,16 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Threading.Tasks;
+using CCM.Core.Helpers;
 using CCM.Core.Interfaces.Managers;
-using CCM.Core.SipEvent;
-using Microsoft.AspNetCore.Mvc;
 using CCM.Core.Interfaces.Parser;
 using CCM.Core.SipEvent.Event;
 using CCM.Core.SipEvent.Messages;
 using CCM.Core.SipEvent.Models;
 using CCM.Web.Hubs;
-using Microsoft.Extensions.Hosting.Internal;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using NLog;
+using System;
 
 namespace CCM.Web.Controllers.ApiRegistrar
 {
@@ -104,7 +101,7 @@ namespace CCM.Web.Controllers.ApiRegistrar
 
                 SipEventHandlerResult result = _sipMessageManager.HandleSipMessage(sipMessage);
 
-                _logger.LogDebug($"SIP message, Handled: {sipEventData.FromUri.Replace("sip:", "")} '{sipEventData.FromDisplayName ?? ""}' Expires:{sipEventData.Expires} -- RAW:${sipEventData.Event}: Timestamp:{sipEventData.UnixTimeStampToDateTime(sipEventData.TimeStamp)} {sipEventData.RegType} (SAVING_)");
+                _logger.LogDebug($"SIP message, Handled: {sipEventData.FromUri.Replace("sip:", "").Sanitize()} '{(sipEventData.FromDisplayName ?? "").Sanitize()}' Expires:{sipEventData.Expires} -- RAW:${sipEventData.Event}: Timestamp:{KamailioSipEventData.UnixTimeStampToDateTime(sipEventData.TimeStamp)} {sipEventData.RegType.Sanitize()} (SAVING_)");
 
                 if (result == null)
                 {
@@ -119,7 +116,7 @@ namespace CCM.Web.Controllers.ApiRegistrar
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
+                _logger.LogError("Could not handle sip message {error}", ex.Message);
                 _logger.LogError(ex.InnerException.ToString());
             }
 

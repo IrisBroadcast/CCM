@@ -24,10 +24,10 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using NLog;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using NLog;
 
 namespace CCM.Web.Hubs
 {
@@ -40,7 +40,7 @@ namespace CCM.Web.Hubs
 
         protected static readonly Logger log = LogManager.GetCurrentClassLogger();
 
-        public Throttler(string idString , int waitTime, Action action)
+        public Throttler(string idString, int waitTime, Action action)
         {
             _idString = idString;
             _waitTime = waitTime;

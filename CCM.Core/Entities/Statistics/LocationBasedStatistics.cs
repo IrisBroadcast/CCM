@@ -36,7 +36,7 @@ namespace CCM.Core.Entities.Statistics
 
         public double AverageTime
         {
-            get { return NumberOfCalls == 0 ? 0 : TotalTimeForCalls/NumberOfCalls; }
+            get { return NumberOfCalls == 0 ? 0 : TotalTimeForCalls / NumberOfCalls; }
         }
 
         public Guid LocationId { get; set; }

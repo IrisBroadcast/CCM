@@ -24,12 +24,12 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
 using CCM.Core.Helpers;
 using CCM.Core.Interfaces.Repositories;
 using CCM.Web.Infrastructure;
 using CCM.Web.Models.Call;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace CCM.Web.Controllers
 {
@@ -65,7 +65,6 @@ namespace CCM.Web.Controllers
             }
 
             var call = _cachedCallRepository.GetCallInfoById(callIdGuid);
-
             if (call == null)
             {
                 return RedirectToAction("Index", "Home");
@@ -80,6 +79,26 @@ namespace CCM.Web.Controllers
             };
 
             return View(model);
+        }
+
+        [CcmAuthorize(Roles = Roles.Admin)]
+        [HttpGet]
+        public ActionResult DeleteCallDirectly(string id)
+        {
+            if (!Guid.TryParse(id, out var callIdGuid))
+            {
+                return RedirectToAction("getcalls", "debug");
+            }
+
+            var call = _cachedCallRepository.GetCallInfoById(callIdGuid);
+            if (call == null)
+            {
+                return RedirectToAction("getcalls", "debug");
+            }
+
+            _cachedCallRepository.CloseCall(callIdGuid);
+
+            return RedirectToAction("getcalls", "debug");
         }
     }
 }

@@ -24,9 +24,9 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System.Net;
 using CCM.Core.Entities.Base;
 using CCM.Core.Interfaces;
+using System.Net;
 
 namespace CCM.Core.Entities
 {

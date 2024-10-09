@@ -24,16 +24,16 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System.Collections.Generic;
 using CCM.Core.Entities.Specific;
 using CCM.Core.Interfaces.Managers;
 using CCM.Core.Interfaces.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace CCM.Web.Controllers.Api
 {
     /// <summary>
-    /// Returns a list of historical calls
+    /// Used by the CCM Frontpage - Returns a list of historical calls
     /// </summary>
     public class OldCallController : ControllerBase
     {
@@ -48,7 +48,8 @@ namespace CCM.Web.Controllers.Api
 
         public IList<OldCall> Index()
         {
-            return _cachedCallHistoryRepository.GetOldCalls(_settingsManager.LatestCallCount);
+            var oldCalls = _cachedCallHistoryRepository.GetOldCallsFiltered("", "", "", "", false, _settingsManager.LatestCallCount, false);
+            return oldCalls;
         }
 
         public IList<OldCall> Filtered(string region = "", string codecType = "", string category = "", string search = "")

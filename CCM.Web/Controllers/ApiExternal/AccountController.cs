@@ -24,13 +24,13 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using Microsoft.AspNetCore.Mvc;
-using NLog;
 using CCM.Core.Entities;
 using CCM.Core.Interfaces.Repositories;
 using CCM.Web.Infrastructure;
 using CCM.Web.Models.ApiExternal;
+using Microsoft.AspNetCore.Mvc;
+using NLog;
+using System;
 
 namespace CCM.Web.Controllers.ApiExternal
 {

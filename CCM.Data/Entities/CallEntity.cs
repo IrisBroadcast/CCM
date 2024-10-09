@@ -50,6 +50,15 @@ namespace CCM.Data.Entities
         [Column("DlgHashEnt")]
         public string DialogHashEnt { get; set; }
 
+        [Column("SipCode")]
+        public string Code { get; set; }
+        [Column("SipMessage")]
+        public string Message { get; set; }
+        [Column("IsStarted")]
+        public bool IsStarted { get; set; }
+
+        public bool IsExternal { get; set; }
+
         public Guid? FromId { get; set; }
         [ForeignKey("FromId")]
         public virtual RegisteredCodecEntity FromCodec { get; set; } // TODO: Rename "FromUserAgent"
@@ -59,7 +68,7 @@ namespace CCM.Data.Entities
         public string FromTag { get; set; } // TODO: Not in use?
         public string FromCategory { get; set; }
         public string FromExternalLocation { get; set; }
-        
+
 
         public Guid? ToId { get; set; }
         [ForeignKey("ToId")]

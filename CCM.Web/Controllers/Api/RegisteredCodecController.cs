@@ -24,9 +24,6 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-using CCM.Core.Entities;
 using CCM.Core.Entities.Specific;
 using CCM.Core.Helpers;
 using CCM.Core.Interfaces.Managers;
@@ -34,6 +31,8 @@ using CCM.Core.Interfaces.Repositories;
 using CCM.Web.Mappers;
 using CCM.Web.Models.Home;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 
 namespace CCM.Web.Controllers.Api
 {
@@ -76,14 +75,14 @@ namespace CCM.Web.Controllers.Api
             {
                 return BadRequest();
             }
+
             RegisteredSipDetails regSipDetails = id.HasValue ? _registeredCodecDetailsRepository.GetRegisteredSipById(id.Value) : _registeredCodecDetailsRepository.GetRegisteredSipByUserAccountId(userId.Value);
             if (regSipDetails == null)
             {
                 return NotFound();
             }
 
-            var call = _cachedCallRepository.GetCallBySipAddress(regSipDetails.Sip);
-
+            OnGoingCall onGoingCall = _cachedCallRepository.GetOngoingCallBySipAddress(regSipDetails.Sip);
             var model = new RegisteredCodecInfoViewModel
             {
                 IsAuthenticated = User.Identity.IsAuthenticated,
@@ -112,8 +111,8 @@ namespace CCM.Web.Controllers.Api
                 CityName = regSipDetails.CityName,
                 RegionName = regSipDetails.RegionName,
 
-                InCall = call != null,
-                InCallWithName = call != null ? GetInCallWith(regSipDetails, call) : string.Empty
+                InCall = onGoingCall != null,
+                InCallWithName = onGoingCall != null ? GetInCallWithName(regSipDetails, onGoingCall) : string.Empty
             };
 
             return Ok(model);
@@ -126,18 +125,17 @@ namespace CCM.Web.Controllers.Api
                 && _settingsManager.CodecControlActive;
         }
 
-        private string GetInCallWith(RegisteredSipDetails registeredUserAgent, Call call)
+        private static string GetInCallWithName(RegisteredSipDetails registeredUserAgent, OnGoingCall call)
         {
             string inCallWith;
             if (call.FromSip == registeredUserAgent.Sip)
             {
-                inCallWith = DisplayNameHelper.GetDisplayName(call.To, call.ToDisplayName, call.ToSip, _settingsManager.SipDomain);
+                inCallWith = call.ToDisplayName;
             }
             else
             {
-                inCallWith = DisplayNameHelper.GetDisplayName(call.From, call.FromDisplayName, call.FromSip, _settingsManager.SipDomain);
+                inCallWith = call.FromDisplayName;
             }
-
             return DisplayNameHelper.AnonymizeDisplayName(inCallWith);
         }
     }

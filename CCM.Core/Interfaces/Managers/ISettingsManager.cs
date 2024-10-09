@@ -24,8 +24,8 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System.Collections.Generic;
 using CCM.Core.Entities;
+using System.Collections.Generic;
 
 namespace CCM.Core.Interfaces.Managers
 {
@@ -47,5 +47,7 @@ namespace CCM.Core.Interfaces.Managers
         string CodecControlPassword { get; }
         int CacheTimeLiveData { get; }
         int CacheTimeConfigData { get; }
+
+        string ExternalApiCode { get; }
     }
 }

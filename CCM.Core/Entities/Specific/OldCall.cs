@@ -37,6 +37,9 @@ namespace CCM.Core.Entities.Specific
         public bool IsPhoneCall { get; set; }
         public string SDP { get; set; }
 
+        public string SipCode { get; set; }
+        public string SipMessage { get; set; }
+
         public string FromDisplayName { get; set; }
         public string FromSip { get; set; }
         public string FromId { get; set; }
@@ -47,8 +50,10 @@ namespace CCM.Core.Entities.Specific
         public string FromComment { get; set; }
         public string FromRegionName { get; set; }
         public string FromCodecTypeName { get; set; }
+        [Obsolete("This one should be removed, no relevance anymore")]
         public string FromCodecTypeColor { get; set; }
         public string FromCodecTypeCategory { get; set; }
+        public string FromTool { get; set; }
 
         public string ToDisplayName { get; set; }
         public string ToSip { get; set; }
@@ -60,7 +65,9 @@ namespace CCM.Core.Entities.Specific
         public string ToComment { get; set; }
         public string ToRegionName { get; set; }
         public string ToCodecTypeName { get; set; }
+        [Obsolete("This one should be removed, no relevance anymore")]
         public string ToCodecTypeColor { get; set; }
         public string ToCodecTypeCategory { get; set; }
+        public string ToTool { get; set; }
     }
 }

@@ -24,16 +24,14 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
 using CCM.Core.Interfaces.Managers;
 using CCM.Core.Interfaces.Repositories;
-using CCM.Core.SipEvent;
 using CCM.Core.SipEvent.Models;
 using CCM.Web.Mappers;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NLog;
+using System;
 
 namespace CCM.Web.Hubs
 {
@@ -80,7 +78,13 @@ namespace CCM.Web.Hubs
                 UpdateCodecsOnline();
             }
 
-            if (updateResult.ChangeStatus == SipEventChangeStatus.CallClosed)
+            if (updateResult.ChangeStatus == SipEventChangeStatus.CallProgress)
+            {
+                UpdateOngoingCalls();
+            }
+
+            if (updateResult.ChangeStatus == SipEventChangeStatus.CallClosed ||
+                updateResult.ChangeStatus == SipEventChangeStatus.CallFailed)
             {
                 UpdateOldCalls();
                 UpdateOngoingCalls();
@@ -113,7 +117,7 @@ namespace CCM.Web.Hubs
 
         private void UpdateOldCalls()
         {
-            var oldCalls = _cachedCallHistoryRepository.GetOldCalls(_settingsManager.LatestCallCount);
+            var oldCalls = _cachedCallHistoryRepository.GetOldCallsFiltered("", "", "", "", false, _settingsManager.LatestCallCount, false);
 
             _logger.LogDebug($"WebGuiHubUpdater. Updating list of old calls on web gui clients. Old calls count: {oldCalls.Count.ToString()}");
             _webGuiHub.Clients.All.OldCalls(oldCalls);

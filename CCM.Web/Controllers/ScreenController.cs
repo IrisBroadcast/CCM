@@ -26,14 +26,14 @@
 
 // TODO: Maybe kill the whole controller..
 
-using System;
-using System.Linq;
 using CCM.Core.Interfaces.Repositories;
 using CCM.Core.SipEvent.Models;
 using CCM.Web.Hubs;
 using CCM.Web.Infrastructure;
 using CCM.Web.Models.Home;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
 
 namespace CCM.Web.Controllers
 {
@@ -109,7 +109,7 @@ namespace CCM.Web.Controllers
             if (model.SipAccountId != Guid.Empty)
             {
                 _cachedSipAccountRepository.UpdateComment(model.SipAccountId, model.Comment);
-                
+
                 var updateResult = new SipEventHandlerResult()
                 {
                     ChangeStatus = SipEventChangeStatus.CodecUpdated,

@@ -24,20 +24,20 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using CCM.Core.Entities.Discovery;
+using CCM.DiscoveryApi.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using CCM.Core.Entities.Discovery;
-using NLog;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
-using System.Text.Json;
 using System.Net.Http.Headers;
-using CCM.DiscoveryApi.Models;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace CCM.DiscoveryApi.Services
 {

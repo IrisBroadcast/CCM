@@ -24,13 +24,13 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
 using CCM.Core.Entities;
 using CCM.Core.Entities.Specific;
 using CCM.Core.Interfaces.Managers;
 using CCM.Core.Interfaces.Repositories;
 using LazyCache;
+using System;
+using System.Collections.Generic;
 
 namespace CCM.Core.Cache
 {
@@ -60,9 +60,19 @@ namespace CCM.Core.Cache
             return _internalRepository.GetOngoingCallById(callId);
         }
 
+        public OnGoingCall GetOngoingCallBySipAddress(string sipAddress)
+        {
+            return _internalRepository.GetOngoingCallBySipAddress(sipAddress);
+        }
+
         public bool CallExists(string callId, string hashId, string hashEnt)
         {
             return _internalRepository.CallExists(callId, hashId, hashEnt);
+        }
+
+        public bool CallExistsBySipAddress(string sipAddress)
+        {
+            return _internalRepository.CallExistsBySipAddress(sipAddress);
         }
 
         public CallInfo GetCallInfo(string callId, string hashId, string hashEnt)
@@ -75,20 +85,27 @@ namespace CCM.Core.Cache
             return _internalRepository.GetCallInfoById(callId);
         }
 
-        public Call GetCallBySipAddress(string sipAddress)
-        {
-            return _internalRepository.GetCallBySipAddress(sipAddress);
-        }
-
         public void UpdateOrAddCall(Call call)
         {
             _internalRepository.UpdateOrAddCall(call);
             _lazyCache.ClearOngoingCalls();
         }
 
+        public void UpdateCallProgress(Guid callId, string code, string message)
+        {
+            _internalRepository.UpdateCallProgress(callId, code, message);
+            _lazyCache.ClearOngoingCalls();
+        }
+
         public void CloseCall(Guid callId)
         {
             _internalRepository.CloseCall(callId);
+            _lazyCache.ClearOngoingCalls();
+        }
+
+        public void FailAndCloseCall(Guid callId, string code, string message)
+        {
+            _internalRepository.FailAndCloseCall(callId, code, message);
             _lazyCache.ClearOngoingCalls();
         }
     }

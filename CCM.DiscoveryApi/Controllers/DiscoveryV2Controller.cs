@@ -25,6 +25,7 @@
  */
 
 using CCM.Core.Entities.Discovery;
+using CCM.DiscoveryApi.Models.DiscoveryV2;
 using CCM.DiscoveryApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -32,7 +33,6 @@ using NLog;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CCM.DiscoveryApi.Models.DiscoveryV2;
 
 namespace CCM.DiscoveryApi.Controllers
 {
@@ -89,7 +89,7 @@ namespace CCM.DiscoveryApi.Controllers
 
         [HttpPost]
         [Route("~/v2/useragents")]
-        public async Task<ActionResult> UserAgents([FromBody]DiscoveryV2UserAgentRequest searchParams)
+        public async Task<ActionResult> UserAgents([FromBody] DiscoveryV2UserAgentRequest searchParams)
         {
             log.Trace("Discovery V2 API - requesting 'useragents'", searchParams); // old return UserAgentsResultV2
 

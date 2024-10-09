@@ -24,11 +24,11 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System.Collections.Generic;
-using System.Linq;
 using CCM.Core.Interfaces.Repositories;
 using CCM.Web.Controllers;
 using CCM.Web.Models.ApiExternal;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CCM.Web.Mappers
 {

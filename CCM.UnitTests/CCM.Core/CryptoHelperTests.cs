@@ -24,13 +24,12 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using CCM.Core.Helpers;
+using NUnit.Framework;
 using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using CCM.Core.Helpers;
-using NUnit.Framework;
 
 namespace CCM.UnitTests.CCM.Core
 {

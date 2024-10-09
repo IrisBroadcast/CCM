@@ -24,19 +24,19 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+using CCM.Core.Entities;
+using CCM.Core.Entities.Specific;
+using CCM.Core.Extensions;
+using CCM.Core.Interfaces.Repositories;
+using CCM.Data.Entities;
+using LazyCache;
+using Microsoft.EntityFrameworkCore;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using NLog;
-using LazyCache;
-using Microsoft.EntityFrameworkCore;
-using CCM.Core.Entities;
-using CCM.Core.Interfaces.Repositories;
-using CCM.Data.Entities;
-using CCM.Core.Entities.Specific;
-using CCM.Core.Extensions;
 
 namespace CCM.Data.Repositories
 {
@@ -253,13 +253,13 @@ namespace CCM.Data.Repositories
 
             var networksV4 = locations
                 .Where(l => !string.IsNullOrEmpty(l.Net_Address_v4) && l.Cidr.HasValue)
-                .Select(l => new LocationNetwork(l.Id, l.Net_Address_v4, l.Cidr.Value,l.Name))
+                .Select(l => new LocationNetwork(l.Id, l.Net_Address_v4, l.Cidr.Value, l.Name))
                 .Where(l => l.Network != null)
                 .ToList();
 
             var networksV6 = locations
                 .Where(l => !string.IsNullOrEmpty(l.Net_Address_v6) && l.Cidr_v6.HasValue)
-                .Select(l => new LocationNetwork(l.Id, l.Net_Address_v6, l.Cidr_v6.Value,l.Name))
+                .Select(l => new LocationNetwork(l.Id, l.Net_Address_v6, l.Cidr_v6.Value, l.Name))
                 .Where(l => l.Network != null)
                 .ToList();
 

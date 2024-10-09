@@ -24,10 +24,6 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Globalization;
-using System.IO;
-using System.Text.Json.Serialization;
 using CCM.Core.Cache;
 using CCM.Core.Helpers;
 using CCM.Core.Helpers.PasswordGeneration;
@@ -58,6 +54,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using System;
+using System.Globalization;
+using System.IO;
+using System.Text.Json.Serialization;
 
 namespace CCM.Web;
 
@@ -185,10 +185,11 @@ public class Startup
 
         // AddDataAnnotationsLocalization adds support for localized DataAnnotations
         // validation messages through IStringLocalizer abstractions.
-        services.AddControllersWithViews().AddDataAnnotationsLocalization().AddViewLocalization().AddJsonOptions(options =>
+        _ = services.AddControllersWithViews().AddDataAnnotationsLocalization().AddViewLocalization().AddJsonOptions(options =>
         {
             options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            options.JsonSerializerOptions.IgnoreNullValues = true;
+            //options.JsonSerializerOptions.IgnoreNullValues = true;
+            options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
         });
     }
 
@@ -205,6 +206,9 @@ public class Startup
         }
         else
         {
+            // StatusCode pages to gracefully handle status codes 400-599.
+            app.UseStatusCodePagesWithRedirects("~/Home/StatusCodePage");
+
             app.UseExceptionHandler("/Home/Error");
             // The default HSTS value is 30 days. You may want to change this
             // for production scenarios, see https://aka.ms/aspnetcore-hsts.
@@ -276,7 +280,8 @@ public class Startup
     }
 }
 
-public static class ServiceExtensionsDependencyInjection {
+public static class ServiceExtensionsDependencyInjection
+{
     public static void AddGeneralDependencyInjection(this IServiceCollection services)
     {
         services.AddScoped<CodecStatusViewModelsProvider>();

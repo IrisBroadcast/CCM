@@ -36,6 +36,7 @@ namespace CCM.Core.Entities
         public Guid FromId { get; set; }
         public Guid ToId { get; set; }
         public DateTime Started { get; set; }
+        public bool IsStarted { get; set; }
         public bool Closed { get; set; }
     }
 }

@@ -24,14 +24,15 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
 using CCM.Core.Entities;
 using CCM.Core.Enums;
+using CCM.Core.Helpers;
 using CCM.Core.Interfaces.Managers;
 using CCM.Core.Interfaces.Repositories;
 using CCM.Core.SipEvent.Messages;
 using CCM.Core.SipEvent.Models;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace CCM.Core.SipEvent
 {
@@ -42,6 +43,7 @@ namespace CCM.Core.SipEvent
         private readonly ICachedCallRepository _cachedCallRepository;
         private readonly ICachedRegisteredCodecRepository _cachedRegisteredCodecRepository;
         private readonly ILocationManager _locationManager;
+
         public ExternalStoreMessageManager(ICachedRegisteredCodecRepository cachedRegisteredCodecRepository, ICachedCallRepository cachedCallRepository, ILogger<SipMessageManager> logger, ILocationManager locationManager)
         {
             _cachedRegisteredCodecRepository = cachedRegisteredCodecRepository;
@@ -63,24 +65,24 @@ namespace CCM.Core.SipEvent
                 case ExternalDialogStatus.End:
                     return CloseCall(dialogMessage);
                 default:
-                    return NothingChangedResult;
+                    return SipEventHandlerResult.NothingChanged;
             }
         }
 
         public SipEventHandlerResult RegisterCall(ExternalDialogMessage message)
         {
-            _logger.LogDebug($"Register call from:{message.FromUsername} to:{message.ToUsername}, call id:{message.CallId}");
+            _logger.LogDebug("Register call from:{fromUsername} to:{toUsername}, call id:{callId}", message.FromUsername.Sanitize(), message.ToUsername.Sanitize(), message.CallId.Sanitize());
 
             if (_cachedCallRepository.CallExists(message.CallId, "", "") && message.Ended != null)
             {
-                _logger.LogDebug($"Call with id:{message.CallId} should be Ended closing it instead of registering it");
+                _logger.LogDebug("Call with id:{callId} should be Ended closing it instead of registering it", message.CallId.Sanitize());
                 return CloseCall(message);
             }
 
             if (_cachedCallRepository.CallExists(message.CallId, "", ""))
             {
-                _logger.LogDebug($"Call with id:{message.CallId} already exists");
-                return NothingChangedResult;
+                _logger.LogDebug("Call with id:{callId} already exists", message.CallId.Sanitize());
+                return SipEventHandlerResult.NothingChanged;
             }
 
             var call = new Call
@@ -89,12 +91,12 @@ namespace CCM.Core.SipEvent
                 FromDisplayName = message.FromDisplayName,
                 FromId = Guid.Parse(message.FromId),
                 FromCategory = message.FromCategory,
-                FromExternalLocation = message.FromIPAddress != null? _locationManager.GetRegionNameByIp(message.FromIPAddress) : null,
+                FromExternalLocation = message.FromIPAddress != null ? _locationManager.GetRegionNameByIp(message.FromIPAddress) : null,
                 ToSip = message.ToUsername,
                 ToDisplayName = message.ToDisplayName,
                 ToId = Guid.Parse(message.ToId),
                 ToCategory = message.ToCategory,
-                ToExternalLocation = message.ToIPAddress != null? _locationManager.GetRegionNameByIp(message.ToIPAddress) : null,
+                ToExternalLocation = message.ToIPAddress != null ? _locationManager.GetRegionNameByIp(message.ToIPAddress) : null,
                 Started = message.Started ?? DateTime.UtcNow,
                 Closed = (message.Ended != null),
                 CallId = message.CallId,
@@ -102,47 +104,43 @@ namespace CCM.Core.SipEvent
                 DialogHashEnt = "",
                 Updated = DateTime.UtcNow,
                 State = SipCallState.NONE,
-                SDP = message.SDP
+                SDP = message.SDP,
+                IsStarted = true,
+                IsExternal = true,
             };
 
             _cachedCallRepository.UpdateOrAddCall(call);
 
-            return SipMessageResult(SipEventChangeStatus.CallStarted, call.Id, call.FromSip);
+            return SipEventHandlerResult.CallStarted(call.Id, call.FromSip);
         }
 
         public SipEventHandlerResult CloseCall(ExternalDialogMessage message)
         {
-            _logger.LogDebug($"Closing call with id:{message.CallId}");
+            _logger.LogDebug("Closing call with id:{callId} (external)", message.CallId.Sanitize());
 
             try
             {
                 CallInfo call = _cachedCallRepository.GetCallInfo(message.CallId, "", "");
-
                 if (call == null)
                 {
-                    _logger.LogWarning($"Unable to find call with call id:{message.CallId}");
-                    return NothingChangedResult;
+                    _logger.LogWarning("Unable to find call with call id:{callId} (external)", message.CallId.Sanitize());
+                    return SipEventHandlerResult.NothingChanged;
                 }
 
                 if (call.Closed)
                 {
-                    _logger.LogWarning($"Call with call id:{message.CallId} already closed");
-                    return NothingChangedResult;
+                    _logger.LogWarning("Call with call id:{callId} already closed (external)", message.CallId.Sanitize());
+                    return SipEventHandlerResult.NothingChanged;
                 }
 
                 _cachedCallRepository.CloseCall(call.Id);
-                return SipMessageResult(SipEventChangeStatus.CallClosed, call.Id, call.FromSipAddress);
+                return SipEventHandlerResult.CallClosed(call.Id, call.FromSipAddress);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Error while closing call with call id:{message.CallId}");
-                return NothingChangedResult;
+                _logger.LogError(ex, "Error while closing call with call id:{callId} (external)", message.CallId.Sanitize());
+                return SipEventHandlerResult.NothingChanged;
             }
         }
-
-        private SipEventHandlerResult NothingChangedResult => SipMessageResult(SipEventChangeStatus.NothingChanged);
-        private SipEventHandlerResult SipMessageResult(SipEventChangeStatus status) { return new SipEventHandlerResult() { ChangeStatus = status }; }
-        private SipEventHandlerResult SipMessageResult(SipEventChangeStatus status, Guid id) { return new SipEventHandlerResult() { ChangeStatus = status, ChangedObjectId = id }; }
-        private SipEventHandlerResult SipMessageResult(SipEventChangeStatus status, Guid id, string sipAddress) { return new SipEventHandlerResult() { ChangeStatus = status, ChangedObjectId = id, SipAddress = sipAddress }; }
     }
 }

@@ -30,6 +30,8 @@ namespace CCM.Core.SipEvent.Messages
     {
         Start,
         End,
-        SingleBye
+        SingleBye,
+        Failed,
+        Progress
     }
 }

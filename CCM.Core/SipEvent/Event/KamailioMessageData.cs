@@ -24,8 +24,8 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System.Collections.Generic;
 using CCM.Core.SipEvent.Messages;
+using System.Collections.Generic;
 
 namespace CCM.Core.SipEvent.Event
 {

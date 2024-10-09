@@ -24,8 +24,8 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System.ComponentModel.DataAnnotations.Schema;
 using CCM.Data.Entities.Base;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CCM.Data.Entities
 {

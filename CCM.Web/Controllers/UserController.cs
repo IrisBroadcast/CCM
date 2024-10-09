@@ -24,17 +24,17 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
 using CCM.Core.Entities;
 using CCM.Core.Helpers;
 using CCM.Core.Interfaces.Repositories;
 using CCM.Web.Infrastructure;
-using NLog;
 using CCM.Web.Models.User;
 using CCM.Web.Properties;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using NLog;
+using System;
+using System.Collections.Generic;
 
 namespace CCM.Web.Controllers
 {
@@ -196,11 +196,11 @@ namespace CCM.Web.Controllers
             Dictionary<string, string> roles = new Dictionary<string, string> { { string.Empty, string.Empty } };
             foreach (var role in allRoles)
             {
-                if(includeAdminRole)
+                if (includeAdminRole)
                 {
                     roles.Add(role.Id.ToString(), role.Name);
                 }
-                else if(role.Name != Roles.Admin)
+                else if (role.Name != Roles.Admin)
                 {
                     roles.Add(role.Id.ToString(), role.Name);
                 }

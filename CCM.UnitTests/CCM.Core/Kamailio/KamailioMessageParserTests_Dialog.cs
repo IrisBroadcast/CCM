@@ -25,7 +25,6 @@
  */
 
 using CCM.Core.SipEvent.Messages;
-using CCM.Core.SipEvent.Parser;
 using NUnit.Framework;
 
 namespace CCM.UnitTests.CCM.Core.Kamailio

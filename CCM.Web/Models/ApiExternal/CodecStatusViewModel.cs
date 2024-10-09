@@ -24,7 +24,6 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using Newtonsoft.Json.Converters;
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -38,12 +37,12 @@ namespace CCM.Web.Models.ApiExternal
         public CodecState State { get; set; }
         public string SipAddress { get; set; }
         public string PresentationName { get; set; }
-        public string DisplayName { get; set; } //TODO:  Not in use ... yet, changed my mind, will be removed...since it's PresentationName...
+        public string DisplayName { get; set; } // TODO:  Not in use ... yet, changed my mind, will be removed...since it's PresentationName...
         public bool HasCodecControl { get; set; }
         #endregion
 
         #region Call
-        public bool InCall { get; set; } // TODO: Not in use .. yet
+        public bool InCall { get; set; }
         public string ConnectedToSipAddress { get; set; }
         public string ConnectedToPresentationName { get; set; }
         public string ConnectedToDisplayName { get; set; } //TODO:  Not in use ... yet
@@ -51,6 +50,9 @@ namespace CCM.Web.Models.ApiExternal
         public bool IsCallingPart { get; set; }
         [JsonConverter(typeof(JsonDateTimeConverter))]
         public DateTime CallStartedAt { get; set; }
+
+        public string SipCode { get; set; }
+        public string SipMessage { get; set; }
         #endregion
     }
 
@@ -60,6 +62,10 @@ namespace CCM.Web.Models.ApiExternal
         public string LocationName { get; set; }
         public string LocationCategory { get; set; }
         public string CodecTypeName { get; set; }
+        /// <summary>
+        /// TODO: This one should be removed, check if anyone is dependant on it..
+        /// </summary>
+        [Obsolete("Don't use it, will be removed")]
         public string CodecTypeColor { get; set; }
         public string CodecTypeCategory { get; set; }
         public string UserExternalReference { get; set; }

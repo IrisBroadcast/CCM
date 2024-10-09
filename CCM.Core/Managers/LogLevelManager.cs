@@ -24,9 +24,9 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System.Linq;
 using NLog;
 using NLog.Config;
+using System.Linq;
 
 namespace CCM.Core.Managers
 {

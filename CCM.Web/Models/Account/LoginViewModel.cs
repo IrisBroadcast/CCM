@@ -24,8 +24,8 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System.ComponentModel.DataAnnotations;
 using CCM.Web.Properties;
+using System.ComponentModel.DataAnnotations;
 
 namespace CCM.Web.Models.Account
 {

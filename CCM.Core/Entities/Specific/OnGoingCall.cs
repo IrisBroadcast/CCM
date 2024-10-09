@@ -35,6 +35,11 @@ namespace CCM.Core.Entities.Specific
         public bool IsPhoneCall { get; set; }
         public string SDP { get; set; }
 
+        public string SipCode { get; set; }
+        public string SipMessage { get; set; }
+        public bool IsStarted { get; set; }
+        public bool IsExternal { get; set; }
+
         public string FromDisplayName { get; set; }
         public string FromSip { get; set; }
         public string FromId { get; set; }

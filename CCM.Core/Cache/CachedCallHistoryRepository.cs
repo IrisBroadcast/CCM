@@ -24,14 +24,14 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using CCM.Core.Entities;
 using CCM.Core.Entities.Specific;
 using CCM.Core.Interfaces.Managers;
 using CCM.Core.Interfaces.Repositories;
 using LazyCache;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CCM.Core.Cache
 {
@@ -63,6 +63,11 @@ namespace CCM.Core.Cache
             return _internalRepository.GetById(id);
         }
 
+        /// <summary>
+        /// Used by Codec Status Hub
+        /// </summary>
+        /// <param name="callId"></param>
+        /// <returns></returns>
         public CallHistory GetCallHistoryByCallId(Guid callId)
         {
             try
@@ -74,12 +79,6 @@ namespace CCM.Core.Cache
             {
                 return null;
             }
-        }
-
-        public IList<OldCall> GetOldCalls(int callCount = 0)
-        {
-            var history = _lazyCache.GetOrAddOldCalls(() => _internalRepository.GetOneMonthOldCalls(), _settingsManager.CacheTimeLiveData);
-            return history.Take(callCount).ToList();
         }
 
         public IList<OldCall> GetOldCallsFiltered(string region, string codecType, string sipAddress, string searchString, bool onlyPhoneCalls, int callCount, bool limitByMonth)
@@ -138,12 +137,12 @@ namespace CCM.Core.Cache
         #region Statistics
         private IReadOnlyList<CallHistory> GetOneYearCallHistory()
         {
-            return _lazyCache.GetOrAddOneYearCallHistory(() => _internalRepository.GetOneYearCallHistory(), _settingsManager.CacheTimeLiveData);
+            return _lazyCache.GetOrAddOneYearCallHistory(() => _internalRepository.GetOneYearCallHistory(), _settingsManager.CacheTimeConfigData);
         }
 
         public IList<CallHistory> GetCallHistoriesByDate(DateTime startDate, DateTime endDate)
         {
-            if (startDate > DateTime.Now.AddMonths(-4)) // .AddYears(-1))
+            if (startDate > DateTime.Now.AddMonths(-4))
             {
                 return _internalRepository.GetCallHistoriesByDate(GetOneYearCallHistory(), startDate, endDate);
             }
@@ -152,7 +151,7 @@ namespace CCM.Core.Cache
 
         public IList<CallHistory> GetCallHistoriesForRegion(DateTime startDate, DateTime endDate, Guid regionId)
         {
-            if (startDate > DateTime.Now.AddMonths(-4)) // .AddYears(-1))
+            if (startDate > DateTime.Now.AddMonths(-4))
             {
                 return _internalRepository.GetCallHistoriesForRegion(GetOneYearCallHistory(), startDate, endDate, regionId);
             }
@@ -161,7 +160,7 @@ namespace CCM.Core.Cache
 
         public IList<CallHistory> GetCallHistoriesForRegisteredSip(DateTime startDate, DateTime endDate, string sipId)
         {
-            if (startDate > DateTime.Now.AddMonths(-4)) // .AddYears(-1))
+            if (startDate > DateTime.Now.AddMonths(-4))
             {
                 return _internalRepository.GetCallHistoriesForRegisteredSip(GetOneYearCallHistory(), startDate, endDate, sipId);
             }
@@ -170,7 +169,7 @@ namespace CCM.Core.Cache
 
         public IList<CallHistory> GetCallHistoriesForCodecType(DateTime startDate, DateTime endDate, Guid codecTypeId)
         {
-            if (startDate > DateTime.Now.AddMonths(-4)) // .AddYears(-1))
+            if (startDate > DateTime.Now.AddMonths(-4))
             {
                 return _internalRepository.GetCallHistoriesForCodecType(GetOneYearCallHistory(), startDate, endDate, codecTypeId);
             }
@@ -179,7 +178,7 @@ namespace CCM.Core.Cache
 
         public IList<CallHistory> GetCallHistoriesForLocation(DateTime startDate, DateTime endDate, Guid locationId)
         {
-            if (startDate > DateTime.Now.AddMonths(-4)) // .AddYears(-1))
+            if (startDate > DateTime.Now.AddMonths(-4))
             {
                 return _internalRepository.GetCallHistoriesForLocation(GetOneYearCallHistory(), startDate, endDate, locationId);
             }

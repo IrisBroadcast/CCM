@@ -24,15 +24,15 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using CCM.Core.Entities;
 using CCM.Core.Interfaces.Repositories;
 using CCM.Data.Entities;
 using LazyCache;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace CCM.Data.Repositories
 {
@@ -128,7 +128,7 @@ namespace CCM.Data.Repositories
             var userAgent = _ccmDbContext.UserAgents.SingleOrDefault(a => a.Id == id);
             if (userAgent != null)
             {
-                _ccmDbContext.UserAgents.Remove(userAgent); 
+                _ccmDbContext.UserAgents.Remove(userAgent);
                 _ccmDbContext.SaveChanges();
             }
         }
@@ -257,7 +257,8 @@ namespace CCM.Data.Repositories
         private List<ProfileCodec> MapToProfiles(IEnumerable<UserAgentProfileOrderEntity> orderedProfiles)
         {
             return orderedProfiles.OrderBy(o => o.ProfileSortIndexForUserAgent)
-                .Select(x => new ProfileCodec {
+                .Select(x => new ProfileCodec
+                {
                     Description = x.Profile.Description,
                     Id = x.Profile.Id,
                     Name = x.Profile.Name,
