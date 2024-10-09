@@ -27,6 +27,7 @@
 using CCM.Core.Entities.Discovery;
 using CCM.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 
 namespace CCM.Web.Controllers.ApiDiscovery
@@ -39,16 +40,19 @@ namespace CCM.Web.Controllers.ApiDiscovery
     public class DiscoveryController : ControllerBase
     {
         private readonly IDiscoveryServiceManager _discoveryService;
+        private readonly ILogger<DiscoveryController> _logger;
 
-        public DiscoveryController(IDiscoveryServiceManager discoveryService)
+        public DiscoveryController(IDiscoveryServiceManager discoveryService, ILogger<DiscoveryController> logger)
         {
             _discoveryService = discoveryService;
+            _logger = logger;
         }
 
         [HttpGet]
         [Route("filters")]
         public List<FilterDto> Filters()
         {
+            _logger.LogDebug("Unauthenticated request to filters");
             return _discoveryService.GetFilters();
         }
 
@@ -56,6 +60,7 @@ namespace CCM.Web.Controllers.ApiDiscovery
         [Route("profiles")]
         public List<ProfileDto> Profiles()
         {
+            _logger.LogDebug("Unauthenticated request to profiles");
             return _discoveryService.GetProfiles();
         }
 
@@ -65,8 +70,11 @@ namespace CCM.Web.Controllers.ApiDiscovery
         {
             if (searchParams == null)
             {
+                _logger.LogDebug("Unauthenticated request to useragents");
                 return BadRequest("No search parameters");
             }
+
+            _logger.LogDebug("Unauthenticated request to useragents - Caller:{caller}, Callee:{callee}", searchParams.Caller, searchParams.Callee);
 
             UserAgentsResultDto uaResult = _discoveryService.GetUserAgents(searchParams.Caller, searchParams.Callee, searchParams.Filters, searchParams.IncludeCodecsInCall);
             return Ok(uaResult);

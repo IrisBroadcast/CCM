@@ -75,6 +75,7 @@ namespace CCM.Web.Controllers.Api
             {
                 return BadRequest();
             }
+
             RegisteredSipDetails regSipDetails = id.HasValue ? _registeredCodecDetailsRepository.GetRegisteredSipById(id.Value) : _registeredCodecDetailsRepository.GetRegisteredSipByUserAccountId(userId.Value);
             if (regSipDetails == null)
             {
@@ -124,7 +125,7 @@ namespace CCM.Web.Controllers.Api
                 && _settingsManager.CodecControlActive;
         }
 
-        private string GetInCallWithName(RegisteredSipDetails registeredUserAgent, OnGoingCall call)
+        private static string GetInCallWithName(RegisteredSipDetails registeredUserAgent, OnGoingCall call)
         {
             string inCallWith;
             if (call.FromSip == registeredUserAgent.Sip)

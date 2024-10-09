@@ -33,7 +33,7 @@ using System.Collections.Generic;
 namespace CCM.Web.Controllers.Api
 {
     /// <summary>
-    /// Returns a list of historical calls
+    /// Used by the CCM Frontpage - Returns a list of historical calls
     /// </summary>
     public class OldCallController : ControllerBase
     {

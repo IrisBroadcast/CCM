@@ -32,6 +32,9 @@ using System.Collections.Generic;
 
 namespace CCM.Web.Controllers.Api
 {
+    /// <summary>
+    /// Used by the CCM Frontpage to get ongoing calls
+    /// </summary>
     public class OngoingCallController : ControllerBase
     {
         private readonly ICachedCallRepository _cachedCallRepository;

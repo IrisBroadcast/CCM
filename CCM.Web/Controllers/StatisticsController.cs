@@ -55,9 +55,10 @@ namespace CCM.Web.Controllers
 
         public ActionResult Index()
         {
-            var model = new StatisticsFilterViewModel();
-
-            model.CodecTypes = _statisticsManager.GetCodecTypes();
+            var model = new StatisticsFilterViewModel
+            {
+                CodecTypes = _statisticsManager.GetCodecTypes()
+            };
             model.CodecTypes.Insert(0, new CodecType() { Name = Resources.All, Id = Guid.Empty });
 
             model.Owners = _statisticsManager.GetOwners();
@@ -171,7 +172,7 @@ namespace CCM.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult LocationSim24HourViewData(DateTime startDate, DateTime endDate, Guid regionId, Guid locationId)
+        public ActionResult LocationSim24HourViewData(DateTime startDate, DateTime endDate, Guid locationId)
         {
             var model = _statisticsManager.GetHourStatisticsForLocation(startDate.ToUniversalTime(), endDate.ToUniversalTime(), locationId, false);
             return PartialView(model);
@@ -184,8 +185,8 @@ namespace CCM.Web.Controllers
             var csv = new StringBuilder();
             csv.AddCsvValue(_localizer["Statistics"]).AddCsvSeparator().AddCsvValue(_localizer["Call_Sim24Hour"]).AppendLine();
             csv.AddCsvValue(_localizer["Location"]).AddCsvSeparator().AddCsvValue(stats.LocationName).AppendLine();
-            csv.AddCsvValue(_localizer["From"]).AddCsvSeparator().AddCsvValue(string.Format(CultureInfo.InvariantCulture, "{ 0:yyyy-MM-dd}", startDate)).AppendLine();
-            csv.AddCsvValue(_localizer["To"]).AddCsvSeparator().AddCsvValue(string.Format(CultureInfo.InvariantCulture, "{ 0:yyyy-MM-dd}", endDate)).AppendLine();
+            csv.AddCsvValue(_localizer["From"]).AddCsvSeparator().AddCsvValue(string.Format(CultureInfo.InvariantCulture, "{0:yyyy-MM-dd}", startDate)).AppendLine();
+            csv.AddCsvValue(_localizer["To"]).AddCsvSeparator().AddCsvValue(string.Format(CultureInfo.InvariantCulture, "{0:yyyy-MM-dd}", endDate)).AppendLine();
             csv.AppendLine();
             csv.AddCsvValue(_localizer["Hour"]).AddCsvSeparator().AddCsvValue(_localizer["Stats_Number_Of_Simultaneous_Calls"]).AppendLine();
             foreach (var hour in stats.Statistics)
@@ -328,7 +329,7 @@ namespace CCM.Web.Controllers
         public ActionResult GetDateBasedCsv(DateBasedFilterType filterType, DateTime startDate, DateTime endDate, Guid filterId)
         {
             IList<DateBasedStatistics> stats;
-            var prefix = "";
+            string prefix;
             switch (filterType)
             {
                 case DateBasedFilterType.Regions:
