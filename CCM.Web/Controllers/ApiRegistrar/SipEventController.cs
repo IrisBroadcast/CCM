@@ -101,7 +101,7 @@ namespace CCM.Web.Controllers.ApiRegistrar
 
                 SipEventHandlerResult result = _sipMessageManager.HandleSipMessage(sipMessage);
 
-                _logger.LogDebug($"SIP message, Handled: {sipEventData.FromUri.Replace("sip:", "").Sanitize()} '{(sipEventData.FromDisplayName ?? "").Sanitize()}' Expires:{sipEventData.Expires} -- RAW:${sipEventData.Event}: Timestamp:{KamailioSipEventData.UnixTimeStampToDateTime(sipEventData.TimeStamp)} {sipEventData.RegType.Sanitize()} (SAVING_)");
+                _logger.LogDebug($"SIP message, Handled: {sipEventData.FromUri.Replace("sip:", "")} '{sipEventData.FromDisplayName ?? ""}' Expires:{sipEventData.Expires} -- RAW:${sipEventData.Event}: Timestamp:{KamailioSipEventData.UnixTimeStampToDateTime(sipEventData.TimeStamp)} {sipEventData.RegType} (SAVING_)");
 
                 if (result == null)
                 {
@@ -116,7 +116,7 @@ namespace CCM.Web.Controllers.ApiRegistrar
             }
             catch (Exception ex)
             {
-                _logger.LogError("Could not handle sip message {error}", ex.Message);
+                _logger.LogError(ex, "Could not handle sip message {error}", ex.Message);
                 _logger.LogError(ex.InnerException.ToString());
             }
 

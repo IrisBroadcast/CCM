@@ -173,7 +173,7 @@ namespace CCM.Core.SipEvent
             var call = new Call();
 
             // Use the id to update correct item if prevously "progressed" call
-            if (callInfo.IsStarted == false)
+            if (callInfo != null && callInfo.IsStarted == false)
             {
                 call.Id = callInfo.Id;
             }
@@ -242,7 +242,7 @@ namespace CCM.Core.SipEvent
             call.Updated = DateTime.UtcNow;
             call.ToTag = sipMessage.ToTag;
             call.FromTag = sipMessage.FromTag;
-            call.SDP = sipMessage.Sdp; ;
+            call.SDP = sipMessage.Sdp;
 
             _cachedCallRepository.UpdateOrAddCall(call);
 
