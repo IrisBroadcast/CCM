@@ -9,8 +9,7 @@ services:
         max-size: 20m
     deploy:
       placement:
-        constraints:
-          - node.labels.function == general-purpose
+        constraints: [node.role == manager]
     extra_hosts:
       - "ccm.sr.se:134.25.10.16"
     networks:

@@ -9,8 +9,7 @@ services:
         max-size: 20m
     deploy:
       placement:
-        constraints:
-          - node.labels.function == general-purpose
+        constraints: [node.role == manager]
     networks:
       - proxynet
     extra_hosts:
