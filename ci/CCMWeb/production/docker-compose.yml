@@ -9,7 +9,8 @@ services:
         max-size: 20m
     deploy:
       placement:
-          constraints: [node.role == manager]
+        constraints:
+          - node.labels.function == general-purpose
     environment:
       ASPNETCORE_URLS: http://+:80
     networks:
